@@ -147,24 +147,19 @@ When building or refactoring UI:
 
 You must implement and respect the following core domain rules.
 
-### 5.1 Inventory Model
+### 5.1 Inventory Model & Smart Kits
 
-- There are **Items** and **Kits**:
-  - **Item:** A single rentable piece (camera body, lens, tripod, light, etc.).
-  - **Kit:** A bundle containing multiple items (e.g., “Sony FX6 Kit” with camera body + lens + batteries + media).
-- Kits should:
-  - Have their own `dailyRate` separate from the sum of children.
-  - Reference child items for inventory tracking (so out-of-stock parts impact kit availability).
+- **Item:** A single rentable piece (camera body, lens, tripod, light, etc.).
+- **Kit (Smart Kit):** A product with a `kitConfig` defining "Slots" (e.g., "Lenses", "Cables").
+  - **Slots:** Can be "Single Select" (Swap default) or "Multi Select" (Add more).
+  - **Composition:** Defined by `defaultItemIds` and `compatibleItemIds`.
+- **Inventory:** Kits reference child items for inventory tracking (so out-of-stock parts impact kit availability).
 
-### 5.2 Rental Pricing Logic
+### 5.2 Rental Pricing Logic (Blind Quote)
 
-- Base field: `dailyRate` per product/kit.
-- Total rental price:
-  - `total = dailyRate * rentalDays * quantity`.
-- Rental duration:
-  - `rentalDays` derived from start and end dates (inclusive logic to be defined and used consistently).
-- Later extensions:
-  - Discount tiers for longer rentals (e.g., weekly/monthly pricing) must be coded in a way that can be extended without rewriting everything.
+- **No Client-Side Totals:** The user sees products and kits, but **NO** total price calculation during the process.
+- **Estimation (Optional):** We *can* show a "Base Rate" (e.g., "From 500dh/day") on the product card just for context, but the Cart/Checkout shows **0.00** or "To Be Quoted."
+- **Checkout:** Purely submits a list of items + dates to the Admin for a custom quote.
 
 ### 5.3 Availability & Stock
 
@@ -279,41 +274,41 @@ When a task is **fully implemented, tested, and integrated**, mark it with `[x]`
 
 - [x] Next.js App Router configured with `[lng]` and route groups.
 - [x] TypeScript strict mode enabled.
-- [ ] Refactor **all services** to use **dependency injection** and interfaces only (no direct PocketBase in UI).
-- [ ] Introduce and wire **Zustand** stores:
-  - [ ] `useCartStore`
-  - [ ] `useUIStore` (modals, drawers, toasts, loading states)
+- [x] Refactor **all services** to use **dependency injection** and interfaces only (no direct PocketBase in UI).
+- [x] Introduce and wire **Zustand** stores:
+  - [x] `useCartStore`
+  - [x] `useUIStore` (modals, drawers, toasts, loading states)
   - [ ] Optional auth/session/UI stores as needed.
 
 ### Phase 2 – Core Catalog & Product UX
 
-- [ ] Implement **equipment listing** page with:
-  - [ ] Filters (category, type, price).
-  - [ ] Search.
-  - [ ] Pagination or infinite scroll.
-- [ ] Implement **product detail** page:
+- [x] Implement **equipment listing** page with:
+  - [x] Filters (category, type, price).
+  - [x] Search.
+  - [x] Pagination or infinite scroll.
+- [x] Implement **product detail** page:
   - [ ] Gallery (images/video).
-  - [ ] Specs and features.
-  - [ ] “Add to Cart” with rental date(s).
+  - [x] Specs and features.
+  - [x] “Add to Cart” with rental date(s).
 
 ### Phase 3 – Cart & Rental Logic
 
-- [ ] Implement cart UI (drawer or page) with:
-  - [ ] Add / remove items.
-  - [ ] Adjust quantity.
-  - [ ] Set rental dates.
-  - [ ] Live price calculation using daily rate × days × qty.
-- [ ] Implement cart persistence:
-  - [ ] Guest (localStorage via Zustand persist).
+- [x] Implement cart UI (drawer or page) with:
+  - [x] Add / remove items.
+  - [x] Adjust quantity.
+  - [x] Set rental dates.
+  - [x] Live price calculation using daily rate × days × qty.
+- [x] Implement cart persistence:
+  - [x] Guest (localStorage via Zustand persist).
   - [ ] Authenticated (backend sync).
   - [ ] Merge logic on login.
 
 ### Phase 4 – Quote / Checkout Flow
 
-- [ ] Implement quote/checkout page with:
-  - [ ] Summary of items, rentals, totals.
-  - [ ] Contact information form (if needed).
-- [ ] Implement server action to create a rental request/order.
+- [x] Implement quote/checkout page with:
+  - [x] Summary of items, rentals, totals.
+  - [x] Contact information form (if needed).
+- [x] Implement server action to create a rental request/order.
 - [ ] Expose user-facing confirmation / success state.
 
 ### Phase 5 – User & Admin Dashboards
