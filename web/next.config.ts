@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   transpilePackages: ["three", "three-globe"],
   images: {
     // Enable unoptimized to bypass Next.js optimizer fetch failures on some VPS environments
-    unoptimized: true,
+    // unoptimized: true, // Re-enabling optimization now that we have proper VPS setup
     dangerouslyAllowSVG: true,
     remotePatterns: [
       {

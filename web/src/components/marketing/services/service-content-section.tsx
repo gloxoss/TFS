@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import type { ServiceSection } from '@/services/services/interface'
+import Image from 'next/image'
 
 interface ServiceContentSectionProps {
     sections: ServiceSection[]
@@ -26,12 +27,19 @@ export default function ServiceContentSection({ sections, lng }: ServiceContentS
                         {/* Background Image */}
                         {section.image && (
                             <>
-                                <div
-                                    className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 hover:scale-105"
-                                    style={{ backgroundImage: `url(${section.image})` }}
-                                />
+                                <div className="absolute inset-0">
+                                    <Image
+                                        src={section.image}
+                                        alt={title || "Service section image"}
+                                        fill
+                                        className="object-cover transition-transform duration-700 hover:scale-105"
+                                        priority={index === 0} // Prioritize first section image
+                                        sizes="100vw"
+                                        quality={85}
+                                    />
+                                </div>
                                 {/* Dark Overlay - Gradient based on layout */}
-                                <div className={`absolute inset-0 ${isReversed
+                                <div className={`absolute inset-0 z-10 ${isReversed
                                     ? 'bg-gradient-to-l from-black via-black/80 to-black/40'
                                     : 'bg-gradient-to-r from-black via-black/80 to-black/40'
                                     }`} />
