@@ -87,12 +87,12 @@ function mapRecordToProduct(record: RecordModel, lang: string = 'en'): Product {
         specsEn: record.specs_en,
         specsFr: record.specs_fr,
         specs,
-        // Images - handle both array and single file fields
+        // Images - handle PocketBase files with fallback to external URL in specs
         imageUrl: Array.isArray(record.images) && record.images[0]
             ? `${PB_URL}/api/files/${record.collectionId}/${record.id}/${record.images[0]}`
             : record.image
                 ? `${PB_URL}/api/files/${record.collectionId}/${record.id}/${record.image}`
-                : undefined,
+                : specs?.image_url as string | undefined,
         images: Array.isArray(record.images)
             ? record.images.map((img: string) =>
                 `${PB_URL}/api/files/${record.collectionId}/${record.id}/${img}`

@@ -63,7 +63,7 @@ function mapServicesToDisplay(services: Service[], lng: string): MappedService[]
         title: lng === 'fr' && service.titleFr ? service.titleFr : service.title,
         description: lng === 'fr' && service.briefDescriptionFr ? service.briefDescriptionFr : (service.briefDescription || ''),
         icon: ICON_MAP[service.slug] || <Camera className="w-6 h-6" />,
-        image: service.images?.[0] || DEFAULT_IMAGES[service.slug] || 'https://images.unsplash.com/photo-1485846234645-a62644f84728?q=75&w=800&auto=format&fit=crop',
+        image: service.heroImage || service.images?.[0] || DEFAULT_IMAGES[service.slug] || 'https://images.unsplash.com/photo-1485846234645-a62644f84728?q=75&w=800&auto=format&fit=crop',
     }))
 }
 

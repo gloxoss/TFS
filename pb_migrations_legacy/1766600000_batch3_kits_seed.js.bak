@@ -1,0 +1,585 @@
+/// <reference path="../pb_data/types.d.ts" />
+
+migrate((app) => {
+    // -------------------------------------------------------------------------
+    // 1. DEFINE DATA
+    // -------------------------------------------------------------------------
+    const BATCH3_ITEMS = [
+        {
+            "id": "lens_cooke_s8i",
+            "name": "Cooke S8/i FF Prime Set",
+            "brand": "Cooke",
+            "category": "Lenses",
+            "tags": ["Large Format", "Spherical"],
+            "description": "Designed for Full Frame sensors. Features a fast T1.4 aperture across the set. Delivers the 'Cooke Look' with organic bokeh.",
+            "specifications": {
+                "mount": "PL",
+                "aperture": "T1.4",
+                "coverage": "Full Frame"
+            },
+            "stock_available": 1
+        },
+        {
+            "id": "lens_zeiss_radiance",
+            "name": "Zeiss Supreme Prime Radiance Set",
+            "brand": "Zeiss",
+            "category": "Lenses",
+            "tags": ["Large Format", "Spherical"],
+            "description": "Based on the Supreme Primes but with a new coating that creates beautiful, controllable blue flares (Radiance).",
+            "specifications": {
+                "mount": "PL",
+                "aperture": "T1.5",
+                "coverage": "Full Frame",
+                "feature": "Blue Flares"
+            },
+            "stock_available": 1
+        },
+        {
+            "id": "lens_angenieux_45_120",
+            "name": "Angenieux Optimo 45-120mm T2.8",
+            "brand": "Angenieux",
+            "category": "Lenses",
+            "tags": ["Zoom"],
+            "description": "Completes the Optimo lightweight zoom series. Perfect portrait to telephoto range.",
+            "specifications": {
+                "focal_length": "45-120mm",
+                "aperture": "T2.8",
+                "mount": "PL",
+                "coverage": "Super 35"
+            },
+            "stock_available": 1
+        },
+        {
+            "id": "lens_canon_15_45",
+            "name": "Canon Cine-Servo 15-120mm T2.95-3.9",
+            "brand": "Canon",
+            "category": "Lenses",
+            "tags": ["Zoom"],
+            "description": "High 8K optical performance. Features a built-in 1.5x extender and removable servo drive.",
+            "specifications": {
+                "focal_length": "15-120mm",
+                "aperture": "T2.95-3.9",
+                "mount": "PL",
+                "coverage": "Super 35 / Full Frame (w/ ext)"
+            },
+            "stock_available": 1
+        }
+    ];
+
+    const KIT_TEMPLATES = [
+        {
+            "id": "kit_venice_pkg",
+            "name": "Sony Venice 2 Cine Package",
+            "main_product_id": "cam_venice_2",
+            "base_price_modifier": -300,
+            "description": "Ultimate full-frame cinema package. Includes Sony Venice 2 Body, OConnor 2575D Fluid Head, Power Distribution, and monitoring."
+        },
+        {
+            "id": "kit_alexa35_pkg",
+            "name": "ARRI Alexa 35 Production Package",
+            "main_product_id": "cam_alexa_35",
+            "base_price_modifier": -200,
+            "description": "A complete cinema package ready for high-end production. Includes Alexa 35, MVF-2 Viewfinder, Codex Media, and Support."
+        },
+        {
+            "id": "kit_red_monstro_pkg",
+            "name": "RED DSMC2 Monstro 8K Package",
+            "main_product_id": "cam_red_monstro",
+            "base_price_modifier": -250,
+            "description": "Full frame 8K raw workflow. Includes RED Monstro body, RED Touch Monitor, Mini-Mags, and choice of PL or EF mount."
+        },
+        {
+            "id": "kit_fx9_docu",
+            "name": "Sony FX9 Documentary Kit",
+            "main_product_id": "cam_fx9",
+            "base_price_modifier": -100,
+            "description": "Ready-to-shoot documentary kit. Includes FX9, Fujinon Cabrio Zoom, and Sachtler Tripod system."
+        },
+        {
+            "id": "kit_amira_eng",
+            "name": "ARRI Amira ENG Kit",
+            "main_product_id": "cam_amira",
+            "base_price_modifier": -150,
+            "description": "Ergonomic shoulder-mount package perfect for broadcast and single-operator use."
+        },
+        {
+            "id": "kit_anamorphic_indie",
+            "name": "Indie Anamorphic Lens Bundle",
+            "main_product_id": "lens_atlas_orion",
+            "base_price_modifier": -50,
+            "description": "Bundle of Atlas Orion Anamorphic lenses (Set A or B) with Matte Box and Wireless Follow Focus."
+        },
+        {
+            "id": "kit_director_monitor",
+            "name": "Wireless Director's Monitor Cage",
+            "main_product_id": "mon_smallhd_703",
+            "base_price_modifier": -20,
+            "description": "Handheld wireless monitoring solution. Includes SmallHD 703 Bolt, handles, and battery power."
+        },
+        {
+            "id": "kit_ronin2_pro",
+            "name": "DJI Ronin 2 Ultimate Stabilization",
+            "main_product_id": "stab_ronin_2",
+            "base_price_modifier": -100,
+            "description": "Complete stabilization package including Ronin 2, Ready Rig or Support Vest, and DJI Force Pro controller."
+        }
+    ];
+
+    const KIT_ITEMS = [
+        {
+            "id": "item_v2_cam",
+            "template_id": "kit_venice_pkg",
+            "product_id": "cam_venice_2",
+            "slot_name": "Camera Body",
+            "is_mandatory": true,
+            "default_quantity": 1
+        },
+        {
+            "id": "item_v2_head",
+            "template_id": "kit_venice_pkg",
+            "product_id": "supp_oconnor_2575d",
+            "slot_name": "Fluid Head",
+            "is_mandatory": true,
+            "default_quantity": 1,
+            "swappable_category": "Support"
+        },
+        {
+            "id": "item_v2_lens",
+            "template_id": "kit_venice_pkg",
+            "product_id": "lens_zeiss_supreme",
+            "slot_name": "Primary Lens Set",
+            "is_mandatory": false,
+            "default_quantity": 1,
+            "swappable_category": "Lenses"
+        },
+        {
+            "id": "item_a35_cam",
+            "template_id": "kit_alexa35_pkg",
+            "product_id": "cam_alexa_35",
+            "slot_name": "Camera Body",
+            "is_mandatory": true,
+            "default_quantity": 1
+        },
+        {
+            "id": "item_a35_ff",
+            "template_id": "kit_alexa35_pkg",
+            "product_id": "ctrl_hi5",
+            "slot_name": "Lens Control",
+            "is_mandatory": false,
+            "default_quantity": 1
+        },
+        {
+            "id": "item_red_cam",
+            "template_id": "kit_red_monstro_pkg",
+            "product_id": "cam_red_monstro",
+            "slot_name": "Camera Body",
+            "is_mandatory": true,
+            "default_quantity": 1
+        },
+        {
+            "id": "item_red_mon",
+            "template_id": "kit_red_monstro_pkg",
+            "product_id": "mon_smallhd_cine7_red",
+            "slot_name": "Control Monitor",
+            "is_mandatory": true,
+            "default_quantity": 1
+        },
+        {
+            "id": "item_fx9_cam",
+            "template_id": "kit_fx9_docu",
+            "product_id": "cam_fx9",
+            "slot_name": "Camera Body",
+            "is_mandatory": true,
+            "default_quantity": 1
+        },
+        {
+            "id": "item_fx9_lens",
+            "template_id": "kit_fx9_docu",
+            "product_id": "lens_fuji_19_90",
+            "slot_name": "Zoom Lens",
+            "is_mandatory": true,
+            "default_quantity": 1,
+            "swappable_category": "Lenses"
+        },
+        {
+            "id": "item_fx9_legs",
+            "template_id": "kit_fx9_docu",
+            "product_id": "supp_sachtler_25",
+            "slot_name": "Tripod System",
+            "is_mandatory": true,
+            "default_quantity": 1
+        },
+        {
+            "id": "item_ana_lens",
+            "template_id": "kit_anamorphic_indie",
+            "product_id": "lens_atlas_orion",
+            "slot_name": "Anamorphic Primes",
+            "is_mandatory": true,
+            "default_quantity": 1
+        },
+        {
+            "id": "item_ana_mb",
+            "template_id": "kit_anamorphic_indie",
+            "product_id": "mb_arri_lmb4x5",
+            "slot_name": "Matte Box",
+            "is_mandatory": true,
+            "default_quantity": 1
+        },
+        {
+            "id": "item_dir_mon",
+            "template_id": "kit_director_monitor",
+            "product_id": "mon_smallhd_703",
+            "slot_name": "Monitor",
+            "is_mandatory": true,
+            "default_quantity": 1
+        },
+        {
+            "id": "item_dir_rx",
+            "template_id": "kit_director_monitor",
+            "product_id": "wl_teradek_bolt6_750",
+            "slot_name": "Wireless Receiver",
+            "is_mandatory": true,
+            "default_quantity": 1
+        },
+        {
+            "id": "item_r2_gimbal",
+            "template_id": "kit_ronin2_pro",
+            "product_id": "stab_ronin_2",
+            "slot_name": "Gimbal",
+            "is_mandatory": true,
+            "default_quantity": 1
+        },
+        {
+            "id": "item_r2_force",
+            "template_id": "kit_ronin2_pro",
+            "product_id": "stab_force_pro",
+            "slot_name": "Remote Controller",
+            "is_mandatory": false,
+            "default_quantity": 1
+        }
+    ];
+
+    const UI_CONFIG = {
+        "filters_configuration": {
+            "brand_filter": {
+                "label": "Filter by Brand",
+                "type": "multiselect",
+                "source": "taxonomies.brands",
+                "allow_multiple": true
+            },
+            "category_filter": {
+                "label": "Filter by Category",
+                "type": "select",
+                "source": "taxonomies.categories",
+                "allow_multiple": false
+            },
+            "tag_filter": {
+                "label": "Features",
+                "type": "tags",
+                "source": "tags",
+                "options": [
+                    "Anamorphic",
+                    "Spherical",
+                    "Large Format",
+                    "Full Frame",
+                    "Super 35",
+                    "Zoom",
+                    "Macro",
+                    "OLED",
+                    "Recorder",
+                    "Wireless"
+                ]
+            },
+            "mount_filter": {
+                "label": "Lens Mount",
+                "type": "checkbox",
+                "options": ["PL", "LPL", "EF", "E-Mount"]
+            },
+            "resolution_filter": {
+                "label": "Max Resolution",
+                "type": "range",
+                "field": "specifications.max_resolution"
+            }
+        }
+    };
+
+
+    // -------------------------------------------------------------------------
+    // 2. SEED BATCH 3 ITEMS (Equipment)
+    // -------------------------------------------------------------------------
+    const eqCollection = app.findCollectionByNameOrId("equipment");
+    const catCollection = app.findCollectionByNameOrId("categories");
+
+    BATCH3_ITEMS.forEach(item => {
+        let record;
+        const slug = item.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+        let isNew = false;
+        try {
+            record = app.findFirstRecordByData("equipment", "slug", slug);
+        } catch (e) {
+            record = new Record(eqCollection);
+            isNew = true;
+        }
+
+        // Find/Create Category
+        let catId = "";
+        try {
+            const cat = app.findFirstRecordByData("categories", "name", item.category);
+            catId = cat.id;
+        } catch (e) {
+            // Try fallback if not exact match or create
+            try {
+                const newCat = new Record(catCollection);
+                newCat.set("name", item.category);
+                newCat.set("name_en", item.category);
+                newCat.set("slug", item.category.toLowerCase());
+                app.save(newCat);
+                catId = newCat.id;
+            } catch (e2) {
+                // ignore
+            }
+        }
+
+        if (isNew) {
+            record.set("id", item.id); // Explicit ID only for new records
+        }
+        record.set("slug", slug);
+        record.set("name_en", item.name);
+        record.set("name_fr", item.name);
+        record.set("description_en", item.description);
+        record.set("description_fr", item.description);
+        record.set("brand", item.brand);
+        record.set("category", catId);
+        record.set("stock", 100);
+        record.set("stock_available", 100);
+        record.set("daily_rate", 200);
+        record.set("visibility", true);
+
+        record.set("specs_en", JSON.stringify(item.specifications));
+        record.set("specs_fr", JSON.stringify(item.specifications));
+
+        if (item.tags && item.tags.length > 0) {
+            record.set("type", item.tags[0]);
+        }
+
+        app.save(record);
+    });
+
+    // -------------------------------------------------------------------------
+    // 3. CREATE COLLECTIONS
+    // -------------------------------------------------------------------------
+
+    // kit_templates
+    let kitsCol;
+    try {
+        kitsCol = app.findCollectionByNameOrId("kit_templates");
+    } catch (e) {
+        kitsCol = new Collection({
+            name: "kit_templates",
+            type: "base",
+            schema: [
+                { name: "name", type: "text", required: true },
+                {
+                    name: "main_product_id", type: "relation", required: true, options: {
+                        collectionId: eqCollection.id, cascadeDelete: false, maxSelect: 1
+                    }
+                },
+                { name: "base_price_modifier", type: "number" },
+                { name: "description", type: "text" },
+            ]
+        });
+        app.save(kitsCol);
+    }
+
+    // kit_items
+    let kitItemsCol;
+    try {
+        kitItemsCol = app.findCollectionByNameOrId("kit_items");
+    } catch (e) {
+        kitItemsCol = new Collection({
+            name: "kit_items",
+            type: "base",
+            schema: [
+                {
+                    name: "template_id", type: "relation", required: true, options: {
+                        collectionId: kitsCol.id, cascadeDelete: true, maxSelect: 1
+                    }
+                },
+                {
+                    name: "product_id", type: "relation", required: true, options: {
+                        collectionId: eqCollection.id, cascadeDelete: false, maxSelect: 1
+                    }
+                },
+                { name: "slot_name", type: "text" },
+                { name: "is_mandatory", type: "bool" },
+                { name: "default_quantity", type: "number" },
+                { name: "swappable_category", type: "text" },
+            ]
+        });
+        app.save(kitItemsCol);
+    }
+
+    // ui_configurations
+    let uiConfigCol;
+    try {
+        const existing = app.findCollectionByNameOrId("ui_configurations");
+        app.delete(existing);
+    } catch (e) {
+        // doesn't exist, ignore
+    }
+
+    uiConfigCol = new Collection({
+        name: "ui_configurations",
+        type: "base",
+        schema: [
+            { name: "config_key", type: "text", required: true, options: { pattern: "^\\w+$" } }, // unique key
+            { name: "value", type: "json" }
+        ]
+    });
+    app.save(uiConfigCol);
+
+    // -------------------------------------------------------------------------
+    // 4. SEED KITS
+    // -------------------------------------------------------------------------
+    KIT_TEMPLATES.forEach(kit => {
+        let record;
+        try {
+            record = app.findFirstRecordByData("kit_templates", "id", kit.id);
+        } catch (e) {
+            record = new Record(kitsCol);
+            record.set("id", kit.id);
+        }
+        record.set("name", kit.name);
+        record.set("description", kit.description);
+        record.set("base_price_modifier", kit.base_price_modifier);
+
+        // Helper to find product
+        let mainProd;
+        try {
+            mainProd = app.findFirstRecordByData("equipment", "id", kit.main_product_id);
+        } catch (e) {
+            // Fallback: Try to find by name from a known map or guess?
+            // We can try to guess the name from the ID or just skip?
+            // Let's hardcode a map for reliability since we know the dataset.
+            const ID_NAME_MAP = {
+                "cam_venice_2": "Sony Venice 2 8K",
+                "cam_alexa_35": "ARRI Alexa 35",
+                "cam_red_monstro": "RED DSMC2 Monstro 8K VV", // Verified name? Let's try partial?
+                "cam_fx9": "Sony PXW-FX9",
+                "cam_amira": "ARRI Amira",
+                "lens_atlas_orion": "Atlas Orion Series Anamorphic Set",
+                "mon_smallhd_703": "SmallHD 703 Bolt 7\" Wireless Monitor",
+                "stab_ronin_2": "DJI Ronin 2"
+            };
+            const nameC = ID_NAME_MAP[kit.main_product_id];
+            if (nameC) {
+                try {
+                    mainProd = app.findFirstRecordByData("equipment", "name_en", nameC);
+                } catch (e2) {
+                    try {
+                        // Try just 'name'
+                        mainProd = app.findFirstRecordByData("equipment", "name", nameC);
+                    } catch (e3) { console.log(`Prod lookup failed for ${kit.main_product_id} / ${nameC}`); }
+                }
+            }
+        }
+
+        if (mainProd) {
+            record.set("main_product_id", mainProd.id);
+            try {
+                app.save(record);
+            } catch (eSave) { console.log("Failed to save Kit: " + eSave.message); }
+        } else {
+            console.log("SKIPPING KIT " + kit.name + " (Main Product Not Found)");
+        }
+    });
+
+    // -------------------------------------------------------------------------
+    // 5. SEED KIT ITEMS
+    // -------------------------------------------------------------------------
+    KIT_ITEMS.forEach(kItem => {
+        let record;
+        try {
+            record = app.findFirstRecordByData("kit_items", "id", kItem.id);
+        } catch (e) {
+            record = new Record(kitItemsCol);
+            record.set("id", kItem.id);
+        }
+
+        record.set("slot_name", kItem.slot_name);
+        record.set("is_mandatory", kItem.is_mandatory);
+        record.set("default_quantity", kItem.default_quantity);
+        record.set("swappable_category", kItem.swappable_category);
+
+        // Link Template
+        try {
+            const tmpl = app.findFirstRecordByData("kit_templates", "id", kItem.template_id);
+            record.set("template_id", tmpl.id);
+        } catch (e) { console.log("Template Not Found: " + kItem.template_id); }
+
+        // Link Product
+        let prodRec;
+        try {
+            prodRec = app.findFirstRecordByData("equipment", "id", kItem.product_id);
+        } catch (e) {
+            // Fallback Map for Items
+            const ITEM_MAP = {
+                "supp_oconnor_2575d": "OConnor Ultimate 2575D Fluid Head",
+                "lens_zeiss_supreme": "Zeiss Supreme Prime Set",
+                "ctrl_hi5": "ARRI Hi-5 Hand Unit",
+                "mon_smallhd_cine7_red": "SmallHD Cine 7 RED RCP2 Monitor",
+                "lens_fuji_19_90": "Fujinon Cabrio 19-90mm T2.9",
+                "supp_sachtler_25": "Sachtler Video 25 Plus", // Guessing name
+                "mb_arri_lmb4x5": "ARRI LMB 4x5 Matte Box",
+                "wl_teradek_bolt6_750": "Teradek Bolt 6 XT 750", // Guessing
+                "stab_force_pro": "DJI Force Pro"
+            };
+
+            // Also add the main kit items if they appear here
+            const ID_NAME_MAP_2 = {
+                "cam_venice_2": "Sony Venice 2 8K",
+                "cam_alexa_35": "ARRI Alexa 35",
+                "cam_red_monstro": "RED DSMC2 Monstro 8K VV",
+                "cam_fx9": "Sony PXW-FX9",
+                "cam_amira": "ARRI Amira",
+                "lens_atlas_orion": "Atlas Orion Series Anamorphic Set",
+                "mon_smallhd_703": "SmallHD 703 Bolt 7\" Wireless Monitor",
+                "stab_ronin_2": "DJI Ronin 2"
+            };
+
+            const targetName = ITEM_MAP[kItem.product_id] || ID_NAME_MAP_2[kItem.product_id];
+            if (targetName) {
+                try {
+                    prodRec = app.findFirstRecordByData("equipment", "name_en", targetName);
+                } catch (ez) {
+                    try { prodRec = app.findFirstRecordByData("equipment", "name", targetName); } catch (ez2) { }
+                }
+            }
+        }
+
+        if (prodRec) {
+            record.set("product_id", prodRec.id);
+            try {
+                app.save(record);
+            } catch (eSave) { console.log("Failed to save Kit Item: " + eSave.message); }
+        } else {
+            console.log("SKIPPING KIT ITEM " + kItem.slot_name + " (Product Not Found: " + kItem.product_id + ")");
+        }
+    });
+
+    // -------------------------------------------------------------------------
+    // 6. SEED UI CONFIG
+    // -------------------------------------------------------------------------
+    if (UI_CONFIG && UI_CONFIG.filters_configuration) {
+        let record;
+        try {
+            record = app.findFirstRecordByData("ui_configurations", "config_key", "equipment_filters");
+        } catch (e) {
+            record = new Record(uiConfigCol);
+            record.set("config_key", "equipment_filters");
+        }
+        record.set("value", JSON.stringify(UI_CONFIG.filters_configuration));
+        app.save(record);
+    }
+});

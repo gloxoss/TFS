@@ -78,7 +78,10 @@ export default function ServiceDetailClient({ service, lng }: ServiceDetailClien
                 <>
                     {/* Structured Sections */}
                     {service.sections && service.sections.length > 0 && (
-                        <ServiceContentSection sections={service.sections} lng={lng} />
+                        <ServiceContentSection
+                            sections={service.sections}
+                            lng={lng}
+                        />
                     )}
 
                     {/* Stats */}

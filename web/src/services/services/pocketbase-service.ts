@@ -27,6 +27,12 @@ export class PocketBaseServicesService implements IServicesService {
     }
 
     private mapRecordToService(record: Record<string, unknown>): Service {
+        let heroImage = record.hero_image as string | undefined
+        if (heroImage && !heroImage.startsWith('http') && !heroImage.startsWith('/')) {
+            // Resolve PocketBase file URL
+            heroImage = this.pb.files.getUrl(record, heroImage)
+        }
+
         return {
             id: record.id as string,
             title: record.title as string,
@@ -40,7 +46,7 @@ export class PocketBaseServicesService implements IServicesService {
             type: record.type as 'internal_link' | 'content_page',
             targetUrl: record.target_url as string | undefined,
             images: record.images as string[] | undefined,
-            heroImage: record.hero_image as string | undefined,
+            heroImage: heroImage,
             sections: this.parseJsonField<ServiceSection[]>(record.sections),
             stats: this.parseJsonField<ServiceStat[]>(record.stats),
             tags: this.parseJsonField<string[]>(record.tags),

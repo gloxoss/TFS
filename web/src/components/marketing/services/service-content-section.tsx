@@ -44,26 +44,27 @@ export default function ServiceContentSection({ sections, lng }: ServiceContentS
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, margin: "-100px" }}
                             transition={{ duration: 0.6 }}
-                            className="relative z-10 container mx-auto px-6 py-24 max-w-7xl flex justify-start"
+                            className={`relative z-10 w-full px-6 md:px-24 lg:px-40 py-24 flex ${isReversed ? 'justify-end' : 'justify-start'}`}
                         >
                             {/* Content Box */}
-                            <div className="max-w-2xl">
+                            <div className={`max-w-5xl ${isReversed ? 'text-right' : 'text-left'}`}>
                                 {title && (
-                                    <h2 className="text-4xl md:text-6xl font-display font-bold text-white mb-8 leading-[0.95] uppercase tracking-tight">
+                                    <h2 className="text-5xl md:text-7xl lg:text-8xl font-display font-bold text-white mb-8 leading-[0.9] uppercase tracking-tight text-balance">
                                         {title}
                                     </h2>
                                 )}
                                 {content && (
                                     <div
-                                        className="prose prose-invert prose-xl max-w-none text-zinc-200 leading-relaxed"
+                                        className="prose prose-invert prose-lg md:prose-2xl max-w-none text-zinc-200 leading-relaxed text-pretty"
                                         dangerouslySetInnerHTML={{ __html: content }}
                                     />
                                 )}
+
                             </div>
                         </motion.div>
                     </section>
                 )
             })}
-        </div>
+        </div >
     )
 }

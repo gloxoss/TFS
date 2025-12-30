@@ -76,7 +76,11 @@ export class CartService {
         slug: record.slug,
         categoryId: record.category,
         isAvailable: (record.stock_available || record.stock || 0) > 0,
-        imageUrl: record.images?.[0] ? `${PB_URL}/api/files/equipment/${record.id}/${record.images[0]}` : undefined,
+        imageUrl: record.images?.[0]
+          ? `${PB_URL}/api/files/equipment/${record.id}/${record.images[0]}`
+          : record.image
+            ? `${PB_URL}/api/files/equipment/${record.id}/${record.image}`
+            : undefined,
       };
     } catch {
       return null;
@@ -102,7 +106,9 @@ export class CartService {
         isAvailable: (record.stock_available || record.stock || 1) > 0,
         imageUrl: record.images?.[0]
           ? `${PB_URL}/api/files/equipment/${record.id}/${record.images[0]}`
-          : undefined,
+          : record.image
+            ? `${PB_URL}/api/files/equipment/${record.id}/${record.image}`
+            : undefined,
       }));
 
       // Create KitItem objects for recommended products (for defaultItems/selectedItems)
