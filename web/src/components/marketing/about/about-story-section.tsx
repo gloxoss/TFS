@@ -224,7 +224,7 @@ export default function AboutStorySection({ lng }: AboutStorySectionProps) {
                             >
                                 <div className="aspect-[3/4] relative">
                                     <Image
-                                        src="https://images.unsplash.com/photo-1478720568477-152d9b164e63?q=80&w=1000&auto=format&fit=crop"
+                                        src="/images/about/about-center.png"
                                         alt="TFS Production Set"
                                         fill
                                         className="object-cover"

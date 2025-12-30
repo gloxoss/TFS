@@ -4,8 +4,8 @@ const nextConfig: NextConfig = {
   productionBrowserSourceMaps: false, // IP Protection: Disable source maps in production
   transpilePackages: ["three", "three-globe"],
   images: {
-    // Enable unoptimized to bypass Next.js optimizer fetch failures on some VPS environments
-    // unoptimized: true, // Re-enabling optimization now that we have proper VPS setup
+    // Disable optimization in development to avoid "resolved to private ip" errors with 127.0.0.1
+    unoptimized: process.env.NODE_ENV === 'development',
     dangerouslyAllowSVG: true,
     remotePatterns: [
       {

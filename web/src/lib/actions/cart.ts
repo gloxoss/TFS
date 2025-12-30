@@ -53,7 +53,7 @@ export async function getUserCart(): Promise<{ success: boolean; items?: CartIte
   try {
     const pb = await createServerClient();
 
-    if (!pb.authStore.isValid) {
+    if (!pb.authStore.isValid || !pb.authStore.model?.id) {
       return { success: false, error: "Not authenticated" };
     }
 

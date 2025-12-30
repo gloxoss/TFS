@@ -149,21 +149,41 @@ const SkeletonOne = () => (
 );
 
 const SkeletonTwo = () => (
-    <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-900 to-neutral-800 border border-white/5 relative overflow-hidden">
-        <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-24 h-24 rounded-full bg-[#D00000]/10 animate-pulse flex items-center justify-center">
-                <div className="w-16 h-16 rounded-full bg-[#D00000]/20" />
-            </div>
+    <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-900 to-neutral-800 border border-white/5 relative overflow-hidden group">
+        <div className="absolute inset-0">
+            <Image
+                src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=800&auto=format&fit=crop"
+                alt="Logistics"
+                fill
+                className="object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-500 scale-100 group-hover:scale-110 transition-transform"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+        </div>
+        <div className="absolute bottom-4 left-4 bg-black/50 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
+            <span className="text-xs text-white font-mono flex items-center gap-1">
+                <IconTruckDelivery className="w-3 h-3" /> ATA CARNET
+            </span>
         </div>
     </div>
 );
 
 const SkeletonThree = () => (
     <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-900 to-neutral-800 border border-white/5 relative overflow-hidden group">
-        <div className="absolute inset-x-0 bottom-0 h-full bg-gradient-to-t from-black via-black/50 to-transparent z-10" />
-        <div className="absolute inset-0 grid grid-cols-2 gap-2 p-4 opacity-50 group-hover:opacity-80 transition-opacity">
-            <div className="bg-zinc-800 rounded-lg h-full w-full animate-pulse delay-75" />
-            <div className="bg-zinc-800 rounded-lg h-full w-full animate-pulse delay-150" />
+        <div className="absolute inset-0">
+            <Image
+                src="https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?q=80&w=1200&auto=format&fit=crop"
+                alt="Film Crew"
+                fill
+                className="object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-500 scale-100 group-hover:scale-105 transition-transform"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+        </div>
+        <div className="absolute bottom-4 left-4 flex gap-2">
+            <div className="bg-black/50 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
+                <span className="text-xs text-white font-mono flex items-center gap-1">
+                    <IconUsersGroup className="w-3 h-3" /> BILINGUAL
+                </span>
+            </div>
         </div>
     </div>
 );
