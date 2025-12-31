@@ -9,7 +9,7 @@
 'use client'
 
 import { useState, useCallback, useRef, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useInView } from 'framer-motion'
 import {
     Filter,
     X,
@@ -173,12 +173,17 @@ export function HybridFilterBar({
         onSearchChange('')
     }, [onCategoryChange, onBrandsChange, onTypesChange, onSearchChange])
 
+    // Detect if top filter bar is in view
+    const filterBarRef = useRef(null)
+    const isInView = useInView(filterBarRef, { amount: 0.1 }) // 10% visible
+    const showMobileFab = !isInView;
+
     return (
         <>
             {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
             {/* DESKTOP: Top Sticky Filter Bar */}
             {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
-            <div className="hidden md:block sticky top-20 z-40 px-4 sm:px-6 lg:px-8 mb-8">
+            <div ref={filterBarRef} className="md:block relative z-40 px-4 sm:px-6 lg:px-8 mb-8">
                 <div className="max-w-7xl mx-auto bg-zinc-900/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl">
 
                     {/* Primary Row: Category Pills - Drag to Scroll */}
@@ -222,11 +227,11 @@ export function HybridFilterBar({
                     </div>
 
                     {/* Secondary Row: Brand Filter, Search, View Toggle */}
-                    <div className="flex items-center justify-between px-6 py-3 gap-4">
+                    <div className="flex items-center justify-between px-4 md:px-6 py-3 gap-2 md:gap-4">
                         {/* Left: Item count + Brand filter */}
-                        <div className="flex items-center gap-4 flex-1 min-w-0">
+                        <div className="flex items-center gap-2 md:gap-4 flex-1 min-w-0 overflow-x-auto scrollbar-hide mask-fade-right">
                             <span className="text-xs text-zinc-500 shrink-0 font-medium">
-                                {totalCount} items
+                                {totalCount} <span className="hidden sm:inline">items</span>
                             </span>
 
                             {/* Brand Dropdown */}
@@ -242,7 +247,7 @@ export function HybridFilterBar({
                                         )}
                                     >
                                         <SlidersHorizontal className="w-4 h-4" />
-                                        Brand
+                                        <span className="hidden sm:inline">Brand</span>
                                         {selectedBrands.length > 0 && (
                                             <span className="w-5 h-5 bg-emerald-700 text-white rounded-full text-xs flex items-center justify-center font-bold">
                                                 {selectedBrands.length}
@@ -327,7 +332,7 @@ export function HybridFilterBar({
                                         )}
                                     >
                                         <Video className="w-4 h-4" />
-                                        Type
+                                        <span className="hidden sm:inline">Type</span>
                                         {selectedTypes.length > 0 && (
                                             <span className="w-5 h-5 bg-blue-700 text-white rounded-full text-xs flex items-center justify-center font-bold">
                                                 {selectedTypes.length}
@@ -412,7 +417,7 @@ export function HybridFilterBar({
                                         )}
                                     >
                                         <CircleDot className="w-4 h-4" />
-                                        Mount
+                                        <span className="hidden sm:inline">Mount</span>
                                         {selectedMounts.length > 0 && (
                                             <span className="w-5 h-5 bg-purple-700 text-white rounded-full text-xs flex items-center justify-center font-bold">
                                                 {selectedMounts.length}
@@ -475,7 +480,7 @@ export function HybridFilterBar({
                                         )}
                                     >
                                         <Scan className="w-4 h-4" />
-                                        Sensor
+                                        <span className="hidden sm:inline">Sensor</span>
                                         {selectedSensorSizes.length > 0 && (
                                             <span className="w-5 h-5 bg-amber-700 text-white rounded-full text-xs flex items-center justify-center font-bold">
                                                 {selectedSensorSizes.length}
@@ -537,7 +542,7 @@ export function HybridFilterBar({
                                         )}
                                     >
                                         <Maximize className="w-4 h-4" />
-                                        Resolution
+                                        <span className="hidden sm:inline">Resolution</span>
                                         {selectedResolutions.length > 0 && (
                                             <span className="w-5 h-5 bg-red-700 text-white rounded-full text-xs flex items-center justify-center font-bold">
                                                 {selectedResolutions.length}
@@ -674,7 +679,7 @@ export function HybridFilterBar({
                                             className="flex items-center gap-2 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-xl text-sm text-zinc-300 transition-colors"
                                         >
                                             <Search className="w-4 h-4" />
-                                            Search
+                                            <span className="hidden sm:inline">Search</span>
                                         </motion.button>
                                     )}
                                 </AnimatePresence>
@@ -726,307 +731,291 @@ export function HybridFilterBar({
             {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
             {/* MOBILE: Compact Header + FAB */}
             {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
-            <div className="md:hidden">
-                {/* Compact Mobile Header */}
-                <div className="sticky top-16 z-30 px-4 mb-4">
-                    <div className="flex items-center justify-between gap-3 py-3">
-                        <span className="text-sm text-zinc-400">
-                            {totalCount} items
-                            {selectedCategory && (
-                                <span className="text-zinc-500"> in <span className="text-white">{categories.find(c => c.slug === selectedCategory)?.name}</span></span>
-                            )}
-                        </span>
-
-                        {/* Active filter badges */}
+            {/* MOBILE: Compact Header (Using Desktop Bar instead now, but keeping spacer if needed) */}
+            {/* ═══════════════════════════════════════════════════════════════════════ */}
+            {/* FAB Button - Only show when top bar is scrolled out of view */}
+            <AnimatePresence>
+                {showMobileFab && (
+                    <motion.button
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0, opacity: 0 }}
+                        onClick={() => setMobileSheetOpen(true)}
+                        className={cn(
+                            "fixed bottom-6 left-6 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-all",
+                            activeFilterCount > 0
+                                ? "bg-red-700 shadow-red-700/30"
+                                : "bg-white shadow-white/20"
+                        )}
+                    >
+                        <Filter className={cn(
+                            "w-6 h-6",
+                            activeFilterCount > 0 ? "text-zinc-900" : "text-zinc-900"
+                        )} />
                         {activeFilterCount > 0 && (
-                            <div className="flex items-center gap-2">
-                                <span className="px-2.5 py-1 bg-red-700/20 text-red-400 rounded-full text-xs font-medium">
-                                    {activeFilterCount} filter{activeFilterCount > 1 ? 's' : ''} active
-                                </span>
-                                <button onClick={clearAllFilters} className="text-zinc-500">
-                                    <X className="w-4 h-4" />
+                            <span className="absolute -top-1 -right-1 w-5 h-5 bg-white text-zinc-900 rounded-full text-xs font-bold flex items-center justify-center">
+                                {activeFilterCount}
+                            </span>
+                        )}
+                    </motion.button>
+                )}
+            </AnimatePresence>
+
+            {/* Mobile Bottom Sheet */}
+            <AnimatePresence>
+                {mobileSheetOpen && (
+                    <>
+                        {/* Backdrop */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50"
+                            onClick={() => setMobileSheetOpen(false)}
+                        />
+
+                        {/* Sheet */}
+                        <motion.div
+                            initial={{ y: '100%' }}
+                            animate={{ y: 0 }}
+                            exit={{ y: '100%' }}
+                            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                            className="fixed bottom-0 left-0 right-0 bg-zinc-900 border-t border-zinc-700 rounded-t-3xl z-50 max-h-[85vh] overflow-hidden flex flex-col"
+                        >
+                            {/* Handle */}
+                            <div className="flex justify-center py-3">
+                                <div className="w-12 h-1.5 bg-zinc-700 rounded-full" />
+                            </div>
+
+                            {/* Header */}
+                            <div className="flex items-center justify-between px-6 pb-4 border-b border-zinc-800">
+                                <div>
+                                    <h3 className="text-xl font-bold text-white">Filters</h3>
+                                    <p className="text-sm text-zinc-500">{totalCount} items available</p>
+                                </div>
+                                <button
+                                    onClick={() => setMobileSheetOpen(false)}
+                                    className="p-2 rounded-full bg-zinc-800 text-zinc-400"
+                                >
+                                    <X className="w-5 h-5" />
                                 </button>
                             </div>
-                        )}
-                    </div>
-                </div>
 
-                {/* FAB Button */}
-                <button
-                    onClick={() => setMobileSheetOpen(true)}
-                    className={cn(
-                        "fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-all",
-                        activeFilterCount > 0
-                            ? "bg-red-700 shadow-red-700/30"
-                            : "bg-white shadow-white/20"
-                    )}
-                >
-                    <Filter className={cn(
-                        "w-6 h-6",
-                        activeFilterCount > 0 ? "text-zinc-900" : "text-zinc-900"
-                    )} />
-                    {activeFilterCount > 0 && (
-                        <span className="absolute -top-1 -right-1 w-5 h-5 bg-white text-zinc-900 rounded-full text-xs font-bold flex items-center justify-center">
-                            {activeFilterCount}
-                        </span>
-                    )}
-                </button>
-
-                {/* Mobile Bottom Sheet */}
-                <AnimatePresence>
-                    {mobileSheetOpen && (
-                        <>
-                            {/* Backdrop */}
-                            <motion.div
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50"
-                                onClick={() => setMobileSheetOpen(false)}
-                            />
-
-                            {/* Sheet */}
-                            <motion.div
-                                initial={{ y: '100%' }}
-                                animate={{ y: 0 }}
-                                exit={{ y: '100%' }}
-                                transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                                className="fixed bottom-0 left-0 right-0 bg-zinc-900 border-t border-zinc-700 rounded-t-3xl z-50 max-h-[85vh] overflow-hidden flex flex-col"
-                            >
-                                {/* Handle */}
-                                <div className="flex justify-center py-3">
-                                    <div className="w-12 h-1.5 bg-zinc-700 rounded-full" />
+                            {/* Scrollable Content */}
+                            <div className="flex-1 overflow-y-auto px-6 py-4 space-y-6">
+                                {/* Search */}
+                                <div>
+                                    <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3 block">
+                                        Search
+                                    </label>
+                                    <div className="relative">
+                                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
+                                        <input
+                                            type="text"
+                                            value={searchQuery}
+                                            onChange={(e) => onSearchChange(e.target.value)}
+                                            placeholder="Search equipment..."
+                                            className="w-full pl-12 pr-4 py-3.5 bg-zinc-800 border border-zinc-700 rounded-2xl text-base focus:outline-none focus:border-red-500 text-white placeholder-zinc-500"
+                                        />
+                                    </div>
                                 </div>
 
-                                {/* Header */}
-                                <div className="flex items-center justify-between px-6 pb-4 border-b border-zinc-800">
-                                    <div>
-                                        <h3 className="text-xl font-bold text-white">Filters</h3>
-                                        <p className="text-sm text-zinc-500">{totalCount} items available</p>
-                                    </div>
-                                    <button
-                                        onClick={() => setMobileSheetOpen(false)}
-                                        className="p-2 rounded-full bg-zinc-800 text-zinc-400"
-                                    >
-                                        <X className="w-5 h-5" />
-                                    </button>
-                                </div>
-
-                                {/* Scrollable Content */}
-                                <div className="flex-1 overflow-y-auto px-6 py-4 space-y-6">
-                                    {/* Search */}
-                                    <div>
-                                        <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3 block">
-                                            Search
-                                        </label>
-                                        <div className="relative">
-                                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
-                                            <input
-                                                type="text"
-                                                value={searchQuery}
-                                                onChange={(e) => onSearchChange(e.target.value)}
-                                                placeholder="Search equipment..."
-                                                className="w-full pl-12 pr-4 py-3.5 bg-zinc-800 border border-zinc-700 rounded-2xl text-base focus:outline-none focus:border-red-500 text-white placeholder-zinc-500"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    {/* Category */}
-                                    <div>
-                                        <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3 block">
-                                            Category
-                                        </label>
-                                        <div className="grid grid-cols-3 gap-2">
+                                {/* Category */}
+                                <div>
+                                    <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3 block">
+                                        Category
+                                    </label>
+                                    <div className="grid grid-cols-3 gap-2">
+                                        <MobileCategoryButton
+                                            label="All"
+                                            icon={Package}
+                                            active={selectedCategory === null}
+                                            onClick={() => onCategoryChange(null)}
+                                        />
+                                        {categories.map(cat => (
                                             <MobileCategoryButton
-                                                label="All"
-                                                icon={Package}
-                                                active={selectedCategory === null}
-                                                onClick={() => onCategoryChange(null)}
+                                                key={cat.id}
+                                                label={cat.name}
+                                                icon={getCategoryIcon(cat.slug)}
+                                                count={cat.productCount}
+                                                active={selectedCategory === cat.slug}
+                                                onClick={() => onCategoryChange(cat.slug)}
                                             />
-                                            {categories.map(cat => (
-                                                <MobileCategoryButton
-                                                    key={cat.id}
-                                                    label={cat.name}
-                                                    icon={getCategoryIcon(cat.slug)}
-                                                    count={cat.productCount}
-                                                    active={selectedCategory === cat.slug}
-                                                    onClick={() => onCategoryChange(cat.slug)}
-                                                />
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Brands */}
+                                {brands.length > 0 && (
+                                    <div>
+                                        <div className="flex items-center justify-between mb-3">
+                                            <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">
+                                                Brand
+                                            </label>
+                                            {selectedBrands.length > 0 && (
+                                                <button
+                                                    onClick={() => onBrandsChange([])}
+                                                    className="text-xs text-zinc-500 hover:text-white"
+                                                >
+                                                    Clear
+                                                </button>
+                                            )}
+                                        </div>
+                                        <div className="flex flex-wrap gap-2">
+                                            {brands.map(brand => (
+                                                <button
+                                                    key={brand}
+                                                    onClick={() => onBrandToggle(brand)}
+                                                    className={cn(
+                                                        "px-4 py-2.5 rounded-xl text-sm font-medium transition-all",
+                                                        selectedBrands.includes(brand)
+                                                            ? "bg-emerald-700 text-white"
+                                                            : "bg-zinc-800 text-zinc-300 border border-zinc-700"
+                                                    )}
+                                                >
+                                                    {brand}
+                                                </button>
                                             ))}
                                         </div>
                                     </div>
+                                )}
 
-                                    {/* Brands */}
-                                    {brands.length > 0 && (
-                                        <div>
-                                            <div className="flex items-center justify-between mb-3">
-                                                <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">
-                                                    Brand
-                                                </label>
-                                                {selectedBrands.length > 0 && (
-                                                    <button
-                                                        onClick={() => onBrandsChange([])}
-                                                        className="text-xs text-zinc-500 hover:text-white"
-                                                    >
-                                                        Clear
-                                                    </button>
-                                                )}
-                                            </div>
-                                            <div className="flex flex-wrap gap-2">
-                                                {brands.map(brand => (
-                                                    <button
-                                                        key={brand}
-                                                        onClick={() => onBrandToggle(brand)}
-                                                        className={cn(
-                                                            "px-4 py-2.5 rounded-xl text-sm font-medium transition-all",
-                                                            selectedBrands.includes(brand)
-                                                                ? "bg-emerald-700 text-white"
-                                                                : "bg-zinc-800 text-zinc-300 border border-zinc-700"
-                                                        )}
-                                                    >
-                                                        {brand}
-                                                    </button>
-                                                ))}
-                                            </div>
+                                {/* Types */}
+                                {types.length > 0 && (
+                                    <div>
+                                        <div className="flex items-center justify-between mb-3">
+                                            <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">
+                                                Type
+                                            </label>
+                                            {selectedTypes.length > 0 && (
+                                                <button
+                                                    onClick={() => onTypesChange([])}
+                                                    className="text-xs text-zinc-500 hover:text-white"
+                                                >
+                                                    Clear
+                                                </button>
+                                            )}
                                         </div>
-                                    )}
-
-                                    {/* Types */}
-                                    {types.length > 0 && (
-                                        <div>
-                                            <div className="flex items-center justify-between mb-3">
-                                                <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">
-                                                    Type
-                                                </label>
-                                                {selectedTypes.length > 0 && (
-                                                    <button
-                                                        onClick={() => onTypesChange([])}
-                                                        className="text-xs text-zinc-500 hover:text-white"
-                                                    >
-                                                        Clear
-                                                    </button>
-                                                )}
-                                            </div>
-                                            <div className="flex flex-wrap gap-2">
-                                                {types.map(type => (
-                                                    <button
-                                                        key={type}
-                                                        onClick={() => onTypeToggle(type)}
-                                                        className={cn(
-                                                            "px-4 py-2.5 rounded-xl text-sm font-medium transition-all",
-                                                            selectedTypes.includes(type)
-                                                                ? "bg-blue-700 text-white"
-                                                                : "bg-zinc-800 text-zinc-300 border border-zinc-700"
-                                                        )}
-                                                    >
-                                                        {type}
-                                                    </button>
-                                                ))}
-                                            </div>
+                                        <div className="flex flex-wrap gap-2">
+                                            {types.map(type => (
+                                                <button
+                                                    key={type}
+                                                    onClick={() => onTypeToggle(type)}
+                                                    className={cn(
+                                                        "px-4 py-2.5 rounded-xl text-sm font-medium transition-all",
+                                                        selectedTypes.includes(type)
+                                                            ? "bg-blue-700 text-white"
+                                                            : "bg-zinc-800 text-zinc-300 border border-zinc-700"
+                                                    )}
+                                                >
+                                                    {type}
+                                                </button>
+                                            ))}
                                         </div>
-                                    )}
+                                    </div>
+                                )}
 
-                                    {/* Mobile Mounts */}
-                                    {mounts.length > 0 && onMountToggle && (
-                                        <div>
-                                            <div className="flex items-center justify-between mb-3">
-                                                <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Mount</label>
-                                                {selectedMounts.length > 0 && onMountsChange && (
-                                                    <button onClick={() => onMountsChange([])} className="text-xs text-zinc-500 hover:text-white">Clear</button>
-                                                )}
-                                            </div>
-                                            <div className="flex flex-wrap gap-2">
-                                                {mounts.map(mount => (
-                                                    <button
-                                                        key={mount}
-                                                        onClick={() => onMountToggle(mount)}
-                                                        className={cn(
-                                                            "px-4 py-2.5 rounded-xl text-sm font-medium transition-all",
-                                                            selectedMounts.includes(mount) ? "bg-purple-700 text-white" : "bg-zinc-800 text-zinc-300 border border-zinc-700"
-                                                        )}
-                                                    >
-                                                        {mount}
-                                                    </button>
-                                                ))}
-                                            </div>
+                                {/* Mobile Mounts */}
+                                {mounts.length > 0 && onMountToggle && (
+                                    <div>
+                                        <div className="flex items-center justify-between mb-3">
+                                            <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Mount</label>
+                                            {selectedMounts.length > 0 && onMountsChange && (
+                                                <button onClick={() => onMountsChange([])} className="text-xs text-zinc-500 hover:text-white">Clear</button>
+                                            )}
                                         </div>
-                                    )}
-
-                                    {/* Mobile Sensors */}
-                                    {sensorSizes.length > 0 && onSensorToggle && (
-                                        <div>
-                                            <div className="flex items-center justify-between mb-3">
-                                                <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Sensor</label>
-                                                {selectedSensorSizes.length > 0 && onSensorsChange && (
-                                                    <button onClick={() => onSensorsChange([])} className="text-xs text-zinc-500 hover:text-white">Clear</button>
-                                                )}
-                                            </div>
-                                            <div className="flex flex-wrap gap-2">
-                                                {sensorSizes.map(size => (
-                                                    <button
-                                                        key={size}
-                                                        onClick={() => onSensorToggle(size)}
-                                                        className={cn(
-                                                            "px-4 py-2.5 rounded-xl text-sm font-medium transition-all",
-                                                            selectedSensorSizes.includes(size) ? "bg-amber-700 text-white" : "bg-zinc-800 text-zinc-300 border border-zinc-700"
-                                                        )}
-                                                    >
-                                                        {size}
-                                                    </button>
-                                                ))}
-                                            </div>
+                                        <div className="flex flex-wrap gap-2">
+                                            {mounts.map(mount => (
+                                                <button
+                                                    key={mount}
+                                                    onClick={() => onMountToggle(mount)}
+                                                    className={cn(
+                                                        "px-4 py-2.5 rounded-xl text-sm font-medium transition-all",
+                                                        selectedMounts.includes(mount) ? "bg-purple-700 text-white" : "bg-zinc-800 text-zinc-300 border border-zinc-700"
+                                                    )}
+                                                >
+                                                    {mount}
+                                                </button>
+                                            ))}
                                         </div>
-                                    )}
+                                    </div>
+                                )}
 
-                                    {/* Mobile Resolutions */}
-                                    {resolutions.length > 0 && onResolutionToggle && (
-                                        <div>
-                                            <div className="flex items-center justify-between mb-3">
-                                                <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Resolution</label>
-                                                {selectedResolutions.length > 0 && onResolutionsChange && (
-                                                    <button onClick={() => onResolutionsChange([])} className="text-xs text-zinc-500 hover:text-white">Clear</button>
-                                                )}
-                                            </div>
-                                            <div className="flex flex-wrap gap-2">
-                                                {resolutions.map(res => (
-                                                    <button
-                                                        key={res}
-                                                        onClick={() => onResolutionToggle(res)}
-                                                        className={cn(
-                                                            "px-4 py-2.5 rounded-xl text-sm font-medium transition-all",
-                                                            selectedResolutions.includes(res) ? "bg-red-700 text-white" : "bg-zinc-800 text-zinc-300 border border-zinc-700"
-                                                        )}
-                                                    >
-                                                        {res}
-                                                    </button>
-                                                ))}
-                                            </div>
+                                {/* Mobile Sensors */}
+                                {sensorSizes.length > 0 && onSensorToggle && (
+                                    <div>
+                                        <div className="flex items-center justify-between mb-3">
+                                            <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Sensor</label>
+                                            {selectedSensorSizes.length > 0 && onSensorsChange && (
+                                                <button onClick={() => onSensorsChange([])} className="text-xs text-zinc-500 hover:text-white">Clear</button>
+                                            )}
                                         </div>
-                                    )}
-                                </div>
+                                        <div className="flex flex-wrap gap-2">
+                                            {sensorSizes.map(size => (
+                                                <button
+                                                    key={size}
+                                                    onClick={() => onSensorToggle(size)}
+                                                    className={cn(
+                                                        "px-4 py-2.5 rounded-xl text-sm font-medium transition-all",
+                                                        selectedSensorSizes.includes(size) ? "bg-amber-700 text-white" : "bg-zinc-800 text-zinc-300 border border-zinc-700"
+                                                    )}
+                                                >
+                                                    {size}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
 
-                                {/* Footer Actions */}
-                                <div className="p-6 border-t border-zinc-800 bg-zinc-900 space-y-3">
+                                {/* Mobile Resolutions */}
+                                {resolutions.length > 0 && onResolutionToggle && (
+                                    <div>
+                                        <div className="flex items-center justify-between mb-3">
+                                            <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Resolution</label>
+                                            {selectedResolutions.length > 0 && onResolutionsChange && (
+                                                <button onClick={() => onResolutionsChange([])} className="text-xs text-zinc-500 hover:text-white">Clear</button>
+                                            )}
+                                        </div>
+                                        <div className="flex flex-wrap gap-2">
+                                            {resolutions.map(res => (
+                                                <button
+                                                    key={res}
+                                                    onClick={() => onResolutionToggle(res)}
+                                                    className={cn(
+                                                        "px-4 py-2.5 rounded-xl text-sm font-medium transition-all",
+                                                        selectedResolutions.includes(res) ? "bg-red-700 text-white" : "bg-zinc-800 text-zinc-300 border border-zinc-700"
+                                                    )}
+                                                >
+                                                    {res}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Footer Actions */}
+                            <div className="p-6 border-t border-zinc-800 bg-zinc-900 space-y-3">
+                                <button
+                                    onClick={() => setMobileSheetOpen(false)}
+                                    className="w-full py-4 bg-red-700 text-white font-bold rounded-2xl text-lg"
+                                >
+                                    Show {totalCount} Results
+                                </button>
+                                {activeFilterCount > 0 && (
                                     <button
-                                        onClick={() => setMobileSheetOpen(false)}
-                                        className="w-full py-4 bg-red-700 text-white font-bold rounded-2xl text-lg"
+                                        onClick={clearAllFilters}
+                                        className="w-full py-3 bg-zinc-800 text-zinc-300 font-medium rounded-2xl"
                                     >
-                                        Show {totalCount} Results
+                                        Clear All Filters
                                     </button>
-                                    {activeFilterCount > 0 && (
-                                        <button
-                                            onClick={clearAllFilters}
-                                            className="w-full py-3 bg-zinc-800 text-zinc-300 font-medium rounded-2xl"
-                                        >
-                                            Clear All Filters
-                                        </button>
-                                    )}
-                                </div>
-                            </motion.div>
-                        </>
-                    )}
-                </AnimatePresence>
-            </div>
+                                )}
+                            </div>
+                        </motion.div>
+                    </>
+                )}
+            </AnimatePresence>
+
         </>
     )
 }
