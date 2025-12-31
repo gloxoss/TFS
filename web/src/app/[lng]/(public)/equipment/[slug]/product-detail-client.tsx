@@ -20,7 +20,7 @@
  */
 'use client'
 
-import { useState, useCallback, useEffect, useRef } from 'react'
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -41,7 +41,8 @@ import {
   Minus,
   ExternalLink,
   Info,
-  Trash2
+  Trash2,
+  ChevronRight
 } from 'lucide-react'
 import { Product } from '@/services/products/types'
 import { ResolvedKit } from '@/types/commerce'
@@ -332,6 +333,7 @@ export interface SlotDisplayData {
     slug?: string
     category?: string
     imageUrl?: string
+    variants?: { id: string; name: string; slug: string }[]
   }[]
   selectedIds: string[]
 }
@@ -352,7 +354,7 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
   const addToast = useUIStore((state) => state.addToast)
 
   // Kit Store Hook
-  const { selections, setSelections, updateSlotSelection, clearSelections, viewPreference, setViewPreference } = useKitStore()
+  const { selections, setSelections, updateSlotSelection, updateSlotVariantSelection, clearSelections, viewPreference, setViewPreference, getVariantSelections } = useKitStore()
 
   // Get selections for this specific product or empty object
   const kitSelections = selections[product.id] || {}
@@ -374,6 +376,21 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
 
   // Slot editing modal state
   const [editingSlot, setEditingSlot] = useState<string | null>(null)
+
+  // Selected variant options state (for products with variantOptions like lighting with wattage selection)
+  const [selectedVariantOptions, setSelectedVariantOptions] = useState<Record<string, string>>(() => {
+    // Initialize with first option of each variant type
+    if (product.variantOptions) {
+      const initial: Record<string, string> = {}
+      Object.entries(product.variantOptions).forEach(([key, values]) => {
+        if (values.length > 0) {
+          initial[key] = values[0]
+        }
+      })
+      return initial
+    }
+    return {}
+  })
 
   // Check for kit on mount
   useEffect(() => {
@@ -415,12 +432,22 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
 
     const placeholderDates = { start: '', end: '' }
 
-    // 1. Add the MAIN PRODUCT (Camera Body)
-    // We add it first as the "anchor" of the kit
-    addItem(product, quantity, placeholderDates)
-
     // Use stored selections
     const selectionsToUse = resolvedKit ? kitSelections : (useMockKit ? mockSelections : undefined)
+    const variantSelectionsToUse = resolvedKit ? getVariantSelections(product.id) : undefined
+
+    // 1. Add the MAIN PRODUCT (Camera Body)
+    // We add it first as the "anchor" of the kit
+    // Pass kitSelections to link accessories if it's a kit, and pass selected variants for configurable products
+    addItem(
+      product,
+      quantity,
+      placeholderDates,
+      selectionsToUse,
+      undefined, // kitDetails
+      selectedVariantOptions,
+      variantSelectionsToUse
+    )
 
     if (resolvedKit && selectionsToUse) {
       // REAL KIT: Iterate through all slots and find selected items
@@ -443,7 +470,8 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
             // Add accessory as individual item
             // Multiply by main kit quantity (e.g. 2 Cameras -> 2 sets of accessories)
             const totalQuantity = count * quantity
-            addItem(itemProduct, totalQuantity, placeholderDates)
+            const itemVariants = resolvedKit ? getVariantSelections(product.id)?.[slot.slotName]?.[id] : undefined
+            addItem(itemProduct, totalQuantity, placeholderDates, undefined, undefined, itemVariants)
           }
         })
       })
@@ -514,7 +542,8 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
           name: product.name,
           slug: product.slug,
           category: product.category?.name,
-          imageUrl: product.imageUrl
+          imageUrl: product.imageUrl,
+          variantOptions: product.variantOptions
         })),
         // Read from STORE selections
         selectedIds: kitSelections[slot.slotName] || [], // Default to empty if logic hasn't run yet
@@ -555,15 +584,22 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
   }, [resolvedKit, useMockKit])
 
   // Handle slot selection update VIA STORE
-  const handleSlotUpdate = useCallback((slotName: string, selectedIds: string[]) => {
+  const handleSlotUpdate = useCallback((slotName: string, selectedIds: string[], variants?: Record<string, Record<string, string>>) => {
     if (resolvedKit) {
       // Update global store
       updateSlotSelection(product.id, slotName, selectedIds)
+
+      // Update variant store if provided
+      if (variants) {
+        Object.entries(variants).forEach(([itemId, itemVariants]) => {
+          updateSlotVariantSelection(product.id, slotName, itemId, itemVariants)
+        })
+      }
     } else if (useMockKit) {
       setMockSelections(prev => ({ ...prev, [slotName]: selectedIds }))
     }
     setEditingSlot(null)
-  }, [resolvedKit, useMockKit, product.id, updateSlotSelection])
+  }, [resolvedKit, useMockKit, product.id, updateSlotSelection, updateSlotVariantSelection])
 
   // Navigation Confirmation State
   const { skipNavigationConfirm, setSkipNavigationConfirm } = useKitStore()
@@ -777,6 +813,71 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
                     </div>
                   </motion.div>
                 </motion.div>
+
+                {/* Variant Options Selector */}
+                {product.variantOptions && Object.keys(product.variantOptions).length > 0 && (
+                  <motion.div
+                    variants={fadeInBlurFast}
+                    className="mb-8 p-4 bg-zinc-900/30 rounded-xl border border-zinc-800"
+                  >
+                    <h3 className="text-sm font-medium text-zinc-400 uppercase tracking-wider mb-3">
+                      Select Options
+                    </h3>
+                    <div className="space-y-3">
+                      {Object.entries(product.variantOptions).map(([optionKey, values]) => (
+                        <div key={optionKey} className="flex items-center gap-3">
+                          <label className="text-sm text-zinc-400 capitalize min-w-[80px]">
+                            {optionKey.replace(/_/g, ' ')}:
+                          </label>
+                          <select
+                            value={selectedVariantOptions[optionKey] || values[0]}
+                            onChange={(e) => setSelectedVariantOptions(prev => ({
+                              ...prev,
+                              [optionKey]: e.target.value
+                            }))}
+                            className="flex-1 px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 focus:outline-none focus:ring-2 focus:ring-amber-500/50 cursor-pointer"
+                          >
+                            {values.map((value) => (
+                              <option key={value} value={value}>
+                                {value}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* Quantity Selector - Moved from bottom bar */}
+                <motion.div
+                  variants={fadeInBlurFast}
+                  className="mt-6 flex items-center justify-between bg-zinc-900/50 rounded-xl border border-zinc-800 p-4"
+                >
+                  <span className="text-sm font-medium text-zinc-300">Quantity</span>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                      className="w-10 h-10 flex items-center justify-center bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 hover:bg-zinc-700 hover:text-white transition-colors"
+                    >
+                      <Minus className="w-4 h-4" />
+                    </button>
+                    <input
+                      type="number"
+                      value={quantity}
+                      min={1}
+                      max={99}
+                      onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                      className="w-12 bg-transparent text-center text-lg font-bold text-white focus:outline-none"
+                    />
+                    <button
+                      onClick={() => setQuantity((q) => Math.min(99, q + 1))}
+                      className="w-10 h-10 flex items-center justify-center bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 hover:bg-zinc-700 hover:text-white transition-colors"
+                    >
+                      <Plus className="w-4 h-4" />
+                    </button>
+                  </div>
+                </motion.div>
               </motion.div>
             </motion.div>
           </div>
@@ -952,6 +1053,22 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
                                             <p className="text-sm font-medium text-zinc-400 group-hover:text-white transition-colors line-clamp-1">
                                               {itemDetails.name}
                                             </p>
+                                            {/* Variant Display (Grid View) */}
+                                            {(() => {
+                                              const slotVariants = getVariantSelections(product.id)?.[slot.slotName]?.[itemDetails.id]
+                                              if (slotVariants) {
+                                                return (
+                                                  <div className="flex flex-wrap gap-1 mt-1">
+                                                    {Object.entries(slotVariants).map(([k, v]) => (
+                                                      <span key={k} className="text-[10px] text-zinc-500 bg-zinc-950/50 px-1 rounded border border-zinc-800/50">
+                                                        {v}
+                                                      </span>
+                                                    ))}
+                                                  </div>
+                                                )
+                                              }
+                                              return null
+                                            })()}
                                           </div>
                                         </div>
                                       </div>
@@ -1007,6 +1124,23 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
                                               <p className="text-sm font-medium text-zinc-200 truncate group-hover:text-amber-400 transition-colors">
                                                 {itemDetails.name}
                                               </p>
+
+                                              {/* Variant Display (List View) */}
+                                              {(() => {
+                                                const slotVariants = getVariantSelections(product.id)?.[slot.slotName]?.[id]
+                                                if (slotVariants) {
+                                                  return (
+                                                    <div className="flex flex-wrap gap-2 mt-0.5">
+                                                      {Object.entries(slotVariants).map(([k, v]) => (
+                                                        <span key={k} className="text-xs text-zinc-400 bg-zinc-900/50 px-1.5 rounded border border-zinc-800">
+                                                          {v}
+                                                        </span>
+                                                      ))}
+                                                    </div>
+                                                  )
+                                                }
+                                                return null
+                                              })()}
                                               <ExternalLink className="w-3 h-3 text-zinc-600 group-hover:text-amber-500 opacity-0 group-hover:opacity-100 transition-all" />
                                             </div>
                                             {categoryName && (
@@ -1088,7 +1222,8 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
                 )}
               </div>
             </motion.div>
-          )}
+          )
+          }
 
           {/* Add to Quote Section - Sticky Bottom on Mobile */}
           <motion.div
@@ -1113,32 +1248,7 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
                   </p>
                 </div>
 
-                {/* Center: Quantity */}
-                <div className="flex items-center gap-4">
-                  <span className="text-sm text-zinc-400">Quantity:</span>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                      className="w-9 h-9 flex items-center justify-center bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 hover:bg-zinc-700 transition-colors"
-                    >
-                      −
-                    </button>
-                    <input
-                      type="number"
-                      value={quantity}
-                      min={1}
-                      max={99}
-                      onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                      className="w-14 px-2 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-center text-zinc-100 focus:outline-none focus:ring-2 focus:ring-red-500/50"
-                    />
-                    <button
-                      onClick={() => setQuantity((q) => Math.min(99, q + 1))}
-                      className="w-9 h-9 flex items-center justify-center bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 hover:bg-zinc-700 transition-colors"
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
+
 
                 {/* Right: Button */}
                 <button
@@ -1177,12 +1287,13 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
                 slotName={editingSlot}
                 slotData={getSlotData().find(s => s.slotName === editingSlot)!}
                 onClose={() => setEditingSlot(null)}
-                onSave={(selectedIds) => handleSlotUpdate(editingSlot, selectedIds)}
+                onSave={(selectedIds, variants) => handleSlotUpdate(editingSlot, selectedIds, variants)}
+                product={product}
               />
             )}
           </AnimatePresence>
-        </motion.div>
-      </AnimatePresence>
+        </motion.div >
+      </AnimatePresence >
     )
   }
 
@@ -1310,6 +1421,38 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
                 </div>
               )}
 
+              {/* Variant Options Selector - for products with configurable options (e.g., wattage) */}
+              {product.variantOptions && Object.keys(product.variantOptions).length > 0 && (
+                <div className="mb-8 p-4 bg-zinc-900/30 rounded-xl border border-zinc-800">
+                  <h3 className="text-xs font-medium text-zinc-500 uppercase tracking-widest mb-3">
+                    Select Options
+                  </h3>
+                  <div className="space-y-3">
+                    {Object.entries(product.variantOptions).map(([optionKey, values]) => (
+                      <div key={optionKey} className="flex items-center gap-3">
+                        <label className="text-sm text-zinc-400 capitalize min-w-[80px]">
+                          {optionKey.replace(/_/g, ' ')}:
+                        </label>
+                        <select
+                          value={selectedVariantOptions[optionKey] || values[0]}
+                          onChange={(e) => setSelectedVariantOptions(prev => ({
+                            ...prev,
+                            [optionKey]: e.target.value
+                          }))}
+                          className="flex-1 px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 focus:outline-none focus:ring-2 focus:ring-amber-500/50 cursor-pointer"
+                        >
+                          {values.map((value) => (
+                            <option key={value} value={value}>
+                              {value}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Add to Quote */}
               <div className="bg-zinc-900/50 rounded-xl border border-zinc-800 p-6 mt-auto">
                 <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
@@ -1417,20 +1560,28 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
 
 interface SlotEditModalProps {
   slotName: string
-  slotData: {
-    slotName: string
-    selectionMode: 'single' | 'multi'
-    items: { id: string; name: string; category?: string; imageUrl?: string }[]
-    selectedIds: string[]
-  }
+  slotData: SlotDisplayData
   onClose: () => void
-  onSave: (selectedIds: string[]) => void
+  onSave: (selectedIds: string[], variants?: Record<string, Record<string, string>>) => void
+  product: Product // Assuming Product type is defined elsewhere
 }
 
-function SlotEditModal({ slotName, slotData, onClose, onSave }: SlotEditModalProps) {
-  const [localSelection, setLocalSelection] = useState<string[]>(slotData.selectedIds)
+function SlotEditModal({ slotName, slotData, onClose, onSave, product }: SlotEditModalProps) {
+  // Local selection state (for pending save)
+  const [localSelection, setLocalSelection] = useState<string[]>(slotData.selectedIds || [])
+
+  // Local variant selection state: itemId -> variantKey -> value
+  // Initialize with existing selections from store
+  const { getVariantSelections } = useKitStore()
+  const existingVariants = getVariantSelections(product.id)?.[slotName] || {}
+  const [localVariants, setLocalVariants] = useState<Record<string, Record<string, string>>>(existingVariants)
+
   const [searchQuery, setSearchQuery] = useState('')
+  // Track which dropdown is open (itemId:key format)
+  const [openDropdownKey, setOpenDropdownKey] = useState<string | null>(null)
+  // View mode
   const [modalViewMode, setModalViewMode] = useState<'grid' | 'list'>('grid')
+  const [activeVariantGroup, setActiveVariantGroup] = useState<{ main: any, variants: any[] } | null>(null)
   const modalContentRef = useRef<HTMLDivElement>(null)
 
   // Handle wheel events manually to ensure scroll works in modal
@@ -1442,8 +1593,26 @@ function SlotEditModal({ slotName, slotData, onClose, onSave }: SlotEditModalPro
     }
   }
 
+  // GROUPING LOGIC: Combine variants into single entries
+  const groupedItems = useMemo(() => {
+    const processedIds = new Set<string>()
+    const groups: any[] = []
+
+    // Map for quick lookup
+    // Simplified logic: No more relation-based grouping. Every item is independent.
+    // Variant options are handled internally by the item.
+    slotData.items.forEach(item => {
+      groups.push({ ...item, type: 'single' })
+    })
+
+    return groups
+  }, [slotData.items])
+
+  // items to display: either the main list (grouped) or the active variant group
+  const displayItems = activeVariantGroup ? activeVariantGroup.variants : groupedItems
+
   // Filter items based on search
-  const filteredItems = slotData.items.filter(item => {
+  const filteredItems = displayItems.filter(item => {
     if (!searchQuery) return true
     const query = searchQuery.toLowerCase()
     return (
@@ -1454,6 +1623,11 @@ function SlotEditModal({ slotName, slotData, onClose, onSave }: SlotEditModalPro
 
   // Helper to get count of an item in selection
   const getItemCount = (itemId: string) => localSelection.filter(id => id === itemId).length
+
+  // Helper for Group Count (sum of all variants in group)
+  const getGroupCount = (variants: any[]) => {
+    return variants.reduce((sum, v) => sum + getItemCount(v.id), 0)
+  }
 
   // Helper to change quantity
   const handleQuantity = (itemId: string, delta: number) => {
@@ -1475,6 +1649,16 @@ function SlotEditModal({ slotName, slotData, onClose, onSave }: SlotEditModalPro
     })
   }
 
+  const handleVariantChange = (itemId: string, key: string, value: string) => {
+    setLocalVariants(prev => ({
+      ...prev,
+      [itemId]: {
+        ...(prev[itemId] || {}),
+        [key]: value
+      }
+    }))
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -1492,11 +1676,23 @@ function SlotEditModal({ slotName, slotData, onClose, onSave }: SlotEditModalPro
       >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-800 flex-shrink-0">
-          <div>
-            <h3 className="text-xl font-semibold text-white">{slotName}</h3>
-            <p className="text-sm text-zinc-500">
-              {slotData.selectionMode === 'single' ? 'Select one item' : 'Adjust quantities'} • {localSelection.length} total items
-            </p>
+          <div className="flex items-center gap-3">
+            {activeVariantGroup && (
+              <button
+                onClick={() => setActiveVariantGroup(null)}
+                className="p-1 -ml-2 rounded-full hover:bg-zinc-800 text-zinc-400 hover:text-white transition-colors"
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </button>
+            )}
+            <div>
+              <h3 className="text-xl font-semibold text-white">
+                {activeVariantGroup ? activeVariantGroup.main.name : slotName}
+              </h3>
+              <p className="text-sm text-zinc-500">
+                {activeVariantGroup ? 'Select specific model' : (slotData.selectionMode === 'single' ? 'Select one item' : 'Adjust quantities')} • {localSelection.length} selected
+              </p>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             {/* View Toggle */}
@@ -1571,22 +1767,30 @@ function SlotEditModal({ slotName, slotData, onClose, onSave }: SlotEditModalPro
           ) : modalViewMode === 'grid' ? (
             /* Grid View */
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {filteredItems.map((item) => {
-                const count = getItemCount(item.id)
+              {filteredItems.map((item: any) => {
+                const isGroup = item.type === 'group'
+                const count = isGroup ? getGroupCount(item.variants) : getItemCount(item.id)
                 const isSelected = count > 0
+
                 return (
                   <div
                     key={item.id}
                     className={cn(
-                      'group relative rounded-xl border overflow-hidden transition-all text-left flex flex-col',
+                      'group relative rounded-xl border transition-all text-left flex flex-col',
                       isSelected
                         ? 'bg-amber-500/10 border-amber-500/50 ring-1 ring-amber-500/30'
                         : 'bg-zinc-800/30 border-zinc-700/50 hover:bg-zinc-800/50 hover:border-zinc-600'
                     )}
                   >
-                    {/* Image Area - Click to Increment or Select */}
+                    {/* Image Area */}
                     <button
-                      onClick={() => handleQuantity(item.id, 1)}
+                      onClick={() => {
+                        if (isGroup) {
+                          setActiveVariantGroup({ main: item.mainItem, variants: item.variants })
+                        } else {
+                          handleQuantity(item.id, 1)
+                        }
+                      }}
                       className="relative w-full aspect-square bg-zinc-900 block"
                     >
                       {item.imageUrl ? (
@@ -1606,153 +1810,208 @@ function SlotEditModal({ slotName, slotData, onClose, onSave }: SlotEditModalPro
                         </div>
                       )}
 
-                      {/* Selection Badge if Single Mode or just Indicator */}
-                      {isSelected && slotData.selectionMode === 'single' && (
-                        <div className="absolute top-2 right-2 w-7 h-7 rounded-full bg-amber-500 flex items-center justify-center">
-                          <Check className="w-4 h-4 text-zinc-900" />
+                      {/* Group Indicator Overlay */}
+                      {isGroup && (
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-2">
+                          <span className="text-xs font-medium text-white bg-zinc-900/50 backdrop-blur px-2 py-1 rounded-full border border-zinc-700">
+                            See Options
+                          </span>
                         </div>
                       )}
                     </button>
 
-                    {/* Info Area & Controls */}
-                    <div className="p-3 flex items-end justify-between gap-2 mt-auto">
-                      <div className="min-w-0 flex-1">
+                    {/* Info Area - Vertical Stack */}
+                    <div className="p-3 flex flex-col gap-3 mt-auto">
+                      {/* Product Name & Category */}
+                      <div>
                         <p className={cn(
-                          "text-sm font-medium line-clamp-2 leading-tight transition-colors",
+                          "text-sm font-medium line-clamp-2 leading-snug transition-colors",
                           isSelected ? "text-white" : "text-zinc-300"
                         )}>
                           {item.name}
                         </p>
                         {item.category && (
-                          <p className="text-xs text-zinc-500 mt-1">{item.category}</p>
+                          <p className="text-xs text-zinc-500 mt-0.5">{item.category}</p>
                         )}
                       </div>
 
-                      {/* Quantity Controls (Only Multi) */}
+                      {/* Variant Selector - Full Width Row */}
+                      {isSelected && item.variantOptions && (
+                        <div className="border-t border-zinc-800 pt-3 space-y-2">
+                          {Object.entries(item.variantOptions).map(([key, options]) => (
+                            <div key={key} className="flex flex-col gap-1.5">
+                              <label className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">
+                                {key.replace(/_/g, ' ')}
+                              </label>
+                              <div className="relative w-full">
+                                {/* Custom Dropdown Trigger */}
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    const dropdownId = `${item.id}:${key}`
+                                    setOpenDropdownKey(openDropdownKey === dropdownId ? null : dropdownId)
+                                  }}
+                                  className="flex items-center justify-between w-full h-10 bg-zinc-800/50 border border-zinc-700 rounded-lg px-3 transition-all hover:border-amber-500/50 hover:bg-zinc-800 cursor-pointer"
+                                >
+                                  <span className="text-sm font-medium text-zinc-100">
+                                    {localVariants[item.id]?.[key] || (Array.isArray(options) ? options[0] : 'Select')}
+                                  </span>
+                                  <div className={cn(
+                                    "text-zinc-400 transition-all",
+                                    openDropdownKey === `${item.id}:${key}` ? "rotate-180 text-amber-500" : ""
+                                  )}>
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                  </div>
+                                </button>
+
+                                {/* Custom Dropdown Menu */}
+                                {openDropdownKey === `${item.id}:${key}` && (
+                                  <div className="absolute z-50 w-full mt-1 bg-zinc-900 border border-zinc-700 rounded-lg shadow-xl overflow-hidden">
+                                    {Array.isArray(options) && options.map((opt: string) => (
+                                      <button
+                                        key={opt}
+                                        type="button"
+                                        onClick={(e) => {
+                                          e.stopPropagation()
+                                          handleVariantChange(item.id, key, opt)
+                                          setOpenDropdownKey(null)
+                                        }}
+                                        className={cn(
+                                          "w-full px-3 py-2.5 text-left text-sm transition-colors",
+                                          (localVariants[item.id]?.[key] || (Array.isArray(options) ? options[0] : '')) === opt
+                                            ? "bg-amber-500/20 text-amber-400 font-medium"
+                                            : "text-zinc-300 hover:bg-zinc-800 hover:text-white"
+                                        )}
+                                      >
+                                        {opt}
+                                      </button>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Quantity Controls - Centered at Bottom */}
                       {slotData.selectionMode === 'multi' && (
-                        <div className="flex items-center gap-1 bg-zinc-900/80 rounded-lg p-0.5 border border-zinc-700">
-                          {count > 0 && (
-                            <button
-                              onClick={(e) => { e.stopPropagation(); handleQuantity(item.id, -count) }} // Remove all
-                              className="w-7 h-7 flex items-center justify-center rounded-md text-red-500 hover:bg-zinc-700 hover:text-red-400 transition-colors mr-1"
-                              title="Remove all"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </button>
-                          )}
-                          <button
-                            onClick={(e) => { e.stopPropagation(); handleQuantity(item.id, -1) }}
-                            className={cn(
-                              "w-7 h-7 flex items-center justify-center rounded-md transition-colors",
-                              count > 0 ? "text-zinc-300 hover:bg-zinc-700 hover:text-white" : "text-zinc-600 cursor-default"
+                        <div className="flex items-center justify-center pt-2 border-t border-zinc-800">
+                          <div className="flex items-center gap-1 bg-zinc-900 rounded-full p-1 border border-zinc-700">
+                            {count > 0 && (
+                              <button
+                                onClick={(e) => { e.stopPropagation(); handleQuantity(item.id, -count) }}
+                                className="w-8 h-8 flex items-center justify-center rounded-full text-red-500 hover:bg-zinc-800 hover:text-red-400 transition-colors"
+                                title="Remove all"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
                             )}
-                          >
-                            −
-                          </button>
-                          <span className={cn("w-6 text-center text-sm font-medium", count > 0 ? "text-amber-500" : "text-zinc-600")}>
-                            {count}
-                          </span>
-                          <button
-                            onClick={(e) => { e.stopPropagation(); handleQuantity(item.id, 1) }}
-                            className="w-7 h-7 flex items-center justify-center rounded-md text-zinc-300 hover:bg-zinc-700 hover:text-white transition-colors"
-                          >
-                            +
-                          </button>
+                            <button
+                              onClick={(e) => { e.stopPropagation(); handleQuantity(item.id, -1) }}
+                              className={cn(
+                                "w-8 h-8 flex items-center justify-center rounded-full transition-colors",
+                                count > 0 ? "text-zinc-300 hover:bg-zinc-800 hover:text-white" : "text-zinc-600 cursor-default"
+                              )}
+                            >
+                              <Minus className="w-4 h-4" />
+                            </button>
+                            <span className={cn("w-8 text-center text-sm font-semibold", count > 0 ? "text-amber-500" : "text-zinc-600")}>
+                              {count}
+                            </span>
+                            <button
+                              onClick={(e) => { e.stopPropagation(); handleQuantity(item.id, 1) }}
+                              className="w-8 h-8 flex items-center justify-center rounded-full text-zinc-300 hover:bg-zinc-800 hover:text-white transition-colors"
+                            >
+                              <Plus className="w-4 h-4" />
+                            </button>
+                          </div>
                         </div>
                       )}
                     </div>
                   </div>
                 )
+
               })}
             </div>
           ) : (
             /* List View */
-            <div className="space-y-2">
-              {filteredItems.map((item) => {
+            <div className="space-y-2 pb-6">
+              {filteredItems.map(item => {
+                const isSelected = localSelection.includes(item.id)
                 const count = getItemCount(item.id)
-                const isSelected = count > 0
+
                 return (
-                  <div
-                    key={item.id}
-                    className={cn(
-                      'w-full flex items-center gap-4 p-3 rounded-xl border transition-all',
-                      isSelected
-                        ? 'bg-amber-500/10 border-amber-500/50 ring-1 ring-amber-500/30'
-                        : 'bg-zinc-800/30 border-zinc-700/50 hover:bg-zinc-800/50 hover:border-zinc-600'
-                    )}
-                  >
-                    {/* Image */}
-                    <button
+                  <div key={item.id} className="bg-zinc-800/30 rounded-xl overflow-hidden border border-zinc-800">
+                    <div
+                      className={cn(
+                        "flex items-center gap-4 p-3 transition-colors cursor-pointer",
+                        isSelected ? "bg-zinc-800/80 border-amber-500/30" : "hover:bg-zinc-800/50"
+                      )}
                       onClick={() => handleQuantity(item.id, 1)}
-                      className="relative w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden bg-zinc-900"
                     >
-                      {item.imageUrl ? (
-                        <Image
-                          src={item.imageUrl}
-                          alt={item.name}
-                          fill
-                          sizes="64px"
-                          className="object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <Package className="w-6 h-6 text-zinc-700" />
-                        </div>
-                      )}
-                    </button>
-
-                    {/* Info */}
-                    <div className="flex-1 min-w-0">
-                      <p className={cn(
-                        "text-sm font-medium truncate transition-colors",
-                        isSelected ? "text-white" : "text-zinc-300"
-                      )}>
-                        {item.name}
-                      </p>
-                      {item.category && (
-                        <p className="text-xs text-zinc-500 mt-0.5">{item.category}</p>
-                      )}
-                    </div>
-
-                    {/* Quantity Controls */}
-                    {slotData.selectionMode === 'multi' ? (
-                      <div className="flex items-center gap-1 bg-zinc-900/50 rounded-lg p-1 border border-zinc-700">
-                        {count > 0 && (
-                          <button
-                            onClick={() => handleQuantity(item.id, -count)}
-                            className="w-8 h-8 flex items-center justify-center rounded-md text-red-500 hover:bg-zinc-700 hover:text-red-400 transition-colors mr-1"
-                            title="Remove all"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
+                      {/* Image */}
+                      <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-zinc-900 flex-shrink-0">
+                        {item.imageUrl ? (
+                          <Image src={item.imageUrl} alt={item.name} fill className="object-cover" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <Package className="w-5 h-5 text-zinc-700" />
+                          </div>
                         )}
-                        <button
-                          onClick={() => handleQuantity(item.id, -1)}
-                          className={cn(
-                            "w-8 h-8 flex items-center justify-center rounded-md transition-colors",
-                            count > 0 ? "text-zinc-300 hover:bg-zinc-700" : "text-zinc-600"
-                          )}
-                        >
-                          −
-                        </button>
-                        <span className={cn("w-8 text-center text-sm font-medium", count > 0 ? "text-amber-500" : "text-zinc-600")}>
-                          {count}
-                        </span>
-                        <button
-                          onClick={() => handleQuantity(item.id, 1)}
-                          className="w-8 h-8 flex items-center justify-center rounded-md text-zinc-300 hover:bg-zinc-700 transition-colors"
-                        >
-                          +
-                        </button>
                       </div>
-                    ) : (
-                      // Single Mode - Just Checkmark
-                      isSelected && (
-                        <div className="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center flex-shrink-0">
-                          <Check className="w-5 h-5 text-zinc-900" />
-                        </div>
-                      )
-                    )}
+
+                      {/* Info */}
+                      <div className="flex-1 min-w-0">
+                        <p className={cn("text-sm font-medium truncate", isSelected ? "text-white" : "text-zinc-300")}>
+                          {item.name}
+                        </p>
+                        {item.category && <p className="text-xs text-zinc-500">{item.category}</p>}
+                      </div>
+
+                      {/* Controls */}
+                      <div className="flex items-center gap-3">
+                        {/* Variant Selector (Compact) */}
+                        {isSelected && item.variantOptions && (
+                          <div className="flex gap-2 mr-2">
+                            {Object.entries(item.variantOptions).map(([key, options]) => (
+                              <select
+                                key={key}
+                                onClick={(e) => e.stopPropagation()}
+                                onChange={(e) => handleVariantChange(item.id, key, e.target.value)}
+                                value={localVariants[item.id]?.[key] || (Array.isArray(options) ? options[0] : '')}
+                                className="bg-zinc-900 border-zinc-700 text-zinc-300 text-xs rounded p-1 max-w-[100px]"
+                              >
+                                {Array.isArray(options) && options.map((opt: string) => <option key={opt} value={opt}>{opt}</option>)}
+                              </select>
+                            ))}
+                          </div>
+                        )}
+
+                        {slotData.selectionMode === 'multi' ? (
+                          <div className="flex items-center gap-1 bg-zinc-900 rounded-lg p-0.5 border border-zinc-700" onClick={(e) => e.stopPropagation()}>
+                            <button
+                              onClick={() => handleQuantity(item.id, -1)}
+                              className={cn("w-7 h-7 flex items-center justify-center rounded-md hover:bg-zinc-800 transition-colors", count > 0 ? "text-zinc-300" : "text-zinc-600")}
+                            >
+                              <Minus className="w-3.5 h-3.5" />
+                            </button>
+                            <span className="w-8 text-center text-sm font-medium text-white">{count}</span>
+                            <button
+                              onClick={() => handleQuantity(item.id, 1)}
+                              className="w-7 h-7 flex items-center justify-center rounded-md text-zinc-300 hover:bg-zinc-800 hover:text-white transition-colors"
+                            >
+                              <Plus className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        ) : (
+                          isSelected && <Check className="w-5 h-5 text-amber-500" />
+                        )}
+                      </div>
+                    </div>
                   </div>
                 )
               })}
@@ -1761,30 +2020,19 @@ function SlotEditModal({ slotName, slotData, onClose, onSave }: SlotEditModalPro
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between gap-4 px-6 py-4 border-t border-zinc-800 bg-zinc-900/80 flex-shrink-0">
-          <p className="text-sm text-zinc-500">
-            {localSelection.length} total items selected
-          </p>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={() => setLocalSelection([])} // Clear Selection
-              className="px-4 py-2 text-sm font-medium text-red-500 hover:text-red-400 transition-colors mr-auto"
-            >
-              Clear
-            </button>
-            <button
-              onClick={() => onSave(localSelection)}
-              className="px-6 py-2.5 bg-amber-500 hover:bg-amber-400 text-zinc-900 font-semibold rounded-xl transition-colors"
-            >
-              Apply Selection
-            </button>
-          </div>
+        <div className="p-4 border-t border-zinc-800 bg-zinc-900/50 flex justify-end gap-3 flex-shrink-0">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={() => onSave(localSelection, localVariants)}
+            className="px-6 py-2 rounded-lg bg-red-600 hover:bg-red-500 text-white font-medium transition-colors"
+          >
+            Done
+          </button>
         </div>
       </motion.div>
     </motion.div>

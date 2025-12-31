@@ -43,6 +43,8 @@ export interface CartItem {
   kitTemplateId?: string
   kitSelections?: { [slotId: string]: string[] }
   kitDetails?: KitDetailItem[] // Visual snapshot of selected accessories
+  selectedVariants?: Record<string, string> // Selected options for configurable products (Main Product)
+  kitVariantSelections?: Record<string, Record<string, Record<string, string>>> // Variants for kit items
 }
 
 export interface CartState {
@@ -55,7 +57,9 @@ export interface CartState {
     quantity: number,
     dates: CartItemDates,
     kitSelections?: { [slotId: string]: string[] },
-    kitDetails?: KitDetailItem[]
+    kitDetails?: KitDetailItem[],
+    selectedVariants?: Record<string, string>,
+    kitVariantSelections?: Record<string, Record<string, Record<string, string>>>
   ) => void
   removeItem: (itemId: string) => void
   updateQuantity: (itemId: string, quantity: number) => void
@@ -92,8 +96,8 @@ export const useCartStore = create<CartState>()(
       items: [],
       globalDates: null,
 
-      addItem: (product, quantity, dates, kitSelections, kitDetails) => {
-        console.log('[CartStore] Adding item:', product.name, quantity, kitSelections)
+      addItem: (product, quantity, dates, kitSelections, kitDetails, selectedVariants, kitVariantSelections) => {
+        console.log('[CartStore] Adding item:', product.name, quantity, kitSelections, selectedVariants)
         set((state) => {
           // Check if item with same product and dates already exists
           const existingIndex = state.items.findIndex(
@@ -102,7 +106,11 @@ export const useCartStore = create<CartState>()(
               item.dates.start === dates.start &&
               item.dates.end === dates.end &&
               // Only merge if kit selections match perfectly (or both undefined)
-              JSON.stringify(item.kitSelections) === JSON.stringify(kitSelections)
+              JSON.stringify(item.kitSelections) === JSON.stringify(kitSelections) &&
+              // Only merge if selected variants match perfectly
+              JSON.stringify(item.selectedVariants) === JSON.stringify(selectedVariants) &&
+              // Only merge if kit variant selections match perfectly
+              JSON.stringify(item.kitVariantSelections) === JSON.stringify(kitVariantSelections)
           )
 
           let nextItems = [...state.items];
@@ -123,6 +131,8 @@ export const useCartStore = create<CartState>()(
               dates,
               kitSelections,
               kitDetails,
+              selectedVariants,
+              kitVariantSelections
             }
             console.log('[CartStore] Created new item:', newItem)
             nextItems = [...state.items, newItem]
@@ -140,6 +150,8 @@ export const useCartStore = create<CartState>()(
               formData.append("startDate", dates.start || '');
               formData.append("endDate", dates.end || '');
               if (kitSelections) formData.append("kitSelections", JSON.stringify(kitSelections));
+              if (selectedVariants) formData.append("selectedVariants", JSON.stringify(selectedVariants));
+              if (kitVariantSelections) formData.append("kitVariantSelections", JSON.stringify(kitVariantSelections));
               try {
                 const { addToCart } = await import('@/lib/actions/cart');
                 const result = await addToCart(formData);

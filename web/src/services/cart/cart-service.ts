@@ -92,24 +92,50 @@ export class CartService {
     for (const slot of bundleCheck.slots) {
       // Get ALL products from this category
       const categoryProducts = await this.pb.collection('equipment').getFullList({
-        filter: `category="${slot.category_id}"`
+        filter: `category="${slot.category_id}"`,
+        expand: 'variants'
       });
 
       // Map to Product objects
-      const availableOptions: Product[] = categoryProducts.map(record => ({
-        id: record.id,
-        name: record.name_en || record.name,
-        nameEn: record.name_en || record.name,
-        nameFr: record.name_fr || record.name,
-        slug: record.slug,
-        categoryId: record.category,
-        isAvailable: (record.stock_available || record.stock || 1) > 0,
-        imageUrl: record.images?.[0]
-          ? `${PB_URL}/api/files/equipment/${record.id}/${record.images[0]}`
-          : record.image
-            ? `${PB_URL}/api/files/equipment/${record.id}/${record.image}`
-            : undefined,
-      }));
+      const availableOptions: Product[] = categoryProducts.map(record => {
+        const product: Product = {
+          id: record.id,
+          name: record.name_en || record.name,
+          nameEn: record.name_en || record.name,
+          nameFr: record.name_fr || record.name,
+          slug: record.slug,
+          categoryId: record.category,
+          isAvailable: (record.stock_available || record.stock || 1) > 0,
+          imageUrl: record.images?.[0]
+            ? `${PB_URL}/api/files/equipment/${record.id}/${record.images[0]}`
+            : record.image
+              ? `${PB_URL}/api/files/equipment/${record.id}/${record.image}`
+              : undefined,
+          variantOptions: record.variant_options ? (
+            typeof record.variant_options === 'string'
+              ? JSON.parse(record.variant_options)
+              : record.variant_options
+          ) : undefined,
+        };
+
+        // Map Variants if expanded
+        if (record.expand?.variants && Array.isArray(record.expand.variants)) {
+          product.variants = record.expand.variants.map((v: any) => ({
+            id: v.id,
+            name: v.name_en || v.name,
+            nameEn: v.name_en || v.name,
+            nameFr: v.name_fr || v.name,
+            slug: v.slug,
+            categoryId: v.category,
+            isAvailable: true, // simplified for nested
+            imageUrl: v.images?.[0]
+              ? `${PB_URL}/api/files/equipment/${v.id}/${v.images[0]}`
+              : undefined
+          }));
+        }
+
+        return product;
+      });
 
       // Create KitItem objects for recommended products (for defaultItems/selectedItems)
       const recommendedIds = slot.recommended_ids || [];

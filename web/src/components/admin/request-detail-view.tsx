@@ -210,10 +210,11 @@ export default function RequestDetailView({ request, lng }: RequestDetailViewPro
                                     <tr key={idx}>
                                         <td className="px-6 py-4">
                                             <div className="text-sm font-medium text-white">{item.name}</div>
-                                            {item.kitSelections && Object.keys(item.kitSelections).length > 0 && (
+                                            {/* Selected Variant Options (e.g., "300W") */}
+                                            {item.selectedVariants && Object.keys(item.selectedVariants).length > 0 && (
                                                 <div className="mt-1 flex flex-wrap gap-1">
-                                                    {Object.entries(item.kitSelections).map(([key, val]) => (
-                                                        <span key={key} className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-zinc-800 text-zinc-400 border border-zinc-700">
+                                                    {Object.entries(item.selectedVariants).map(([key, val]) => (
+                                                        <span key={key} className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-amber-500/20 text-amber-400 border border-amber-500/30">
                                                             {val as string}
                                                         </span>
                                                     ))}

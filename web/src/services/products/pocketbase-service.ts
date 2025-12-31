@@ -103,7 +103,13 @@ function mapRecordToProduct(record: RecordModel, lang: string = 'en'): Product {
         isAvailable,
         visibility: record.visibility !== false,
         // Expose daily_rate as price for UI to handle conditionally
-        price: record.daily_rate
+        price: record.daily_rate,
+        // Variant options for configurable products (parsed from JSON)
+        variantOptions: record.variant_options ? (
+            typeof record.variant_options === 'string'
+                ? JSON.parse(record.variant_options)
+                : record.variant_options
+        ) : undefined
     }
 }
 
@@ -166,7 +172,7 @@ export class PocketBaseProductService implements IProductService {
             try {
                 const record = await this.pb.collection(EQUIPMENT_COLLECTION).getFirstListItem(
                     `slug = "${slug}"`,
-                    // { expand: 'category' }
+                    { expand: 'category' }
                 );
                 const product = mapRecordToProduct(record);
                 if (record.expand?.category) {
@@ -229,6 +235,9 @@ export class PocketBaseProductService implements IProductService {
         try {
             // Build filter string
             const filterParts: string[] = [];
+
+            // Always filter out hidden/archived products
+            filterParts.push('visibility = true');
 
             if (filters?.categorySlug) {
                 try {

@@ -37,6 +37,7 @@ interface SubmissionCartItem {
   groupId?: string
   kitTemplateId?: string
   kitSelections?: { [slotId: string]: string[] }
+  selectedVariants?: Record<string, string>
 }
 
 interface QuoteSubmissionData {
@@ -116,6 +117,7 @@ export async function submitQuote(submission: QuoteSubmissionData): Promise<Quot
       quantity: item.quantity,
       imageUrl: item.product.imageUrl,
       kitSelections: item.kitSelections,
+      selectedVariants: item.selectedVariants,
     }))
 
     // Build payload

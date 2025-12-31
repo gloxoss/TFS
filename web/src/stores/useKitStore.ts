@@ -23,9 +23,16 @@ import { persist, createJSONStorage } from 'zustand/middleware'
  */
 export type KitSelections = Record<string, string[]>
 
+/**
+ * map slot_id -> { item_id -> { variant_key -> variant_value } }
+ */
+export type KitVariantSelections = Record<string, Record<string, Record<string, string>>>
+
 export interface KitState {
     // Map parent_product_id -> { slot_id -> selected_ids[] }
     selections: Record<string, KitSelections>
+    // Map parent_product_id -> { slot_id -> { item_id -> variants } }
+    variantSelections: Record<string, KitVariantSelections>
 
     // Actions
     /**
@@ -39,6 +46,11 @@ export interface KitState {
     updateSlotSelection: (productId: string, slotId: string, selectedIds: string[]) => void
 
     /**
+     * Update a single item's variant selection within a slot
+     */
+    updateSlotVariantSelection: (productId: string, slotId: string, itemId: string, variants: Record<string, string>) => void
+
+    /**
      * Clear selections for a specific product (e.g., after adding to cart)
      */
     clearSelections: (productId: string) => void
@@ -47,6 +59,7 @@ export interface KitState {
      * Get selections for a specific product
      */
     getSelections: (productId: string) => KitSelections | undefined
+    getVariantSelections: (productId: string) => KitVariantSelections | undefined
 
     // View Preference
     viewPreference: 'grid' | 'list'
@@ -65,6 +78,7 @@ export const useKitStore = create<KitState>()(
     persist(
         (set, get) => ({
             selections: {},
+            variantSelections: {},
 
             setSelections: (productId, selections) => {
                 set((state) => ({
@@ -90,11 +104,36 @@ export const useKitStore = create<KitState>()(
                 })
             },
 
+            updateSlotVariantSelection: (productId, slotId, itemId, variants) => {
+                set((state) => {
+                    const currentProduct = state.variantSelections[productId] || {}
+                    const currentSlot = currentProduct[slotId] || {}
+
+                    return {
+                        variantSelections: {
+                            ...state.variantSelections,
+                            [productId]: {
+                                ...currentProduct,
+                                [slotId]: {
+                                    ...currentSlot,
+                                    [itemId]: variants
+                                }
+                            }
+                        }
+                    }
+                })
+            },
+
             clearSelections: (productId) => {
                 set((state) => {
                     const newSelections = { ...state.selections }
                     delete newSelections[productId]
-                    return { selections: newSelections }
+                    const newVariants = { ...state.variantSelections }
+                    delete newVariants[productId]
+                    return {
+                        selections: newSelections,
+                        variantSelections: newVariants
+                    }
                 })
             },
 
@@ -109,12 +148,16 @@ export const useKitStore = create<KitState>()(
             getSelections: (productId) => {
                 return get().selections[productId]
             },
+            getVariantSelections: (productId) => {
+                return get().variantSelections[productId]
+            },
         }),
         {
             name: 'tfs-kit-persistence', // unique name for localStorage key
             storage: createJSONStorage(() => localStorage),
             partialize: (state) => ({
                 selections: state.selections,
+                variantSelections: state.variantSelections,
                 viewPreference: state.viewPreference,
                 skipNavigationConfirm: state.skipNavigationConfirm
             }), // explicit allowlist

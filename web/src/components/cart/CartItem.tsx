@@ -95,6 +95,11 @@ export const CartItemComponent = memo(function CartItemComponent({
           <Link href={productUrl} className="text-sm font-medium text-zinc-100 hover:text-white line-clamp-1">
             {product.name}
           </Link>
+          {item.selectedVariants && Object.keys(item.selectedVariants).length > 0 && (
+            <p className="text-[10px] text-zinc-400 mt-0.5 line-clamp-1">
+              {Object.values(item.selectedVariants).join(', ')}
+            </p>
+          )}
           <p className="text-xs text-zinc-500 mt-0.5">
             {hasDates ? (
               <>{rentalDays} day{rentalDays !== 1 ? 's' : ''} × {quantity}</>
@@ -147,6 +152,15 @@ export const CartItemComponent = memo(function CartItemComponent({
           <Link href={productUrl} className="text-base font-medium text-zinc-100 hover:text-white line-clamp-2">
             {product.name}
           </Link>
+          {item.selectedVariants && Object.keys(item.selectedVariants).length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mt-1">
+              {Object.entries(item.selectedVariants).map(([key, value]) => (
+                <span key={key} className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-zinc-800 text-zinc-300 border border-zinc-700">
+                  <span className="opacity-70 mr-1 uppercase">{key}:</span> {value}
+                </span>
+              ))}
+            </div>
+          )}
           <button
             onClick={handleRemove}
             className="p-1.5 text-zinc-500 hover:text-red-400 transition-colors flex-shrink-0"

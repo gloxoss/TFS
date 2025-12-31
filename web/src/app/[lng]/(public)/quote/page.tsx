@@ -402,6 +402,7 @@ export default function QuotePage() {
           groupId: item.groupId,
           kitTemplateId: item.kitTemplateId,
           kitSelections: item.kitSelections,
+          selectedVariants: item.selectedVariants,
         })),
         globalDates: globalDates,
         lng,
@@ -530,7 +531,25 @@ export default function QuotePage() {
                             className="w-10 h-10 rounded-lg object-cover bg-zinc-700"
                           />
                         )}
-                        <span className="text-zinc-300 flex-1">{item.product.name || item.product.nameEn || item.product.slug}</span>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-zinc-300 truncate">{item.product.name || item.product.nameEn || item.product.slug}</p>
+                          {/* Selected Variants */}
+                          {item.selectedVariants && Object.keys(item.selectedVariants).length > 0 && (
+                            <div className="flex flex-wrap gap-x-2 gap-y-1 mt-0.5">
+                              {Object.entries(item.selectedVariants).map(([key, value]) => (
+                                <span key={key} className="text-xs text-zinc-500">
+                                  <span className="opacity-70">{key}:</span> {String(value)}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                          {/* Kit Items Count */}
+                          {item.kitSelections && (
+                            <p className="text-xs text-zinc-600 mt-0.5">
+                              {Object.values(item.kitSelections).flat().length} kit items
+                            </p>
+                          )}
+                        </div>
                         <span className="text-zinc-500">×{item.quantity}</span>
                       </li>
                     ))}

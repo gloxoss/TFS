@@ -52,6 +52,10 @@ export interface Product {
   price?: number
   /** Flag to indicate if product is a kit with accessories (for builder UI) */
   is_kit?: boolean
+  /** Variant options for configurable products (e.g., { wattage: ["60W", "300W", "500W"] }) */
+  variantOptions?: Record<string, string[]>
+  /** Child variants (e.g., expanded variant records) */
+  variants?: Product[]
 }
 
 /**
