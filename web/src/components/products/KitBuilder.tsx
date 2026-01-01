@@ -10,6 +10,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import Image from 'next/image'
 import { X, Check, Plus, ChevronRight } from 'lucide-react'
 import { Product } from '@/services/products/types'
 import { ResolvedKit, ResolvedKitSlot } from '@/types/commerce'
@@ -123,8 +124,8 @@ export function KitSelectionModal({
                       ? 'Sélectionnez autant que vous le souhaitez'
                       : 'Select as many as you need'
                     : lng === 'fr'
-                    ? 'Choisissez une option'
-                    : 'Choose one option'}
+                      ? 'Choisissez une option'
+                      : 'Choose one option'}
                 </p>
               </div>
               <button
@@ -161,12 +162,15 @@ export function KitSelectionModal({
                   </div>
 
                   {/* Item thumbnail */}
-                  <div className="w-12 h-12 rounded bg-zinc-700 flex-shrink-0 overflow-hidden">
+                  <div className="w-12 h-12 rounded bg-zinc-700 flex-shrink-0 overflow-hidden relative">
                     {item.imageUrl ? (
-                      <img
+                      <Image
                         src={item.imageUrl}
                         alt={item.name}
-                        className="w-full h-full object-cover"
+                        fill
+                        sizes="48px"
+                        className="object-cover"
+                        loading="lazy"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-zinc-500 text-xs">

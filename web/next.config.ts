@@ -7,6 +7,10 @@ const nextConfig: NextConfig = {
     // Disable optimization in development to avoid "resolved to private ip" errors with 127.0.0.1
     unoptimized: process.env.NODE_ENV === 'development',
     dangerouslyAllowSVG: true,
+    // Modern formats for better compression (AVIF ~50% smaller than JPEG, WebP ~30% smaller)
+    formats: ['image/avif', 'image/webp'],
+    // Minimum cache TTL for optimized images (24 hours)
+    minimumCacheTTL: 86400,
     remotePatterns: [
       {
         protocol: 'http',

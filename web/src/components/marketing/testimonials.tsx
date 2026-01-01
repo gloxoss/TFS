@@ -51,10 +51,13 @@ export default function Testimonials({ testimonials = defaultTestimonials, class
                             )}
                         >
                             {testimonial.logoUrl && (
-                                <img
+                                <Image
                                     alt="Company Logo"
                                     src={testimonial.logoUrl}
-                                    className="h-12 self-start"
+                                    width={120}
+                                    height={48}
+                                    className="h-12 w-auto self-start"
+                                    loading="lazy"
                                 />
                             )}
                             <figure className="mt-10 flex flex-auto flex-col justify-between">
@@ -62,10 +65,13 @@ export default function Testimonials({ testimonials = defaultTestimonials, class
                                     <p>“{testimonial.body}”</p>
                                 </blockquote>
                                 <figcaption className="mt-10 flex items-center gap-x-6">
-                                    <img
+                                    <Image
                                         alt={testimonial.author.name}
                                         src={testimonial.author.imageUrl}
+                                        width={56}
+                                        height={56}
                                         className="size-14 rounded-full bg-gray-800"
+                                        loading="lazy"
                                     />
                                     <div className="text-base">
                                         <div className="font-semibold text-white">{testimonial.author.name}</div>

@@ -8,6 +8,7 @@
  */
 
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import {
   Package,
   Calendar,
@@ -248,11 +249,16 @@ function QuoteCard({ quote, index, lng }: QuoteCardProps) {
                 className="flex items-center gap-2 px-2 py-1 bg-zinc-800/50 rounded-md"
               >
                 {item.imageUrl ? (
-                  <img
-                    src={item.imageUrl}
-                    alt={item.name}
-                    className="w-6 h-6 rounded object-cover"
-                  />
+                  <div className="relative w-6 h-6">
+                    <Image
+                      src={item.imageUrl}
+                      alt={item.name}
+                      fill
+                      sizes="24px"
+                      className="rounded object-cover"
+                      loading="lazy"
+                    />
+                  </div>
                 ) : (
                   <Camera className="w-4 h-4 text-zinc-600" />
                 )}
