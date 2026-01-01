@@ -57,10 +57,17 @@ export function EquipmentCatalogClient({
   const [sortBy, setSortBy] = useState<SortOption>('name')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
 
+  // Helper to filter out placeholder/empty values
+  const isValidFilterValue = (val: unknown): val is string => {
+    if (!val || typeof val !== 'string') return false;
+    const normalized = val.trim().toLowerCase();
+    return normalized !== '' && normalized !== 'n/a' && normalized !== 'null' && normalized !== 'undefined';
+  };
+
   // Extract unique brands from products
   const availableBrands = useMemo(() => {
     return Array.from(
-      new Set(initialProducts.map(p => p.brand).filter(Boolean))
+      new Set(initialProducts.map(p => p.brand).filter(isValidFilterValue))
     ).sort() as string[]
   }, [initialProducts])
 
@@ -68,44 +75,44 @@ export function EquipmentCatalogClient({
   const availableTypes = useMemo(() => {
     const types = new Set<string>();
     initialProducts.forEach(p => {
-      if (p.type) types.add(p.type);
-      if (p.specs?.type) types.add(String(p.specs.type));
+      if (isValidFilterValue(p.type)) types.add(p.type);
+      if (isValidFilterValue(p.specs?.type)) types.add(String(p.specs.type));
     });
-    return Array.from(types).filter(Boolean).sort();
+    return Array.from(types).sort();
   }, [initialProducts])
 
   // Extract unique mounts from products (check both mount field and specs)
   const availableMounts = useMemo(() => {
     const mounts = new Set<string>();
     initialProducts.forEach(p => {
-      if (p.mount) mounts.add(p.mount);
-      if (p.specs?.mount) mounts.add(String(p.specs.mount));
-      if (p.specs?.lens_mount) mounts.add(String(p.specs.lens_mount));
+      if (isValidFilterValue(p.mount)) mounts.add(p.mount);
+      if (isValidFilterValue(p.specs?.mount)) mounts.add(String(p.specs.mount));
+      if (isValidFilterValue(p.specs?.lens_mount)) mounts.add(String(p.specs.lens_mount));
     });
-    return Array.from(mounts).filter(Boolean).sort();
+    return Array.from(mounts).sort();
   }, [initialProducts])
 
   // Extract unique sensor sizes from products (check both field and specs)
   const availableSensorSizes = useMemo(() => {
     const sizes = new Set<string>();
     initialProducts.forEach(p => {
-      if (p.sensorSize) sizes.add(p.sensorSize);
-      if (p.specs?.sensor_size) sizes.add(String(p.specs.sensor_size));
-      if (p.specs?.coverage) sizes.add(String(p.specs.coverage));
-      if (p.specs?.sensor) sizes.add(String(p.specs.sensor));
+      if (isValidFilterValue(p.sensorSize)) sizes.add(p.sensorSize);
+      if (isValidFilterValue(p.specs?.sensor_size)) sizes.add(String(p.specs.sensor_size));
+      if (isValidFilterValue(p.specs?.coverage)) sizes.add(String(p.specs.coverage));
+      if (isValidFilterValue(p.specs?.sensor)) sizes.add(String(p.specs.sensor));
     });
-    return Array.from(sizes).filter(Boolean).sort();
+    return Array.from(sizes).sort();
   }, [initialProducts])
 
   // Extract unique resolutions from products (check both field and specs)
   const availableResolutions = useMemo(() => {
     const resolutions = new Set<string>();
     initialProducts.forEach(p => {
-      if (p.resolution) resolutions.add(p.resolution);
-      if (p.specs?.resolution) resolutions.add(String(p.specs.resolution));
-      if (p.specs?.max_resolution) resolutions.add(String(p.specs.max_resolution));
+      if (isValidFilterValue(p.resolution)) resolutions.add(p.resolution);
+      if (isValidFilterValue(p.specs?.resolution)) resolutions.add(String(p.specs.resolution));
+      if (isValidFilterValue(p.specs?.max_resolution)) resolutions.add(String(p.specs.max_resolution));
     });
-    return Array.from(resolutions).filter(Boolean).sort();
+    return Array.from(resolutions).sort();
   }, [initialProducts])
 
   // Update URL with filters
@@ -321,7 +328,7 @@ export function EquipmentCatalogClient({
     })
 
     return result
-  }, [initialProducts, selectedBrands, sortBy, searchQuery, initialSearch])
+  }, [initialProducts, selectedBrands, selectedTypes, selectedMounts, selectedSensorSizes, selectedResolutions, sortBy, searchQuery, initialSearch])
 
   const totalFilteredCount = filteredProducts.length
 

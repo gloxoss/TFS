@@ -29,6 +29,15 @@ const containerVariants = {
   },
 }
 
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.4, ease: [0.25, 0.1, 0.25, 1] as const }
+  }
+}
+
 export function ProductGrid({
   products,
   lng,
@@ -47,7 +56,11 @@ export function ProductGrid({
 
   if (products.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 text-center">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="flex flex-col items-center justify-center py-16 text-center"
+      >
         <div className="w-16 h-16 mb-4 rounded-full bg-zinc-800 flex items-center justify-center">
           <svg
             className="w-8 h-8 text-zinc-500"
@@ -67,12 +80,19 @@ export function ProductGrid({
         <p className="text-zinc-500 max-w-sm">
           Try adjusting your filters or search terms to find what you&apos;re looking for.
         </p>
-      </div>
+      </motion.div>
     )
   }
 
+  // Generate a key based on product IDs to force re-animation when products change
+  const gridKey = products.map(p => p.id).join('-') || 'empty';
+
   return (
-    <div
+    <motion.div
+      key={gridKey}
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
       className={cn(
         'grid gap-6',
         'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
@@ -80,9 +100,11 @@ export function ProductGrid({
       )}
     >
       {products.map((product) => (
-        <ProductCard key={product.id} product={product} lng={lng} />
+        <motion.div key={product.id} variants={itemVariants}>
+          <ProductCard product={product} lng={lng} />
+        </motion.div>
       ))}
-    </div>
+    </motion.div>
   )
 }
 

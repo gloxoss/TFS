@@ -128,8 +128,6 @@ export function HybridFilterBar({
     const [resDropdownOpen, setResDropdownOpen] = useState(false)
     const [searchOpen, setSearchOpen] = useState(false)
 
-
-
     // Close logic 
     useEffect(() => {
         if (!mobileSheetOpen) {
@@ -229,7 +227,7 @@ export function HybridFilterBar({
                     {/* Secondary Row: Brand Filter, Search, View Toggle */}
                     <div className="flex items-center justify-between px-4 md:px-6 py-3 gap-2 md:gap-4">
                         {/* Left: Item count + Brand filter */}
-                        <div className="flex items-center gap-2 md:gap-4 flex-1 min-w-0 overflow-x-auto scrollbar-hide mask-fade-right">
+                        <div className="flex items-center gap-2 md:gap-4 flex-1 min-w-0 flex-wrap">
                             <span className="text-xs text-zinc-500 shrink-0 font-medium">
                                 {totalCount} <span className="hidden sm:inline">items</span>
                             </span>
@@ -238,7 +236,10 @@ export function HybridFilterBar({
                             {brands.length > 0 && (
                                 <div className="relative">
                                     <button
-                                        onClick={() => setBrandDropdownOpen(!brandDropdownOpen)}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setBrandDropdownOpen(!brandDropdownOpen);
+                                        }}
                                         className={cn(
                                             "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all",
                                             selectedBrands.length > 0
