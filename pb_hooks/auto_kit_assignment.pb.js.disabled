@@ -1,0 +1,121 @@
+/// <reference path="../pb_data/types.d.ts" />
+
+/**
+ * PocketBase Hooks: Auto-update Kit Slots when New Equipment is Added
+ * 
+ * This hook automatically adds new equipment to relevant kit slots based on category.
+ * 
+ * Trigger: After a new record is created in the "equipment" collection
+ * 
+ * Logic:
+ * - If category is "Cameras" and equipment is featured -> Create kit template
+ * - If category is "Lenses" -> Add to all Lens slots
+ * - If category is "Monitors" -> Add to all Monitor slots
+ * - If category is "Wireless Video" -> Add to all Wireless slots
+ * - If category is "Power" -> Add to all Power slots
+ */
+
+// Hook: On equipment record create
+onRecordAfterCreateRequest((e) => {
+    console.log("🔧 [Hook] New equipment created:", e.record.get("name"));
+
+    const equipmentCollection = $app.findCollectionByNameOrId("pbc_equipment00001");
+    const categoriesCollection = $app.findCollectionByNameOrId("pbc_categories0001");
+    const kitSlotsCollection = $app.findCollectionByNameOrId("pbc_kitslots000001");
+    const kitTemplatesCollection = $app.findCollectionByNameOrId("pbc_kittemplates01");
+
+    const record = e.record;
+    const categoryId = record.get("category");
+
+    if (!categoryId) {
+        console.log("⚠️ [Hook] No category assigned, skipping auto-assignment");
+        return;
+    }
+
+    // Get category name
+    let categoryName = "";
+    try {
+        const catRec = $app.findRecordById(categoriesCollection, categoryId);
+        categoryName = catRec.get("name") || catRec.get("slug") || "";
+    } catch (err) {
+        console.log("⚠️ [Hook] Could not find category:", categoryId);
+        return;
+    }
+
+    console.log(`📦 [Hook] Equipment category: ${categoryName}`);
+
+    // Determine which slot type to update
+    let slotMatchKeyword = "";
+    switch (categoryName.toLowerCase()) {
+        case "lenses":
+            slotMatchKeyword = "lens";
+            break;
+        case "monitors":
+            slotMatchKeyword = "monitor";
+            break;
+        case "wireless video":
+            slotMatchKeyword = "wireless";
+            break;
+        case "power":
+            slotMatchKeyword = "power";
+            break;
+        case "grip & support":
+            slotMatchKeyword = "support";
+            break;
+        default:
+            console.log("ℹ️ [Hook] Category doesn't map to kit slots:", categoryName);
+            break;
+    }
+
+    // If it's a camera and is featured, create a kit template
+    if (categoryName.toLowerCase() === "cameras" && record.get("is_featured")) {
+        const templateName = `${record.get("name")} Production Package`;
+
+        try {
+            const existing = $app.findFirstRecordByFilter(kitTemplatesCollection, `name = "${templateName}"`);
+            console.log("⏭️ [Hook] Kit template already exists:", templateName);
+        } catch (e) {
+            // Create new template
+            const newTemplate = new Record(kitTemplatesCollection);
+            newTemplate.set("name", templateName);
+            newTemplate.set("main_product_id", record.id);
+            newTemplate.set("base_price_modifier", 0);
+            newTemplate.set("description", `Complete production package built around the ${record.get("name")}. Customize with your choice of lenses, support, monitoring, and accessories.`);
+
+            $app.save(newTemplate);
+            console.log("✅ [Hook] Auto-created kit template:", templateName);
+        }
+    }
+
+    // Update relevant kit slots with this new equipment
+    if (slotMatchKeyword) {
+        try {
+            const allSlots = $app.findRecordsByFilter(kitSlotsCollection, "1=1", "", 200, 0);
+            let updatedCount = 0;
+
+            for (const slot of allSlots) {
+                const slotName = (slot.get("name") || "").toLowerCase();
+
+                if (slotName.includes(slotMatchKeyword)) {
+                    const existingRecs = slot.get("recommended_items") || [];
+
+                    if (!existingRecs.includes(record.id)) {
+                        const newRecs = [...existingRecs, record.id];
+                        slot.set("recommended_items", newRecs);
+                        $app.save(slot);
+                        updatedCount++;
+                    }
+                }
+            }
+
+            if (updatedCount > 0) {
+                console.log(`✅ [Hook] Added to ${updatedCount} kit slots`);
+            }
+        } catch (err) {
+            console.log("⚠️ [Hook] Error updating kit slots:", err);
+        }
+    }
+
+}, "equipment");
+
+console.log("🔗 [Hooks] Equipment auto-kit-assignment hook registered");

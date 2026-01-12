@@ -1,0 +1,33 @@
+{
+    "hero": {
+        "title": "Get in Touch",
+        "subtitle": "Ready to equip your next production? Contact us for rentals, quotes, and technical support."
+    },
+    "form": {
+        "title": "Send a Message",
+        "name": "Your Name",
+        "email": "Email Address",
+        "phone": "Phone Number",
+        "subject": "Subject",
+        "message": "Your Message",
+        "submit": "Send Message",
+        "success": "Message sent! We'll get back to you soon.",
+        "error": "Something went wrong. Please try again."
+    },
+    "info": {
+        "title": "Visit Us",
+        "subtitle": "Our equipment showroom in Casablanca.",
+        "casablanca": {
+            "city": "Casablanca, Morocco",
+            "address": "55-57, Rue Souleimane el Farissi, 20330",
+            "phone": "0522 246 372",
+            "email": "info@tfs.ma"
+        }
+    },
+    "hours": {
+        "title": "Opening Hours",
+        "weekdays": "Monday - Friday: 9:00 - 18:00",
+        "saturday": "Saturday: 10:00 - 14:00",
+        "sunday": "Sunday: Closed"
+    }
+}

@@ -1,0 +1,1 @@
+Error: failed to apply migration 1765457188_created_kit_items.js: fields: (1: (collectionId: The relation collection doesn't exist..).).

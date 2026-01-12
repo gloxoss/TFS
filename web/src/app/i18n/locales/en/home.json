@@ -1,0 +1,106 @@
+{
+    "hero": {
+        "title": "Equip Your Vision",
+        "subtitle": "Professional production solutions for filmmakers—equipment, crew, locations, permits, props, and post-production—all to bring your vision to life."
+    },
+    "bento": {
+        "platform": {
+            "title": "Why TFS",
+            "subtitle": "Morocco's Premier Equipment Rental",
+            "description": "We provide the highest quality cinema equipment and expert support for film productions, commercials, and content creators in Casablanca and beyond."
+        },
+        "cards": {
+            "logistics": {
+                "title": "Morocco-Wide Delivery",
+                "description": "Fast delivery across Morocco. We ensure your gear arrives ready for your shoot, wherever you're filming."
+            },
+            "kits": {
+                "title": "Complete Camera Packages",
+                "description": "Our curated kits include everything you need - cameras, lenses, batteries, and accessories. Ready to roll."
+            },
+            "manifest": {
+                "title": "Premium Selection",
+                "description": "From RED and ARRI to Sony and Blackmagic - we carry the industry's most trusted cinema cameras and accessories."
+            },
+            "quotes": {
+                "title": "Personalized Quotes",
+                "description": "Every production is unique. Tell us about your project and we'll create a custom quote tailored to your needs.",
+                "stat": ""
+            },
+            "support": {
+                "title": "Expert Technical Support",
+                "description": "Our team of film professionals is always available to help you choose the right gear and troubleshoot any issues."
+            }
+        }
+    },
+    "cta": {
+        "title": "Ready to Start Your Project?",
+        "subtitle": "Request a personalized quote for your next production.",
+        "button": "Request Quote"
+    },
+    "news": {
+        "title": "FROM THE STUDIO",
+        "items": [
+            {
+                "category": "TECH",
+                "title": "ARRI Alexa 35: The New Standard in Digital Cinema",
+                "image": "https://images.unsplash.com/photo-1542204165-6b8c9a807d96?q=80&w=2670&auto=format&fit=crop"
+            },
+            {
+                "category": "ON SET",
+                "title": "Behind the Scenes: Filming in Morocco's Stunning Locations",
+                "image": "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=2671&auto=format&fit=crop"
+            },
+            {
+                "category": "GUIDE",
+                "title": "Choosing the Right Camera for Your Documentary",
+                "image": "https://images.unsplash.com/photo-1533750516457-a7f992034fec?q=80&w=2676&auto=format&fit=crop"
+            },
+            {
+                "category": "TIPS",
+                "title": "Essential Lighting Setups for Interview Productions",
+                "image": "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?q=80&w=2670&auto=format&fit=crop"
+            }
+        ]
+    },
+    "categories": {
+        "title": "Equipment Categories",
+        "subtitle": "Everything you need for your next production.",
+        "items": [
+            {
+                "id": "camera",
+                "title": "Cameras",
+                "image": "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=2528&auto=format&fit=crop"
+            },
+            {
+                "id": "machinery",
+                "title": "Grip & Support",
+                "image": "https://images.unsplash.com/photo-1540655037529-a2987c2bec93?q=80&w=2752&auto=format&fit=crop"
+            },
+            {
+                "id": "lighting",
+                "title": "Lighting",
+                "image": "https://images.unsplash.com/photo-1588693850125-964205f242aa?q=80&w=2672&auto=format&fit=crop"
+            },
+            {
+                "id": "filters",
+                "title": "Lenses & Filters",
+                "image": "https://images.unsplash.com/photo-1506152983158-b4a74a01c721?q=80&w=2674&auto=format&fit=crop"
+            },
+            {
+                "id": "studios",
+                "title": "Audio",
+                "image": "https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?q=80&w=2576&auto=format&fit=crop"
+            },
+            {
+                "id": "post",
+                "title": "Accessories",
+                "image": "https://images.unsplash.com/photo-1535016120720-40c6874c3b1c?q=80&w=2664&auto=format&fit=crop"
+            }
+        ]
+    },
+    "featured": {
+        "title": "Popular Equipment",
+        "subtitle": "Our most requested gear, available for your next production."
+    }
+}

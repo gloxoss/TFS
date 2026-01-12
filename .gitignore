@@ -1,0 +1,42 @@
+# PocketBase data (synced separately via scp)
+pb_data/
+pb_data_stage/
+pb_data_*/
+*.db-wal
+*.db-shm
+
+# Large archives (synced separately)
+*.zip
+*.tar
+*.tar.gz
+*.7z
+*.rar
+
+# HEROUI templates (not needed for production)
+HEROUI/
+
+# Old migrations backup
+pb_migrations_old/
+
+# Tools and scripts (optional)
+tools/
+
+# Environment
+/web/.env.local
+/web/.env
+prod.env
+
+# Deploy artifacts
+/deploy.md
+/pocketbase
+*.exe
+
+# Build outputs synced separately
+web/.next/
+web/node_modules/
+
+# Misc large files
+*.mp4
+*.mov
+*.avi
+
