@@ -10,6 +10,10 @@ import { FileText, Plus, Eye, EyeOff, Edit, Trash2, Calendar } from 'lucide-reac
 import { createServerClient } from '@/lib/pocketbase/server'
 import { verifyAdminAccess } from '@/services/auth/access-control'
 import { revalidatePath } from 'next/cache'
+import { PB_URL } from '@/lib/pocketbase/config'
+import { createActionLogger } from '@/lib/logger'
+
+const log = createActionLogger('AdminBlog');
 
 interface BlogPost {
     id: string
@@ -28,7 +32,6 @@ async function getBlogPosts(): Promise<BlogPost[]> {
 
     try {
         const client = await createServerClient(false)
-        const baseUrl = process.env.NEXT_PUBLIC_POCKETBASE_URL || 'http://127.0.0.1:8090'
 
         const result = await client.collection('posts').getFullList()
 
@@ -39,13 +42,13 @@ async function getBlogPosts(): Promise<BlogPost[]> {
             excerpt: post.excerpt || post.excerpt_en || '',
             published: post.published || post.visibility || false,
             coverImageUrl: post.cover_image
-                ? `${baseUrl}/api/files/${post.collectionId}/${post.id}/${post.cover_image}`
+                ? `${PB_URL}/api/files/${post.collectionId}/${post.id}/${post.cover_image}`
                 : null,
             created: post.created,
             updated: post.updated
         }))
     } catch (error) {
-        console.error('Error fetching blog posts:', error)
+        log.error('Error fetching blog posts', error)
         return []
     }
 }
@@ -64,7 +67,7 @@ async function togglePostVisibility(id: string) {
         })
         revalidatePath('/[lng]/admin/blog')
     } catch (error) {
-        console.error('Error toggling visibility:', error)
+        log.error('Error toggling visibility', error)
     }
 }
 
@@ -79,7 +82,7 @@ async function deletePost(id: string) {
         await client.collection('posts').delete(id)
         revalidatePath('/[lng]/admin/blog')
     } catch (error) {
-        console.error('Error deleting post:', error)
+        log.error('Error deleting post', error)
     }
 }
 

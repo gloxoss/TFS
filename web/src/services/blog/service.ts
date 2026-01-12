@@ -9,12 +9,7 @@
 
 import PocketBase, { RecordModel } from 'pocketbase'
 import { BlogPost, BlogFilters } from './types'
-
-const PB_URL_RAW = process.env.NEXT_PUBLIC_POCKETBASE_URL;
-if (!PB_URL_RAW && process.env.NODE_ENV === 'production') {
-    throw new Error('NEXT_PUBLIC_POCKETBASE_URL is not defined');
-}
-const PB_URL = PB_URL_RAW || 'http://127.0.0.1:8090';
+import { PB_URL } from '@/lib/pocketbase/config'
 
 /**
  * Map PocketBase record to BlogPost

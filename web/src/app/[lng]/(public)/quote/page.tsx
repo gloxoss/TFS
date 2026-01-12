@@ -61,7 +61,7 @@ export default function QuotePage({ params, searchParams }: PageProps) {
   // Ensure lng is a string
   const lng = Array.isArray(resolvedParams?.lng) ? resolvedParams.lng[0] : (resolvedParams?.lng as string) || 'en'
 
-  /* eslint-disable react-hooks/rules-of-hooks */
+  // === ALL HOOKS MUST BE CALLED UNCONDITIONALLY ===
   const router = useRouter()
   const [currentStep, setCurrentStep] = useState<FormStep>('dates')
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -142,6 +142,16 @@ export default function QuotePage({ params, searchParams }: PageProps) {
   }, [watchedEmail, checkEmailExistsHandler])
 
   const { trigger, getValues, watch } = form
+
+  // Get translated steps (memoized)
+  const steps = useMemo(() => getSteps(lng), [lng])
+  const currentStepIndex = steps.findIndex((s) => s.id === currentStep)
+
+  // Variant Toggle Check: Default to Minimal, unless v=legacy
+  const searchParamsValue = React.use(searchParams) as { v?: string }
+  const isLegacy = searchParamsValue?.v === 'legacy'
+
+  // === CONDITIONAL RETURNS START HERE (after all hooks) ===
 
   // Redirect if empty
   if (items.length === 0 && !submitResult?.success) {
@@ -253,14 +263,6 @@ export default function QuotePage({ params, searchParams }: PageProps) {
       setIsSubmitting(false)
     }
   }
-
-  // Get translated steps
-  const steps = getSteps(lng)
-  const currentStepIndex = steps.findIndex((s) => s.id === currentStep)
-
-  // Variant Toggle Check: Default to Minimal, unless v=legacy
-  const searchParamsValue = React.use(searchParams) as { v?: string }
-  const isLegacy = searchParamsValue?.v === 'legacy'
 
   const toggleVariant = () => {
     const newParams = new URLSearchParams(window.location.search)

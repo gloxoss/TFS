@@ -5,6 +5,10 @@ import { createServerClient } from "@/lib/pocketbase/server";
 import { getCartService } from "@/services";
 import { ResolvedKit } from '@/types/commerce';
 import type { CartItem } from '@/stores/useCartStore';
+import { escapePBFilter } from '@/lib/security';
+import { createActionLogger } from '@/lib/logger';
+
+const log = createActionLogger('Cart');
 
 interface AddToCartResult {
   success: boolean;
@@ -44,7 +48,7 @@ export async function addToCart(formData: FormData): Promise<AddToCartResult> {
 
     return { success: true };
   } catch (error) {
-    console.error("Add to cart error:", error);
+    log.error('Add to cart error', error);
     return { success: false, error: "Failed to add item to cart" };
   }
 }
@@ -60,7 +64,7 @@ export async function getUserCart(): Promise<{ success: boolean; items?: CartIte
     // Assuming there's a cart_items collection with user relation
     // This needs to be implemented based on your schema
     const cartItems = await pb.collection('cart_items').getFullList({
-      filter: `user="${pb.authStore.model?.id}"`,
+      filter: `user="${escapePBFilter(pb.authStore.model?.id || '')}"`,
       expand: 'product',
     });
 
@@ -84,7 +88,7 @@ export async function getUserCart(): Promise<{ success: boolean; items?: CartIte
 
     return { success: true, items };
   } catch (error) {
-    console.error("Get user cart error:", error);
+    log.error('Get user cart error', error);
     return { success: false, error: "Failed to load cart" };
   }
 }
@@ -104,7 +108,7 @@ export async function mergeGuestCart(guestItems: CartItem[]): Promise<{ success:
 
     // Get existing user cart items
     const existingCartItems = await pb.collection('cart_items').getFullList({
-      filter: `user="${userId}"`,
+      filter: `user="${escapePBFilter(userId)}"`,
     });
 
     // Create a map of existing items by product ID for quick lookup

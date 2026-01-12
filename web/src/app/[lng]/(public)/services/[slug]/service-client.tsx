@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
+import DOMPurify from 'isomorphic-dompurify'
 
 // Section Components
 import ServiceHeroSection from '@/components/marketing/services/service-hero-section'
@@ -107,7 +108,7 @@ export default function ServiceDetailClient({ service, lng }: ServiceDetailClien
                         <div className="container mx-auto px-6 max-w-4xl">
                             <div
                                 className="prose prose-invert prose-lg max-w-none"
-                                dangerouslySetInnerHTML={{ __html: fullDescription }}
+                                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(fullDescription) }}
                             />
                         </div>
                     </section>

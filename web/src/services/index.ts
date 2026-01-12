@@ -6,6 +6,7 @@
  */
 
 import PocketBase from 'pocketbase'
+import { PB_URL, getPBUrl } from '@/lib/pocketbase/config'
 import { PocketBaseProductService } from './products/pocketbase-service'
 import { PocketBaseQuoteService } from './quotes/pocketbase-service'
 import { CartService } from './cart/cart-service'
@@ -68,17 +69,8 @@ export function getQuoteService(pbClient: PocketBase): IQuoteService {
 // Default instances (for convenience in server components)
 // ============================================================================
 
-// Helper to get safe PB URL
-const getPbUrl = () => {
-  const url = process.env.NEXT_PUBLIC_POCKETBASE_URL
-  if (!url) {
-    if (process.env.NODE_ENV === 'production') {
-      throw new Error('NEXT_PUBLIC_POCKETBASE_URL is not defined')
-    }
-    return 'http://127.0.0.1:8090'
-  }
-  return url
-}
+// Use centralized PB URL from config
+// See: @/lib/pocketbase/config.ts
 
 /**
  * Gets a product service instance.
@@ -87,7 +79,7 @@ const getPbUrl = () => {
  */
 export function productService(): IProductService {
   // Create a fresh PocketBase client (anonymous - products are public)
-  const pb = new PocketBase(getPbUrl())
+  const pb = new PocketBase(getPBUrl())
   return new PocketBaseProductService(pb)
 }
 
@@ -134,7 +126,7 @@ export function getBlogService(pbClient: PocketBase) {
  * Blog posts use listRule/viewRule for public access.
  */
 export function blogService() {
-  const pb = new PocketBase(process.env.NEXT_PUBLIC_POCKETBASE_URL || 'http://127.0.0.1:8090')
+  const pb = new PocketBase(PB_URL)
   return new BlogService(pb)
 }
 
@@ -158,6 +150,6 @@ export function getServicesService(pbClient: PocketBase) {
  * Services use listRule/viewRule for public access.
  */
 export function servicesService() {
-  const pb = new PocketBase(process.env.NEXT_PUBLIC_POCKETBASE_URL || 'http://127.0.0.1:8090')
+  const pb = new PocketBase(PB_URL)
   return new PocketBaseServicesService(pb)
 }

@@ -6,13 +6,14 @@ import { usePocketBase } from "@/components/pocketbase-provider";
 import { debounce } from 'lodash';
 import { Check, X, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { escapePBFilter } from '@/lib/security';
 
 export default function NameInput() {
   const [name, setName] = useState('');
   const [isChecking, setIsChecking] = useState(false);
   const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
   const [error, setError] = useState<string | null>(null);
-  
+
   const client = usePocketBase();
   const { t } = useTranslation();
 
@@ -28,9 +29,9 @@ export default function NameInput() {
 
     try {
       const response = await client.collection('users').getList(1, 1, {
-        filter: `name = "${nameToCheck}"`,
+        filter: `name = "${escapePBFilter(nameToCheck)}"`,
       });
-      
+
       setIsAvailable(response.totalItems === 0);
       if (response.totalItems > 0) {
         setError(t('auth.name.taken'));

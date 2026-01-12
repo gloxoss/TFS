@@ -1,0 +1,64 @@
+services:
+  # ===========================================================================
+  # Next.js Web Application
+  # ===========================================================================
+  web:
+    image: tfs-web:${VERSION:-latest}
+    container_name: tfs-web
+    restart: always
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_POCKETBASE_URL=http://pocketbase:8090
+      - NEXT_PUBLIC_SITE_URL=${SITE_URL:-http://localhost:3000}
+      - NEXT_PUBLIC_SITE_NAME=${SITE_NAME:-TV Film Solutions}
+    depends_on:
+      pocketbase:
+        condition: service_healthy
+    networks:
+      - tfs
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ===========================================================================
+  # PocketBase Database
+  # ===========================================================================
+  pocketbase:
+    image: tfs-pb:${VERSION:-latest}
+    container_name: tfs-pocketbase
+    restart: always
+    ports:
+      - "${PB_PORT:-8090}:8090"
+    volumes:
+      - pb_data:/pb/pb_data
+    healthcheck:
+      test: [ "CMD", "wget", "-q", "--spider", "http://localhost:8090/api/health" ]
+      interval: 30s
+      timeout: 10s
+      start_period: 15s
+      retries: 3
+    networks:
+      - tfs
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+# =============================================================================
+# Networks
+# =============================================================================
+networks:
+  tfs:
+    driver: bridge
+
+# =============================================================================
+# Volumes (Persistent Data)
+# =============================================================================
+volumes:
+  pb_data:
+    driver: local

@@ -14,6 +14,7 @@ import {
     AlertCircle
 } from 'lucide-react'
 import { AppSettings, updateSettings } from '@/lib/actions/settings'
+import { PB_URL } from '@/lib/pocketbase/config'
 
 // Settings Section Component
 function SettingsSection({
@@ -323,7 +324,7 @@ export default function SettingsClient({
             {/* External Links */}
             <div className="flex items-center gap-4 text-sm">
                 <a
-                    href={`${process.env.NEXT_PUBLIC_POCKETBASE_URL || 'http://127.0.0.1:8090'}/_/`}
+                    href={`${PB_URL}/_/`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-zinc-400 hover:text-red-400 transition-colors"

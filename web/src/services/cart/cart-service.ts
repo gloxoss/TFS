@@ -1,12 +1,11 @@
 import PocketBase from 'pocketbase';
 import { Cart, CartItem, KitTemplate, KitItem, ResolvedKit, ResolvedKitSlot } from '@/types/commerce';
 import { Product } from '@/services/products/types';
+import { PB_URL } from '@/lib/pocketbase/config';
+import { createServiceLogger } from '@/lib/logger';
+import { escapePBFilter } from '@/lib/security';
 
-const PB_URL = process.env.NEXT_PUBLIC_POCKETBASE_URL;
-if (!PB_URL && process.env.NODE_ENV === 'production') {
-  throw new Error('NEXT_PUBLIC_POCKETBASE_URL is not defined');
-}
-const SAFE_PB_URL = PB_URL || 'http://127.0.0.1:8090';
+const log = createServiceLogger('CartService');
 
 export class CartService {
   private pb: PocketBase;
@@ -18,21 +17,21 @@ export class CartService {
   // 1. THE TRIGGER: Check if product has a kit template
   async checkBundleRequirement(productId: string): Promise<{ hasBundle: boolean; template?: KitTemplate; slots?: any[] }> {
     try {
-      console.log('[CartService.checkBundleRequirement] Checking for productId:', productId);
+      log.debug('Checking bundle requirement', { productId });
       // Find a template where this product is the "Main Trigger"
-      const template = await this.pb.collection('kit_templates').getFirstListItem(`main_product_id="${productId}"`);
-      console.log('[CartService.checkBundleRequirement] Template found:', template?.id, template?.name);
+      const template = await this.pb.collection('kit_templates').getFirstListItem(`main_product_id="${escapePBFilter(productId)}"`);
+      log.debug('Template found', { templateId: template?.id, name: template?.name });
 
       if (!template) {
-        console.log('[CartService.checkBundleRequirement] No template found');
+        log.debug('No template found');
         return { hasBundle: false };
       }
 
       // Fetch kit_slots for this template (NEW: category-based slots)
       const slots = await this.pb.collection('kit_slots').getFullList({
-        filter: `template_id="${template.id}"`
+        filter: `template_id="${escapePBFilter(template.id)}"`
       });
-      console.log('[CartService.checkBundleRequirement] Found', slots.length, 'kit slots');
+      log.debug('Found kit slots', { count: slots.length });
 
       return {
         hasBundle: true,
@@ -52,19 +51,19 @@ export class CartService {
       };
     } catch (e: any) {
       // 404 means no bundle found, which is fine
-      console.log('[CartService.checkBundleRequirement] Error/404:', e?.message || e);
+      log.debug('Error/404 (expected)', { message: e?.message });
       return { hasBundle: false };
     }
   }
 
   // 1b. RESOLVE KIT: Convert DB structure to UI-friendly ResolvedKit (Category-Based)
   async resolveKit(productId: string): Promise<ResolvedKit | null> {
-    console.log('[CartService.resolveKit] Starting for productId:', productId);
+    log.debug('Resolving kit', { productId });
     const bundleCheck = await this.checkBundleRequirement(productId);
-    console.log('[CartService.resolveKit] Bundle check result:', bundleCheck.hasBundle, 'slots:', bundleCheck.slots?.length);
+    log.debug('Bundle check result', { hasBundle: bundleCheck.hasBundle, slotCount: bundleCheck.slots?.length });
 
     if (!bundleCheck.hasBundle || !bundleCheck.template || !bundleCheck.slots) {
-      console.log('[CartService.resolveKit] Returning null - no bundle');
+      log.debug('No bundle found, returning null');
       return null;
     }
 
@@ -185,7 +184,7 @@ export class CartService {
 
     // B. Fetch existing items to check for duplicates (Optimization)
     const existingItems = await this.pb.collection('cart_items').getFullList({
-      filter: `cart = "${cartId}"`
+      filter: `cart = "${escapePBFilter(cartId)}"`
     });
 
     // C. Process selections
@@ -254,7 +253,7 @@ export class CartService {
   // 3. FETCH: Get Cart with Hierarchy
   async getCart(userId: string): Promise<Cart | null> {
     try {
-      const cartRecord = await this.pb.collection('carts').getFirstListItem(`user="${userId}" && status="active"`);
+      const cartRecord = await this.pb.collection('carts').getFirstListItem(`user="${escapePBFilter(userId)}" && status="active"`);
       const items = await this.pb.collection('cart_items').getFullList({
         filter: `cart="${cartRecord.id}"`,
         expand: 'product',

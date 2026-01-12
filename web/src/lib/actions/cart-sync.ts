@@ -9,6 +9,7 @@
 import { createServerClient } from '@/lib/pocketbase/server'
 import { CartItem } from '@/stores/useCartStore'
 import { createActionLogger } from '@/lib/logger'
+import { escapePBFilter } from '@/lib/security'
 
 const log = createActionLogger('CartSync')
 
@@ -34,7 +35,7 @@ export async function saveCartToDatabase(items: CartItem[]): Promise<{
         // 1. Get or Create Cart ID for the user
         let cartId: string;
         try {
-            const cart = await pb.collection('carts').getFirstListItem(`user = "${userId}" && status = "active"`);
+            const cart = await pb.collection('carts').getFirstListItem(`user = "${escapePBFilter(userId || '')}" && status = "active"`);
             cartId = cart.id;
         } catch {
             const newCart = await pb.collection('carts').create({
@@ -47,7 +48,7 @@ export async function saveCartToDatabase(items: CartItem[]): Promise<{
         // 2. Delete existing items for this specific cart
         // OPTIMIZATION: In the future, we could diff update, but for now strict sync is safer
         const existing = await pb.collection('cart_items').getFullList({
-            filter: `cart = "${cartId}"`
+            filter: `cart = "${escapePBFilter(cartId)}"`
         });
 
         const deletePromises = existing.map(item => pb.collection('cart_items').delete(item.id));
@@ -96,7 +97,7 @@ export async function loadCartFromDatabase(): Promise<{
         // 1. Find the active cart
         let cartId: string;
         try {
-            const cart = await pb.collection('carts').getFirstListItem(`user = "${userId}" && status = "active"`);
+            const cart = await pb.collection('carts').getFirstListItem(`user = "${escapePBFilter(userId || '')}" && status = "active"`);
             cartId = cart.id;
         } catch {
             // No active cart, return empty
@@ -105,7 +106,7 @@ export async function loadCartFromDatabase(): Promise<{
 
         // 2. Fetch items for this cart
         const records = await pb.collection('cart_items').getFullList({
-            filter: `cart = "${cartId}"`,
+            filter: `cart = "${escapePBFilter(cartId)}"`,
             expand: 'product',
             sort: 'group_id,created'
         })

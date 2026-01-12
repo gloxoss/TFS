@@ -3,6 +3,10 @@
 import { createServerClient, createAdminClient } from "@/lib/pocketbase/server"
 import { revalidatePath } from "next/cache"
 import { slugify } from "@/lib/utils/slugify"
+import { PB_URL } from "@/lib/pocketbase/config"
+import { createActionLogger } from "@/lib/logger"
+
+const log = createActionLogger('Blog');
 
 export type BlogActionResult = {
     success: boolean
@@ -52,7 +56,7 @@ export async function createPost(formData: FormData): Promise<BlogActionResult> 
             data.cover_image = coverImage
         }
 
-        console.log('[BlogAction] Creating post:', { ...data, cover_image: data.cover_image ? 'File present' : 'No file' })
+        log.debug('Creating post', { hasImage: !!data.cover_image })
 
         // Create record
         const record = await pb.collection('posts').create(data)
@@ -64,7 +68,7 @@ export async function createPost(formData: FormData): Promise<BlogActionResult> 
         return { success: true, data: record }
 
     } catch (error: any) {
-        console.error('[BlogAction] Error creating post:', error)
+        log.error('Error creating post', error)
 
         let errorMessage = "Failed to create post"
         if (error?.response?.data) {
@@ -132,7 +136,7 @@ export async function updatePost(formData: FormData): Promise<BlogActionResult> 
         return { success: true, data: record }
 
     } catch (error: any) {
-        console.error('[BlogAction] Error updating post:', error)
+        log.error('Error updating post', error)
         return { success: false, error: error?.message || "Failed to update post" }
     }
 }
@@ -156,11 +160,6 @@ export async function getPost(id: string): Promise<{
 }> {
     try {
         const pb = await createServerClient()
-        const PB_URL_RAW = process.env.NEXT_PUBLIC_POCKETBASE_URL;
-        if (!PB_URL_RAW && process.env.NODE_ENV === 'production') {
-            throw new Error('NEXT_PUBLIC_POCKETBASE_URL is not defined');
-        }
-        const baseUrl = PB_URL_RAW || 'http://127.0.0.1:8090'
 
         const record = await pb.collection('posts').getOne(id)
 
@@ -174,13 +173,13 @@ export async function getPost(id: string): Promise<{
                 excerpt: record.excerpt || record.excerpt_en || '',
                 published: record.published || false,
                 coverImageUrl: record.cover_image
-                    ? `${baseUrl}/api/files/${record.collectionId}/${record.id}/${record.cover_image}`
+                    ? `${PB_URL}/api/files/${record.collectionId}/${record.id}/${record.cover_image}`
                     : null,
                 created: record.created
             }
         }
     } catch (error: any) {
-        console.error('[BlogAction] Error fetching post:', error)
+        log.error('Error fetching post', error)
         return { success: false, error: error?.message || 'Post not found' }
     }
 }
@@ -201,7 +200,7 @@ export async function deletePost(id: string): Promise<BlogActionResult> {
         return { success: true }
 
     } catch (error: any) {
-        console.error('[BlogAction] Error deleting post:', error)
+        log.error('Error deleting post', error)
         return { success: false, error: error?.message || "Failed to delete post" }
     }
 }

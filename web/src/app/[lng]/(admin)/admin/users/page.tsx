@@ -9,6 +9,10 @@ import Link from 'next/link'
 import { Users, UserPlus, Shield, ShieldCheck, ShieldX, Mail } from 'lucide-react'
 import { createServerClient } from '@/lib/pocketbase/server'
 import { verifyAdminAccess } from '@/services/auth/access-control'
+import { PB_URL } from '@/lib/pocketbase/config'
+import { createActionLogger } from '@/lib/logger'
+
+const log = createActionLogger('AdminUsers');
 
 interface User {
     id: string
@@ -40,7 +44,7 @@ async function getUsers(): Promise<User[]> {
             lastLogin: user.last_login || null
         }))
     } catch (error) {
-        console.error('Error fetching users:', error)
+        log.error('Error fetching users', error)
         return []
     }
 }
@@ -155,7 +159,7 @@ async function UsersContent({ lng }: { lng: string }) {
                     <p className="text-zinc-500 mt-1">Manage platform users and roles</p>
                 </div>
                 <a
-                    href={`${process.env.NEXT_PUBLIC_POCKETBASE_URL || 'http://127.0.0.1:8090'}/_/#/collections?collectionId=_pb_users_auth_`}
+                    href={`${PB_URL}/_/#/collections?collectionId=_pb_users_auth_`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg font-medium transition-colors"

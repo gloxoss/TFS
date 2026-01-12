@@ -4,6 +4,8 @@ import PocketBase from 'pocketbase';
 import acceptLanguage from 'accept-language';
 import { fallbackLng, languages } from './app/i18n/settings';
 import { ROLES } from './types/auth';
+import { PB_URL, buildCSPHeader } from './lib/pocketbase/config';
+import { logger } from './lib/logger';
 
 acceptLanguage.languages(languages);
 
@@ -24,14 +26,14 @@ function parseAuthCookie(cookieValue: string) {
     }
     return JSON.parse(decoded);
   } catch (e) {
-    console.error("[Middleware] Failed to parse auth cookie:", e);
+    logger.warn('Failed to parse auth cookie', { error: e });
     return null;
   }
 }
 
 export async function proxy(request: NextRequest) {
   const response = NextResponse.next();
-  const pb = new PocketBase(process.env.NEXT_PUBLIC_POCKETBASE_URL);
+  const pb = new PocketBase(PB_URL);
 
   // -----------------------------------------------------------------------
   // 0. Security Headers
@@ -41,10 +43,7 @@ export async function proxy(request: NextRequest) {
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   response.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
   response.headers.set('Cross-Origin-Opener-Policy', 'same-origin');
-  response.headers.set(
-    'Content-Security-Policy',
-    "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: http://127.0.0.1:8090 http://localhost:8090 http://72.62.27.47:8090 https://*.bhphoto.com https://*.cloudinary.com https://*.unsplash.com https://grainy-gradients.vercel.app; font-src 'self' https://fonts.gstatic.com https://*.perplexity.ai data:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';"
-  );
+  response.headers.set('Content-Security-Policy', buildCSPHeader());
   // Preconnect to grainy gradients (used for effects)
   response.headers.set('Link', '<https://grainy-gradients.vercel.app>; rel=preconnect');
 
@@ -98,7 +97,7 @@ export async function proxy(request: NextRequest) {
 
   // Block client-only routes when portal disabled (login stays available for admins)
   if (!isClientPortalEnabled && isClientOnlyPath && !isAdminPath) {
-    console.log('[Middleware] Client portal disabled, blocking:', pathWithoutLocale);
+    logger.debug('Client portal disabled, blocking path', { path: pathWithoutLocale });
     const currentLocale = pathname.split('/')[1] || fallbackLng;
     const url = request.nextUrl.clone();
     url.pathname = `/${currentLocale}/`;
@@ -121,7 +120,7 @@ export async function proxy(request: NextRequest) {
 
     // Logic: Redirect if not allowed
     if (!isValid) {
-      console.log("[Middleware] === NOT VALID - Redirecting to login ===");
+      logger.debug('Auth not valid, redirecting to login');
       // Not logged in -> Go to Login (preserving locale)
       // Extract locale from current path to keep user in same language
       const currentLocale = pathname.split('/')[1] || fallbackLng;
@@ -137,7 +136,7 @@ export async function proxy(request: NextRequest) {
 
       // Strict Admin Check
       if (userRole !== ROLES.ADMIN) {
-        console.log('[Middleware] Access Denied: User is not admin.');
+        logger.debug('Access denied: User is not admin');
         // Not an admin -> Go to Home
         const currentLocale = pathname.split('/')[1] || fallbackLng;
         const url = request.nextUrl.clone();

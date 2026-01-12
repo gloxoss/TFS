@@ -16,6 +16,7 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { Product } from '@/services/products/types'
+import { logger } from '@/lib/logger'
 
 // ============================================================================
 // Types
@@ -97,7 +98,7 @@ export const useCartStore = create<CartState>()(
       globalDates: null,
 
       addItem: (product, quantity, dates, kitSelections, kitDetails, selectedVariants, kitVariantSelections) => {
-        console.log('[CartStore] Adding item:', product.name, quantity, kitSelections, selectedVariants)
+        logger.debug('Adding item to cart', { productName: product.name, quantity })
         set((state) => {
           // Check if item with same product and dates already exists
           const existingIndex = state.items.findIndex(
@@ -116,7 +117,7 @@ export const useCartStore = create<CartState>()(
           let nextItems = [...state.items];
 
           if (existingIndex >= 0) {
-            console.log('[CartStore] Merging with existing item index:', existingIndex)
+            logger.debug('Merging with existing cart item', { existingIndex })
             // Update quantity of existing item
             nextItems[existingIndex] = {
               ...nextItems[existingIndex],
@@ -134,16 +135,15 @@ export const useCartStore = create<CartState>()(
               selectedVariants,
               kitVariantSelections
             }
-            console.log('[CartStore] Created new item:', newItem)
+            logger.debug('Created new cart item', { itemId: newItem.id })
             nextItems = [...state.items, newItem]
-            console.log('[CartStore] New items array length:', nextItems.length)
           }
 
           // SERVER SYNC: Push new items to server for authenticated users
           import('@/stores/auth-store').then(async ({ useAuthStore }) => {
             const user = useAuthStore.getState().user;
             if (user) {
-              console.log('[CartStore] Syncing item to server for user:', user.email)
+              logger.debug('Syncing cart to server', { userEmail: user.email })
               const formData = new FormData();
               formData.append("productId", product.id);
               formData.append("quantity", quantity.toString());
@@ -155,9 +155,9 @@ export const useCartStore = create<CartState>()(
               try {
                 const { addToCart } = await import('@/lib/actions/cart');
                 const result = await addToCart(formData);
-                console.log('[CartStore] Server sync result:', result.success ? 'OK' : result.error);
+                logger.debug('Server sync result', { success: result.success })
               } catch (err) {
-                console.error('[CartStore] Server sync failed', err);
+                logger.error('Server sync failed', err as Error)
               }
             }
           });

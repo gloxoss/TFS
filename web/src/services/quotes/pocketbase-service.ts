@@ -10,6 +10,8 @@
  */
 
 import PocketBase from 'pocketbase'
+import { PB_URL } from '@/lib/pocketbase/config'
+import { escapePBFilter } from '@/lib/security'
 import type {
   IQuoteService,
   CreateQuotePayload,
@@ -19,12 +21,6 @@ import type {
 } from './interface'
 import type { PaginatedResult } from '@/services/products/interface'
 import { createServiceLogger } from '@/lib/logger'
-
-const PB_URL_RAW = process.env.NEXT_PUBLIC_POCKETBASE_URL;
-if (!PB_URL_RAW && process.env.NODE_ENV === 'production') {
-  throw new Error('NEXT_PUBLIC_POCKETBASE_URL is not defined');
-}
-const POCKETBASE_URL = PB_URL_RAW || 'http://127.0.0.1:8090';
 
 export class PocketBaseQuoteService implements IQuoteService {
   private pb: PocketBase
@@ -63,7 +59,7 @@ export class PocketBaseQuoteService implements IQuoteService {
       pdfGenerated: (record.pdf_generated as boolean) || false,
       // Map attached quote_pdf file field - PocketBase stores filename, we need to build full URL
       pdfFileUrl: record.quote_pdf
-        ? `${process.env.NEXT_PUBLIC_POCKETBASE_URL || 'http://127.0.0.1:8090'}/api/files/quotes/${record.id}/${record.quote_pdf}`
+        ? `${PB_URL}/api/files/quotes/${record.id}/${record.quote_pdf}`
         : undefined,
       pdfFileName: record.quote_pdf as string | undefined,
       followUpDate: record.follow_up_date as string | undefined,
@@ -141,7 +137,7 @@ export class PocketBaseQuoteService implements IQuoteService {
   async getUserQuotes(userId: string): Promise<Quote[]> {
     try {
       const records = await this.pb.collection('quotes').getList(1, 50, {
-        filter: `user = "${userId}"`,
+        filter: `user = "${escapePBFilter(userId)}"`,
         sort: '-created',
       })
       return records.items.map((r) => this.mapRecordToQuote(r))
@@ -154,7 +150,7 @@ export class PocketBaseQuoteService implements IQuoteService {
   async getQuotesByEmail(email: string): Promise<Quote[]> {
     try {
       const records = await this.pb.collection('quotes').getList(1, 50, {
-        filter: `client_email = "${email}"`,
+        filter: `client_email = "${escapePBFilter(email)}"`,
         sort: '-created',
       })
       return records.items.map((r) => this.mapRecordToQuote(r))
@@ -179,7 +175,7 @@ export class PocketBaseQuoteService implements IQuoteService {
       // Use Admin Auth to fetch quote + access_token securely
       // We create a new client here to avoid messing with the injected client's auth state
       // if it happens to be a user client.
-      const adminPb = new PocketBase(POCKETBASE_URL)
+      const adminPb = new PocketBase(PB_URL)
       await adminPb.collection('_superusers').authWithPassword(
         process.env.POCKETBASE_ADMIN_EMAIL || '',
         process.env.POCKETBASE_ADMIN_PASSWORD || ''
@@ -214,11 +210,11 @@ export class PocketBaseQuoteService implements IQuoteService {
         options.filter = filterString
       }
 
-      console.log('[PocketBaseQuoteService] Fetching quotes. Options:', JSON.stringify(options))
+      this.log.debug('Fetching quotes', { options })
 
       const records = await this.pb.collection('quotes').getList(page, perPage, options)
 
-      console.log('[PocketBaseQuoteService] Success. Total items:', records.totalItems)
+      this.log.debug('Quotes fetched successfully', { totalItems: records.totalItems })
 
       return {
         items: records.items.map((r) => this.mapRecordToQuote(r)),
@@ -228,7 +224,7 @@ export class PocketBaseQuoteService implements IQuoteService {
         totalPages: records.totalPages,
       }
     } catch (error) {
-      console.error('[PocketBaseQuoteService] Error fetching admin quotes:', error)
+      this.log.error('Error fetching admin quotes', error)
       return {
         items: [],
         page,
@@ -268,7 +264,7 @@ export class PocketBaseQuoteService implements IQuoteService {
       formData.append('is_locked', 'false')  // Fixed: Use correct field name from schema
       formData.append('quoted_at', new Date().toISOString())  // Set timestamp for grace period
 
-      console.log('[QuoteService] Uploading quote:', {
+      this.log.debug('Uploading quote', {
         id,
         fileName: file.name,
         fileSize: file.size,
@@ -278,14 +274,10 @@ export class PocketBaseQuoteService implements IQuoteService {
       const record = await this.pb.collection('quotes').update(id, formData)
       return { success: true, data: this.mapRecordToQuote(record) }
     } catch (error: any) {
-      console.error('Error uploading quote:', error)
-      // Log detailed PocketBase error response if available
-      if (error?.response?.data) {
-        console.error('PocketBase validation errors:', JSON.stringify(error.response.data, null, 2))
-      }
-      if (error?.response) {
-        console.error('PocketBase full response:', JSON.stringify(error.response, null, 2))
-      }
+      this.log.error('Error uploading quote', error, {
+        validationErrors: error?.response?.data,
+        fullResponse: error?.response,
+      })
       return { success: false, error: error?.message || 'Failed to upload quote and lock record.' }
     }
   }

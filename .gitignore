@@ -1,42 +1,113 @@
-# PocketBase data (synced separately via scp)
+# =============================================================================
+# TFS Project .gitignore - Optimized for Clean Deployments
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# PocketBase Data (synced separately via scp)
+# -----------------------------------------------------------------------------
 pb_data/
-pb_data_stage/
 pb_data_*/
 *.db-wal
 *.db-shm
+*.db
 
-# Large archives (synced separately)
+# -----------------------------------------------------------------------------
+# Large Archives & Backups
+# -----------------------------------------------------------------------------
 *.zip
 *.tar
 *.tar.gz
 *.7z
 *.rar
+backups/
 
-# HEROUI templates (not needed for production)
+# -----------------------------------------------------------------------------
+# UI Template Sources (reference only, not for production)
+# -----------------------------------------------------------------------------
 HEROUI/
+TailwindPlus/
 
-# Old migrations backup
+# -----------------------------------------------------------------------------
+# Legacy & Backup Migrations (archived)
+# -----------------------------------------------------------------------------
 pb_migrations_old/
+pb_migrations_legacy*/
+pb_migrations_factory_reset*/
 
-# Tools and scripts (optional)
+# -----------------------------------------------------------------------------
+# Development Scripts & Data Files
+# -----------------------------------------------------------------------------
+*.py
+*.csv
+*.pdf
+__pycache__/
+_legacy_reference/
 tools/
+scripts/
 
-# Environment
-/web/.env.local
-/web/.env
+# Debug/Log Files
+*.log
+*.txt
+!README.txt
+admin_debug_notes.txt
+missing*.txt
+fix_*.json
+*_catalog.json
+*_urls.json
+
+# -----------------------------------------------------------------------------
+# Environment & Secrets
+# -----------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+!.env.production.template
 prod.env
+secrets/
 
-# Deploy artifacts
-/deploy.md
-/pocketbase
-*.exe
-
-# Build outputs synced separately
+# -----------------------------------------------------------------------------
+# Build & Deploy Artifacts
+# -----------------------------------------------------------------------------
 web/.next/
 web/node_modules/
+web/out/
+deploy/images/*.tar
+*.exe
+pocketbase
+pocketbase.exe
 
-# Misc large files
+# Docker exports
+docker_exports/
+deploy_bundle/
+
+# -----------------------------------------------------------------------------
+# Media (synced separately)
+# -----------------------------------------------------------------------------
 *.mp4
 *.mov
 *.avi
+*.mkv
 
+# Stray root images (cleanup)
+/*.jpg
+/*.png
+/*.gif
+!web/public/**
+
+# -----------------------------------------------------------------------------
+# IDE & System
+# -----------------------------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# -----------------------------------------------------------------------------
+# Temp/Misc
+# -----------------------------------------------------------------------------
+*.tmp
+*.bak
+*.backup
+fly.toml

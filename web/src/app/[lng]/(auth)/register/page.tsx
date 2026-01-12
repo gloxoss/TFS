@@ -1,7 +1,7 @@
 // app/[lng]/(unauthed)/register/page.tsx
 'use client';
 
-import { register } from "@/lib/actions/auth";
+import { register } from "@/lib/actions/session";
 import { useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import NameInput from "@/components/ui/name-input";
@@ -18,20 +18,20 @@ export default function Register() {
   async function handleSubmit(formData: FormData) {
     setErrors([]);
     formData.append('language', lng);
-    
+
     const result = await register(formData);
-    
+
     if (result?.errors) {
       setErrors(result.errors.map(error => t(`auth.errors.${error}`)));
     } else if (result?.redirect) {
       // Store auth attempt state temporarily
       sessionStorage.setItem('auth_attempt', 'true');
-      
+
       // Add a small delay to ensure auth state propagation
       await new Promise(resolve => setTimeout(resolve, 200));
-      
+
       router.push(`/${lng}${result.redirect}`);
-      
+
       // Clean up after navigation
       setTimeout(() => {
         sessionStorage.removeItem('auth_attempt');
@@ -45,7 +45,7 @@ export default function Register() {
         <h1 className="text-2xl font-bold mb-8 text-center text-base-content">
           {t('auth.register')}
         </h1>
-        
+
         {errors.length > 0 && (
           <div className="bg-error/10 border border-error/30 text-error px-4 py-3 rounded-lg mb-6">
             <div className="flex items-center gap-2 mb-2">
@@ -62,7 +62,7 @@ export default function Register() {
 
         <div className="space-y-4">
           <NameInput />
-          
+
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-base-content/80 mb-1">
               {t('auth.email')}

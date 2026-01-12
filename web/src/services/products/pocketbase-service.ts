@@ -1,12 +1,10 @@
 import PocketBase, { RecordModel } from 'pocketbase';
 import { IProductService, ProductFilters, PaginatedResult } from './interface';
 import { Product, Category } from './types';
+import { PB_URL } from '@/lib/pocketbase/config';
+import { createServiceLogger } from '@/lib/logger';
 
-const PB_URL_RAW = process.env.NEXT_PUBLIC_POCKETBASE_URL;
-if (!PB_URL_RAW && process.env.NODE_ENV === 'production') {
-    throw new Error('NEXT_PUBLIC_POCKETBASE_URL is not defined');
-}
-const PB_URL = PB_URL_RAW || 'http://127.0.0.1:8090';
+const log = createServiceLogger('ProductService');
 
 /**
  * Map raw DB record to clean Product type
@@ -152,7 +150,7 @@ export class PocketBaseProductService implements IProductService {
             });
             return records.map(mapRecordToProductDefault);
         } catch (error) {
-            console.error('Error fetching all products:', error);
+            log.error('Error fetching all products', error);
             return [];
         }
     }
@@ -168,7 +166,7 @@ export class PocketBaseProductService implements IProductService {
             }
             return product;
         } catch (error) {
-            console.error('Error fetching product by id:', error);
+            log.error('Error fetching product by id', error);
             return null;
         }
     }
@@ -191,12 +189,12 @@ export class PocketBaseProductService implements IProductService {
 
                 // If it's genuinely not found (not a connection error), don't retry
                 if (isNotFound) {
-                    console.log(`Product with slug "${slug}" not found in database`);
+                    log.debug('Product not found', { slug });
                     return null;
                 }
 
                 // Log the error with attempt number
-                console.error(`Error fetching product by slug (attempt ${attempt}/${retries}):`, error);
+                log.warn('Error fetching product, retrying', { slug, attempt, retries, error });
 
                 // Wait before retrying (exponential backoff)
                 if (attempt < retries) {
@@ -206,7 +204,7 @@ export class PocketBaseProductService implements IProductService {
         }
 
         // All retries exhausted
-        console.error(`Failed to fetch product with slug "${slug}" after ${retries} attempts`);
+        log.error('Failed to fetch product after all retries', undefined, { slug, retries });
         return null;
     }
 
@@ -223,13 +221,13 @@ export class PocketBaseProductService implements IProductService {
             }
 
             // Fallback: get the first 6 products if no featured ones exist
-            console.log('[ProductService] No featured products found, falling back to recent products');
+            log.debug('No featured products, using recent');
             const fallbackRecords = await this.pb.collection(EQUIPMENT_COLLECTION).getList(1, 6, {
                 sort: '-created', // Most recently created first
             });
             return fallbackRecords.items.map(mapRecordToProductDefault);
         } catch (error) {
-            console.error('Error fetching featured products:', error);
+            log.error('Error fetching featured products', error);
             return [];
         }
     }
@@ -295,7 +293,7 @@ export class PocketBaseProductService implements IProductService {
                 totalPages: result.totalPages,
             };
         } catch (error) {
-            console.error('Error fetching products:', error);
+            log.error('Error fetching products', error);
             // Return empty result on error (e.g., collection doesn't exist)
             return {
                 items: [],
@@ -314,7 +312,7 @@ export class PocketBaseProductService implements IProductService {
             });
             return records.map(mapRecordToCategory);
         } catch (error) {
-            console.error('Error fetching categories:', error);
+            log.error('Error fetching categories', error);
             // Return empty array on error (e.g., collection doesn't exist)
             return [];
         }

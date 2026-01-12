@@ -9,6 +9,7 @@
 import { verifyAdminAccess } from '@/services/auth/access-control'
 import { createServerClient, createAdminClient } from '@/lib/pocketbase/server'
 import { revalidatePath } from 'next/cache'
+import { PB_URL } from '@/lib/pocketbase/config'
 
 export interface EquipmentItem {
     id: string
@@ -44,7 +45,21 @@ export interface EquipmentListResponse {
  * Transform PocketBase record to EquipmentItem
  */
 function transformEquipment(record: Record<string, any>, baseUrl: string): EquipmentItem {
-    const images = Array.isArray(record.images) ? record.images : []
+    // Handle both 'images' array field and 'image' singular field
+    const imagesArray = Array.isArray(record.images) ? record.images : []
+
+    // Build image URLs - prioritize 'images' array, fall back to 'image' singular
+    let imageUrls: string[] = []
+
+    if (imagesArray.length > 0) {
+        // Use multi-file 'images' field
+        imageUrls = imagesArray.map((img: string) =>
+            `${baseUrl}/api/files/${record.collectionId}/${record.id}/${img}`
+        )
+    } else if (record.image) {
+        // Fall back to single 'image' field (hero image)
+        imageUrls = [`${baseUrl}/api/files/${record.collectionId}/${record.id}/${record.image}`]
+    }
 
     return {
         id: record.id,
@@ -58,10 +73,8 @@ function transformEquipment(record: Record<string, any>, baseUrl: string): Equip
         descriptionFr: record.description_fr || '',
         dailyRate: record.daily_rate || 0,
         stock: record.stock || 0,
-        images,
-        imageUrls: images.map((img: string) =>
-            `${baseUrl}/api/files/${record.collectionId}/${record.id}/${img}`
-        ),
+        images: imagesArray.length > 0 ? imagesArray : (record.image ? [record.image] : []),
+        imageUrls,
         visibility: record.visibility ?? true,
         featured: record.featured || false,
         availabilityStatus: record.availability_status || 'available',
@@ -89,11 +102,6 @@ export async function getEquipmentList(
         }
 
         const client = await createAdminClient()
-        const PB_URL_RAW = process.env.NEXT_PUBLIC_POCKETBASE_URL;
-        if (!PB_URL_RAW && process.env.NODE_ENV === 'production') {
-            throw new Error('NEXT_PUBLIC_POCKETBASE_URL is not defined');
-        }
-        const baseUrl = PB_URL_RAW || 'http://127.0.0.1:8090'
 
         // Build filter
         const filterParts: string[] = []
@@ -113,7 +121,7 @@ export async function getEquipmentList(
             filter
         })
 
-        const items = result.items.map(item => transformEquipment(item, baseUrl))
+        const items = result.items.map(item => transformEquipment(item, PB_URL))
 
         return {
             success: true,
@@ -150,16 +158,11 @@ export async function getEquipmentById(id: string): Promise<{
         }
 
         const client = await createAdminClient()
-        const PB_URL_RAW = process.env.NEXT_PUBLIC_POCKETBASE_URL;
-        if (!PB_URL_RAW && process.env.NODE_ENV === 'production') {
-            throw new Error('NEXT_PUBLIC_POCKETBASE_URL is not defined');
-        }
-        const baseUrl = PB_URL_RAW || 'http://127.0.0.1:8090'
         const record = await client.collection('equipment').getOne(id)
 
         return {
             success: true,
-            item: transformEquipment(record, baseUrl)
+            item: transformEquipment(record, PB_URL)
         }
     } catch (error) {
         console.error('[AdminInventory] Error fetching equipment:', error)
