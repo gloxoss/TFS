@@ -1,56 +1,54 @@
 /**
  * Security Utilities
  * 
- * Functions for sanitizing user inputs to prevent injection attacks.
+ * Centralized security functions for input sanitization and validation.
  */
 
 /**
- * Escape a string for safe use in PocketBase filter queries.
- * Prevents filter injection by escaping special characters.
+ * Escape special characters for PocketBase filter queries.
+ * Prevents filter injection attacks when using user input in filter strings.
  * 
- * @example
- * // Safe usage in filter
- * filter: `email = "${escapePBFilter(userEmail)}"`
+ * @param value - The string value to escape
+ * @returns Escaped string safe for use in PocketBase filter queries
  */
 export function escapePBFilter(value: string): string {
-    if (!value) return ''
-
-    // Escape double quotes and backslashes for PocketBase filter syntax
+    if (!value) return '';
+    // Escape backslashes first, then double quotes
     return value
-        .replace(/\\/g, '\\\\')  // Escape backslashes first
-        .replace(/"/g, '\\"')    // Escape double quotes
-        .replace(/'/g, "\\'")    // Escape single quotes
+        .replace(/\\/g, '\\\\')
+        .replace(/"/g, '\\"');
 }
 
 /**
- * Validate that a string is a valid email format.
- * Use before database queries.
+ * Validate email format.
+ * Basic validation - for comprehensive validation, use server-side checks.
  */
 export function isValidEmail(email: string): boolean {
-    if (!email || typeof email !== 'string') return false
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    return emailRegex.test(email)
+    if (!email) return false;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
 }
 
 /**
- * Validate that a string is a valid PocketBase record ID.
+ * Validate PocketBase record ID format.
  * PocketBase IDs are 15-character alphanumeric strings.
  */
 export function isValidPBId(id: string): boolean {
-    if (!id || typeof id !== 'string') return false
-    // PocketBase uses 15-char alphanumeric IDs
-    return /^[a-zA-Z0-9]{15}$/.test(id)
+    if (!id) return false;
+    // PocketBase IDs are exactly 15 characters, alphanumeric
+    return /^[a-zA-Z0-9]{15}$/.test(id);
 }
 
 /**
  * Sanitize a string for safe display.
- * Removes potentially dangerous characters.
+ * Escapes HTML entities to prevent XSS when displaying user content.
  */
 export function sanitizeDisplayString(value: string): string {
-    if (!value) return ''
+    if (!value) return '';
     return value
+        .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#x27;')
+        .replace(/'/g, '&#039;');
 }

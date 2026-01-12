@@ -1,0 +1,58 @@
+[
+  {
+    "name": "Sony Venice 2 8K",
+    "slug": "sony-venice-2-8k"
+  },
+  {
+    "name": "ARRI Amira",
+    "slug": "arri-amira"
+  },
+  {
+    "name": "Panasonic VariCam LT",
+    "slug": "panasonic-varicam-lt"
+  },
+  {
+    "name": "Sony PMW-F55",
+    "slug": "sony-pmw-f55"
+  },
+  {
+    "name": "ARRI 9.5-18mm T2.9 Ultra Wide Zoom",
+    "slug": "arri-9-5-18mm-t2-9-ultra-wide-zoom"
+  },
+  {
+    "name": "ARRI Alura 18-80mm T2.6 Studio Zoom",
+    "slug": "arri-alura-18-80mm-t2-6-studio-zoom"
+  },
+  {
+    "name": "Fujinon Cabrio 14-35mm T2.9",
+    "slug": "fujinon-cabrio-14-35mm-t2-9"
+  },
+  {
+    "name": "Fujinon Cabrio 20-120mm T3.5",
+    "slug": "fujinon-cabrio-20-120mm-t3-5"
+  },
+  {
+    "name": "Fujinon Cabrio 85-300mm T2.9-4.0",
+    "slug": "fujinon-cabrio-85-300mm-t2-9-4-0"
+  },
+  {
+    "name": "Angenieux Optimo Style 16-40mm T2.8",
+    "slug": "angenieux-optimo-style-16-40mm-t2-8"
+  },
+  {
+    "name": "Angenieux Optimo Style 48-130mm T3",
+    "slug": "angenieux-optimo-style-48-130mm-t3"
+  },
+  {
+    "name": "Angenieux Optimo Style 30-76mm T2.8",
+    "slug": "angenieux-optimo-style-30-76mm-t2-8"
+  },
+  {
+    "name": "Sigma 50-100mm T2 High-Speed Zoom",
+    "slug": "sigma-50-100mm-t2-high-speed-zoom"
+  },
+  {
+    "name": "Teradek RT FIZ Wireless Lens Control",
+    "slug": "teradek-rt-fiz-wireless-lens-control"
+  }
+]

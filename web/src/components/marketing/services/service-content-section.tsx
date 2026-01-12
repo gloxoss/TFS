@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion'
 import type { ServiceSection } from '@/services/services/interface'
 import Image from 'next/image'
-import DOMPurify from 'isomorphic-dompurify'
 
 interface ServiceContentSectionProps {
     sections: ServiceSection[]
@@ -73,7 +72,7 @@ export default function ServiceContentSection({ sections, lng, serviceId }: Serv
                                 {content && (
                                     <div
                                         className="prose prose-invert prose-lg md:prose-2xl max-w-none text-zinc-200 leading-relaxed text-pretty"
-                                        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }}
+                                        dangerouslySetInnerHTML={{ __html: content }}
                                     />
                                 )}
 

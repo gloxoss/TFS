@@ -3,9 +3,6 @@
  * 
  * Catches JavaScript errors anywhere in the child component tree,
  * logs those errors, and displays a fallback UI instead of crashing.
- * 
- * Required because React 18+ requires error boundaries for graceful
- * degradation when components throw during render.
  */
 'use client'
 
@@ -33,20 +30,14 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     }
 
     componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
-        // Log error to console in development
         if (process.env.NODE_ENV === 'development') {
             console.error('ErrorBoundary caught an error:', error, errorInfo)
         }
-
-        // Call custom error handler if provided
         this.props.onError?.(error, errorInfo)
-
-        // TODO: In production, send to error tracking service (e.g., Sentry)
     }
 
     render(): ReactNode {
         if (this.state.hasError) {
-            // Custom fallback or default error UI
             if (this.props.fallback) {
                 return this.props.fallback
             }

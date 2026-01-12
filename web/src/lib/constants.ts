@@ -1,84 +1,87 @@
 /**
  * Application Constants
  * 
- * Centralized configuration values for the TFS platform.
- * Avoids magic numbers scattered throughout the codebase.
+ * Centralized configuration values to avoid magic numbers throughout the codebase.
  */
 
-// =============================================================================
-// UI CONSTANTS
-// =============================================================================
-
-export const UI = {
-    /** Default debounce delay for search inputs (ms) */
-    DEBOUNCE_MS: 300,
-
-    /** Toast notification display duration (ms) */
-    TOAST_DURATION_MS: 4000,
-
-    /** Sidebar width in pixels */
-    SIDEBAR_WIDTH_PX: 288,
-
-    /** Scroll threshold for sticky elements (px) */
-    SCROLL_THRESHOLD_PX: 300,
-
-    /** Animation durations */
-    ANIMATION: {
-        FAST_MS: 150,
-        NORMAL_MS: 300,
-        SLOW_MS: 500,
-    },
-} as const
-
-// =============================================================================
-// BUSINESS LOGIC CONSTANTS
-// =============================================================================
-
-export const BUSINESS = {
-    /** Maximum rental period (days) */
-    MAX_RENTAL_DAYS: 365,
-
-    /** Default rental period (days) */
-    DEFAULT_RENTAL_DAYS: 1,
-
-    /** Cart sync debounce delay (ms) */
-    CART_SYNC_DEBOUNCE_MS: 1000,
-
-    /** Email check debounce delay (ms) */
-    EMAIL_CHECK_DEBOUNCE_MS: 800,
-
-    /** API retry attempts */
-    API_RETRY_ATTEMPTS: 3,
-
-    /** API retry delay multiplier (ms) */
-    API_RETRY_DELAY_MS: 200,
-} as const
-
-// =============================================================================
-// PAGINATION CONSTANTS
-// =============================================================================
+// ============================================================================
+// Pagination
+// ============================================================================
 
 export const PAGINATION = {
-    /** Default items per page */
-    DEFAULT_PER_PAGE: 12,
+    /** Default items per page for product listings */
+    DEFAULT_PAGE_SIZE: 12,
+    /** Default items per page for admin tables */
+    ADMIN_PAGE_SIZE: 20,
+    /** Maximum items per page allowed */
+    MAX_PAGE_SIZE: 100,
+} as const;
 
-    /** Admin dashboard items per page */
-    ADMIN_PER_PAGE: 20,
+// ============================================================================
+// Cart & Commerce
+// ============================================================================
 
-    /** Maximum items per page */
-    MAX_PER_PAGE: 100,
-} as const
+export const CART = {
+    /** Maximum quantity per item */
+    MAX_ITEM_QUANTITY: 99,
+    /** Minimum rental days */
+    MIN_RENTAL_DAYS: 1,
+    /** Default rental days */
+    DEFAULT_RENTAL_DAYS: 1,
+    /** Cart expiry in days for guests */
+    GUEST_CART_EXPIRY_DAYS: 7,
+} as const;
 
-// =============================================================================
-// HTTP STATUS CODES (for consistency)
-// =============================================================================
+// ============================================================================
+// Rate Limiting
+// ============================================================================
 
-export const HTTP = {
-    OK: 200,
-    CREATED: 201,
-    BAD_REQUEST: 400,
-    UNAUTHORIZED: 401,
-    FORBIDDEN: 403,
-    NOT_FOUND: 404,
-    INTERNAL_SERVER_ERROR: 500,
-} as const
+export const RATE_LIMITS = {
+    /** Maximum email checks per minute */
+    EMAIL_CHECK_MAX: 10,
+    /** Rate limit window in milliseconds */
+    RATE_LIMIT_WINDOW_MS: 60 * 1000,
+} as const;
+
+// ============================================================================
+// Image Dimensions
+// ============================================================================
+
+export const IMAGES = {
+    /** Product card thumbnail */
+    THUMBNAIL: { width: 300, height: 300 },
+    /** Product detail hero */
+    PRODUCT_HERO: { width: 800, height: 600 },
+    /** Category banner */
+    CATEGORY_BANNER: { width: 400, height: 300 },
+    /** Blog cover */
+    BLOG_COVER: { width: 1200, height: 630 },
+} as const;
+
+// ============================================================================
+// Validation
+// ============================================================================
+
+export const VALIDATION = {
+    /** Minimum password length */
+    MIN_PASSWORD_LENGTH: 8,
+    /** Minimum username length */
+    MIN_USERNAME_LENGTH: 4,
+    /** Maximum username length */
+    MAX_USERNAME_LENGTH: 32,
+    /** Maximum file upload size in bytes (10MB) */
+    MAX_FILE_SIZE: 10 * 1024 * 1024,
+} as const;
+
+// ============================================================================
+// Timeouts
+// ============================================================================
+
+export const TIMEOUTS = {
+    /** Debounce delay for search input in ms */
+    SEARCH_DEBOUNCE: 300,
+    /** Toast notification duration in ms */
+    TOAST_DURATION: 3000,
+    /** API request timeout in ms */
+    API_TIMEOUT: 30000,
+} as const;

@@ -1,17 +1,17 @@
-import type { ReactNode } from "react";
-
 /**
  * Root Layout
  * 
- * This is the minimal root layout required by Next.js App Router.
- * The main layout with providers, fonts, and styling is in [lng]/layout.tsx
- * 
- * This layout only handles the root page.tsx redirect.
+ * Minimal layout for the root redirect page.
+ * The actual app layouts are in [lng]/ subdirectories.
  */
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({
+    children,
+}: {
+    children: React.ReactNode
+}) {
     return (
-        <html lang="en">
+        <html>
             <body>{children}</body>
         </html>
-    );
+    )
 }

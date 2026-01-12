@@ -173,7 +173,7 @@ migrate((app) => {
         const setCol = app.findCollectionByNameOrId("settings");
         const setRec = new Record(setCol);
         setRec.set("company_name", "TFS - TV Film Solutions");
-        setRec.set("contact_email", "info@tfs.ma");
+        setRec.set("contact_email", "contact@tfs.ma");
         setRec.set("company_phone", "+212 522 246 372");
         setRec.set("company_fax", "+212 522 241 396");
         setRec.set("company_address", "N°55-57, Rue Souleimane El Farissi, Ain Borja - Casablanca 20330, Morocco");

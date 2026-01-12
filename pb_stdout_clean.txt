@@ -1,0 +1,1 @@
+Error: failed to apply migration 1765457188_deleted_categories.js: [categories] failed to delete due to existing relation references: equipment
