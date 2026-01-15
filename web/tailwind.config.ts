@@ -1,8 +1,7 @@
 import type { Config } from "tailwindcss";
-const { heroui } = require("@heroui/react");
-const {
-  default: flattenColorPalette,
-} = require("tailwindcss/lib/util/flattenColorPalette");
+import { heroui } from "@heroui/react";
+import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette";
+import typography from "@tailwindcss/typography";
 
 const config: Config = {
   content: [
@@ -71,7 +70,7 @@ const config: Config = {
   },
   plugins: [
     heroui(), // HeroUI Plugin
-    require('@tailwindcss/typography'),
+    typography,
     addVariablesForColors, // Aceternity Helper
   ],
 };

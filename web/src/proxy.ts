@@ -47,6 +47,10 @@ export async function proxy(request: NextRequest) {
   // Preconnect to grainy gradients (used for effects)
   response.headers.set('Link', '<https://grainy-gradients.vercel.app>; rel=preconnect');
 
+  // Pass pathname to server components for role-based routing
+  response.headers.set('x-pathname', request.nextUrl.pathname);
+
+
   // -----------------------------------------------------------------------
   // 1. I18n Redirection Logic
   // -----------------------------------------------------------------------

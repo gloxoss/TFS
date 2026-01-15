@@ -4,9 +4,10 @@
  * Admin Inventory (Equipment) Server Actions
  * 
  * CRUD operations for equipment management.
+ * Products managers and admins can access inventory operations.
  */
 
-import { verifyAdminAccess } from '@/services/auth/access-control'
+import { verifyAdminAccess, verifyInventoryAccess, canDeleteProducts } from '@/services/auth/access-control'
 import { createServerClient, createAdminClient } from '@/lib/pocketbase/server'
 import { revalidatePath } from 'next/cache'
 import { PB_URL } from '@/lib/pocketbase/config'
@@ -67,7 +68,8 @@ function transformEquipment(record: Record<string, any>, baseUrl: string): Equip
         nameEn: record.name_en || record.name || '',
         nameFr: record.name_fr || '',
         slug: record.slug || '',
-        category: record.category || '',
+        // Use expanded category name if available, otherwise fall back to ID
+        category: record.expand?.category?.name || record.expand?.category?.name_en || record.category || '',
         brand: record.brand || '',
         descriptionEn: record.description_en || '',
         descriptionFr: record.description_fr || '',
@@ -96,8 +98,9 @@ export async function getEquipmentList(
     }
 ): Promise<EquipmentListResponse> {
     try {
-        const isAdmin = await verifyAdminAccess()
-        if (!isAdmin) {
+        // Products managers and admins can access inventory
+        const hasAccess = await verifyInventoryAccess()
+        if (!hasAccess) {
             return { success: false, items: [], totalItems: 0, totalPages: 0, page, error: 'Unauthorized' }
         }
 
@@ -118,7 +121,8 @@ export async function getEquipmentList(
         const filter = filterParts.length > 0 ? filterParts.join(' && ') : undefined
 
         const result = await client.collection('equipment').getList(page, limit, {
-            filter
+            filter,
+            expand: 'category' // Expand category relation to get name
         })
 
         const items = result.items.map(item => transformEquipment(item, PB_URL))
@@ -152,8 +156,9 @@ export async function getEquipmentById(id: string): Promise<{
     error?: string
 }> {
     try {
-        const isAdmin = await verifyAdminAccess()
-        if (!isAdmin) {
+        // Products managers and admins can access inventory
+        const hasAccess = await verifyInventoryAccess()
+        if (!hasAccess) {
             return { success: false, item: null, error: 'Unauthorized' }
         }
 
@@ -183,8 +188,9 @@ export async function createEquipment(formData: FormData): Promise<{
     error?: string
 }> {
     try {
-        const isAdmin = await verifyAdminAccess()
-        if (!isAdmin) {
+        // Products managers and admins can create equipment
+        const hasAccess = await verifyInventoryAccess()
+        if (!hasAccess) {
             return { success: false, error: 'Unauthorized' }
         }
 
@@ -263,8 +269,9 @@ export async function updateEquipment(id: string, formData: FormData): Promise<{
     error?: string
 }> {
     try {
-        const isAdmin = await verifyAdminAccess()
-        if (!isAdmin) {
+        // Products managers and admins can update equipment
+        const hasAccess = await verifyInventoryAccess()
+        if (!hasAccess) {
             return { success: false, error: 'Unauthorized' }
         }
 
@@ -317,9 +324,10 @@ export async function deleteEquipment(id: string): Promise<{
     error?: string
 }> {
     try {
-        const isAdmin = await verifyAdminAccess()
-        if (!isAdmin) {
-            return { success: false, error: 'Unauthorized' }
+        // Only admins can delete equipment (not products managers)
+        const canDelete = await canDeleteProducts()
+        if (!canDelete) {
+            return { success: false, error: 'Delete permission denied. Only admins can delete products.' }
         }
 
         const client = await createAdminClient()
@@ -347,8 +355,9 @@ export async function toggleEquipmentVisibility(id: string): Promise<{
     error?: string
 }> {
     try {
-        const isAdmin = await verifyAdminAccess()
-        if (!isAdmin) {
+        // Products managers and admins can toggle visibility
+        const hasAccess = await verifyInventoryAccess()
+        if (!hasAccess) {
             return { success: false, error: 'Unauthorized' }
         }
 
@@ -380,8 +389,9 @@ export async function getEquipmentCategories(): Promise<{
     error?: string
 }> {
     try {
-        const isAdmin = await verifyAdminAccess()
-        if (!isAdmin) {
+        // Products managers and admins can fetch categories
+        const hasAccess = await verifyInventoryAccess()
+        if (!hasAccess) {
             return { success: false, categories: [], error: 'Unauthorized' }
         }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Dialog, DialogBackdrop, DialogPanel, TransitionChild } from '@headlessui/react';
 import {
     X,
@@ -18,11 +18,13 @@ import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { usePocketBase } from '@/components/pocketbase-provider';
+import { ROLES, UserRole, PERMISSIONS, roleHasPermission } from '@/types/auth';
 
 interface NavigationItem {
     name: string;
     href: string;
     icon: LucideIcon;
+    permission?: string; // Required permission to see this item
 }
 
 interface AdminSidebarProps {
@@ -35,25 +37,52 @@ export default function AdminSidebar({
     lng
 }: AdminSidebarProps) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [userRole, setUserRole] = useState<UserRole | null>(null);
     const pathname = usePathname();
     const pb = usePocketBase();
     const router = useRouter();
     const user = pb.authStore.model;
 
+    // Get user role on mount
+    useEffect(() => {
+        if (user && 'role' in user) {
+            setUserRole(user.role as UserRole);
+        }
+    }, [user]);
+
     const logout = () => {
         pb.authStore.clear();
-        document.cookie = "pb_auth=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;"; // Clear cookie as well 
+        document.cookie = "pb_auth=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
         router.push(`/${lng}/login`);
     };
 
-    const navigation: NavigationItem[] = [
-        { name: 'Overview', href: `/${lng}/admin`, icon: LayoutDashboard },
-        { name: 'Requests', href: `/${lng}/admin/requests`, icon: Inbox },
-        { name: 'Inventory', href: `/${lng}/admin/inventory`, icon: Package },
-        { name: 'Blog', href: `/${lng}/admin/blog`, icon: FileText },
-        { name: 'Users', href: `/${lng}/admin/users`, icon: Users },
-        { name: 'Settings', href: `/${lng}/admin/settings`, icon: Settings },
+    // All possible navigation items with required permissions
+    const allNavigation: NavigationItem[] = [
+        { name: 'Overview', href: `/${lng}/admin`, icon: LayoutDashboard, permission: PERMISSIONS.DASHBOARD_VIEW },
+        { name: 'Requests', href: `/${lng}/admin/requests`, icon: Inbox, permission: PERMISSIONS.QUOTES_VIEW },
+        { name: 'Inventory', href: `/${lng}/admin/inventory`, icon: Package, permission: PERMISSIONS.INVENTORY_VIEW },
+        { name: 'Blog', href: `/${lng}/admin/blog`, icon: FileText, permission: PERMISSIONS.BLOG_VIEW },
+        { name: 'Users', href: `/${lng}/admin/users`, icon: Users, permission: PERMISSIONS.USERS_VIEW },
+        { name: 'Settings', href: `/${lng}/admin/settings`, icon: Settings, permission: PERMISSIONS.SETTINGS_VIEW },
     ];
+
+    // Filter navigation based on user role
+    const navigation = allNavigation.filter(item => {
+        if (!userRole) return true; // Show all during loading to prevent flash
+        if (!item.permission) return true; // No permission required
+        return roleHasPermission(userRole, item.permission);
+    });
+
+    // Get role display label
+    const getRoleLabel = (role: UserRole | null): string => {
+        if (!role) return 'Loading...';
+        switch (role) {
+            case ROLES.ADMIN: return 'Admin';
+            case ROLES.PRODUCTS_MANAGER: return 'Products Manager';
+            case ROLES.CUSTOMER: return 'Customer';
+            default: return 'User';
+        }
+    };
 
     const isCurrent = (href: string) => {
         if (href === `/${lng}/admin` && pathname === href) return true;
@@ -90,7 +119,12 @@ export default function AdminSidebar({
                                 <div className="h-8 w-8 rounded bg-red-600 flex items-center justify-center">
                                     <span className="text-white font-bold">A</span>
                                 </div>
-                                <span className="text-xl font-bold text-white tracking-widest">ADMIN</span>
+                                <div className="flex flex-col">
+                                    <span className="text-xl font-bold text-white tracking-widest">ADMIN</span>
+                                    {userRole === ROLES.PRODUCTS_MANAGER && (
+                                        <span className="text-xs text-amber-500">Products Manager</span>
+                                    )}
+                                </div>
                             </div>
                             <nav className="flex flex-1 flex-col">
                                 <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -128,7 +162,12 @@ export default function AdminSidebar({
                         <div className="h-8 w-8 rounded bg-red-600 flex items-center justify-center">
                             <span className="text-white font-bold">A</span>
                         </div>
-                        <span className="text-xl font-bold text-white tracking-widest">ADMIN</span>
+                        <div className="flex flex-col">
+                            <span className="text-xl font-bold text-white tracking-widest">ADMIN</span>
+                            {userRole === ROLES.PRODUCTS_MANAGER && (
+                                <span className="text-xs text-amber-500">Products Manager</span>
+                            )}
+                        </div>
                     </div>
                     <nav className="flex flex-1 flex-col">
                         <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -160,7 +199,8 @@ export default function AdminSidebar({
                                     <span className="sr-only">Your profile</span>
                                     <div className="flex flex-col overflow-hidden">
                                         <span aria-hidden="true" className="truncate w-full text-zinc-300">{user?.email || 'Admin'}</span>
-                                        <button onClick={logout} className="text-xs text-zinc-500 text-left hover:text-red-400 flex items-center gap-1 transition-colors">
+                                        <span className="text-xs text-zinc-500">{getRoleLabel(userRole)}</span>
+                                        <button onClick={logout} className="text-xs text-zinc-500 text-left hover:text-red-400 flex items-center gap-1 transition-colors mt-1">
                                             <LogOut className="size-3" /> Sign out
                                         </button>
                                     </div>
@@ -184,8 +224,10 @@ export default function AdminSidebar({
                     <span className="sr-only">Open sidebar</span>
                     <Menu aria-hidden="true" className="size-6" />
                 </button>
-                <div className="flex-1 text-sm/6 font-semibold text-white">Admin Operations</div>
-                <Link href={`/${lng}/admin/settings`}>
+                <div className="flex-1 text-sm/6 font-semibold text-white">
+                    {userRole === ROLES.PRODUCTS_MANAGER ? 'Products Management' : 'Admin Operations'}
+                </div>
+                <Link href={`/${lng}/admin/inventory`}>
                     <span className="sr-only">Your profile</span>
                     <div className="size-8 rounded-full bg-red-600 flex items-center justify-center text-xs text-white font-bold">
                         {user?.email?.charAt(0).toUpperCase() || 'A'}

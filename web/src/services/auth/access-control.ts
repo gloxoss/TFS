@@ -1,73 +1,126 @@
 import PocketBase, { AuthModel } from 'pocketbase';
-import { UserRole, ROLES } from '@/types/auth';
+import {
+    UserRole,
+    ROLES,
+    PERMISSIONS,
+    roleHasPermission,
+    hasInventoryAccess as hasInventoryRole
+} from '@/types/auth';
+import { createServerClient } from '@/lib/pocketbase/server';
 
 // ============================================================================
-// Service Logic
+// Role Extraction
 // ============================================================================
 
 /**
  * Extract the role from a PocketBase client/model.
- * Handles both "Admin" collection and "Users" collection with 'role' field.
+ * Handles the 'users' collection with 'role' field.
  */
 export function getCurrentUserRole(model: AuthModel): UserRole | 'guest' {
     if (!model) return 'guest';
 
-    // 1. Native PocketBase Admin
-    // (In PB, admins are in a special collection usually called '_superusers' or similar internally,
-    // but the SDK exposes them via .admins alias. The model itself usually lacks 'collectionName' 
-    // in the same way, but let's check widely used patterns)
-    // 
-    // However, often we use a unified 'users' collection with a 'role' field.
-    // We'll prioritize the explicity 'role' field.
-    if ('role' in model && model.role === ROLES.ADMIN) {
-        return ROLES.ADMIN;
+    // Check for role field in user model
+    if ('role' in model) {
+        const role = model.role as string;
+
+        // Validate against known roles
+        if (role === ROLES.ADMIN) return ROLES.ADMIN;
+        if (role === ROLES.PRODUCTS_MANAGER) return ROLES.PRODUCTS_MANAGER;
     }
 
-    // 2. Check for "Admins" collection (if using native separate admins)
-    // This is a safeguard if you use PB's built-in Admin UI users.
-    // Note: PB AuthStore Model for admins usually doesn't have a collectionId/Name exposed easily 
-    // in the type definition, but valid admin models exist.
-    // For now, we assume if you are authenticated as an admin on the SDK, it might not be a RecordModel.
-    // A simple heuristic: if it has an email but no 'role' field, and it came from .admins.authWith...,
-    // we might treat it as admin IF we trust the source. 
-    // BETTER: Stick to the unified 'users' collection with 'role'='admin' for this app.
-
+    // Default to customer for authenticated users without explicit role
     return ROLES.CUSTOMER;
 }
 
+// ============================================================================
+// Access Verification (Synchronous - for client components)
+// ============================================================================
+
 /**
- * Verify if the current session has Admin access.
- * Returns true if allowed, false otherwise.
- * 
- * Logic:
- * 1. Check if authStore is valid.
- * 2. Check if role is 'admin'.
+ * Check if user has full admin access
  */
 export function hasAdminAccess(pb: { authStore: PocketBase['authStore'] }): boolean {
     if (!pb.authStore.isValid || !pb.authStore.model) {
         return false;
     }
-
     const role = getCurrentUserRole(pb.authStore.model);
     return role === ROLES.ADMIN;
 }
 
 /**
- * Server-Side Helper: Verify Admin Access from Cookies
- * Used in Page/Layouts (Server Components).
- * 
- * @throws Error (or handled by redirect in consumer) - actually returns boolean for easier handling
+ * Check if user has inventory access (admin or products_manager)
  */
-import { createServerClient } from '@/lib/pocketbase/server';
+export function hasInventoryAccess(pb: { authStore: PocketBase['authStore'] }): boolean {
+    if (!pb.authStore.isValid || !pb.authStore.model) {
+        return false;
+    }
+    const role = getCurrentUserRole(pb.authStore.model);
+    return hasInventoryRole(role);
+}
 
 /**
- * Server-Side Helper: Verify Admin Access from Cookies
- * Used in Page/Layouts (Server Components) and Middleware.
- * 
- * @throws Error (or handled by redirect in consumer) - actually returns boolean for easier handling
+ * Check if user has a specific permission
+ */
+export function hasPermission(
+    pb: { authStore: PocketBase['authStore'] },
+    permission: string
+): boolean {
+    if (!pb.authStore.isValid || !pb.authStore.model) {
+        return false;
+    }
+    const role = getCurrentUserRole(pb.authStore.model);
+    return roleHasPermission(role, permission);
+}
+
+// ============================================================================
+// Server-Side Verification (Async - for server components/actions)
+// ============================================================================
+
+/**
+ * Get current user's role from server-side cookie
+ */
+export async function getCurrentRole(): Promise<UserRole | 'guest'> {
+    const pb = await createServerClient(false);
+    if (!pb.authStore.isValid || !pb.authStore.model) {
+        return 'guest';
+    }
+    return getCurrentUserRole(pb.authStore.model);
+}
+
+/**
+ * Verify full admin access server-side
  */
 export async function verifyAdminAccess(): Promise<boolean> {
-    // Usage in Layouts/Pages requires Read-Only client preventing "Cookies can only be modified" errors.
     const pb = await createServerClient(false);
     return hasAdminAccess(pb);
+}
+
+/**
+ * Verify inventory access server-side (admin or products_manager)
+ */
+export async function verifyInventoryAccess(): Promise<boolean> {
+    const pb = await createServerClient(false);
+    return hasInventoryAccess(pb);
+}
+
+/**
+ * Verify specific permission server-side
+ */
+export async function verifyPermission(permission: string): Promise<boolean> {
+    const pb = await createServerClient(false);
+    return hasPermission(pb, permission);
+}
+
+/**
+ * Check if current user can approve products (admin only)
+ */
+export async function canApproveProducts(): Promise<boolean> {
+    return verifyPermission(PERMISSIONS.INVENTORY_APPROVE);
+}
+
+/**
+ * Check if current user can delete products (admin only)
+ */
+export async function canDeleteProducts(): Promise<boolean> {
+    return verifyPermission(PERMISSIONS.INVENTORY_DELETE);
 }
