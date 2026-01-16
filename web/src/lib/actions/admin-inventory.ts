@@ -292,10 +292,13 @@ export async function updateEquipment(id: string, formData: FormData): Promise<{
             }
         })
 
-        // Handle new images
+        // Handle images (both new Files and existing filenames to keep)
+        // PocketBase requires sending ALL images you want to keep (existing filenames) + new files
         const images = formData.getAll('images')
         images.forEach(img => {
             if (img instanceof File && img.size > 0) {
+                data.append('images', img)
+            } else if (typeof img === 'string' && img.length > 0) {
                 data.append('images', img)
             }
         })

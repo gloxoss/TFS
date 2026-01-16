@@ -34,7 +34,7 @@ export default function EditEquipmentPage({
     const [visibility, setVisibility] = useState(true)
     const [featured, setFeatured] = useState(false)
     const [availabilityStatus, setAvailabilityStatus] = useState('available')
-    const [existingImages, setExistingImages] = useState<string[]>([])
+    const [existingImages, setExistingImages] = useState<{ url: string; filename: string }[]>([])
     const [newImages, setNewImages] = useState<File[]>([])
     const [newImagePreviews, setNewImagePreviews] = useState<string[]>([])
 
@@ -69,7 +69,16 @@ export default function EditEquipmentPage({
                 setVisibility(item.visibility)
                 setFeatured(item.featured)
                 setAvailabilityStatus(item.availabilityStatus)
-                setExistingImages(item.imageUrls)
+
+                // Map URLs and filenames
+                // item.images contains filenames, item.imageUrls contains full URLs
+                // We assume they are in the same order
+                const mappedImages = item.imageUrls.map((url, index) => ({
+                    url,
+                    filename: item.images[index] || '' // Fallback if index mismatch, though unlikely
+                })).filter(img => img.filename) // Ensure we have a filename
+
+                setExistingImages(mappedImages)
             } else {
                 setError('Equipment not found')
             }
@@ -103,6 +112,11 @@ export default function EditEquipmentPage({
         setNewImagePreviews(prev => prev.filter((_, i) => i !== index))
     }
 
+    // Remove existing image
+    const removeExistingImage = (index: number) => {
+        setExistingImages(prev => prev.filter((_, i) => i !== index))
+    }
+
     // Submit form
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -124,6 +138,12 @@ export default function EditEquipmentPage({
             formData.append('featured', String(featured))
             formData.append('availability_status', availabilityStatus)
 
+            // Append existing images (filenames) to keep
+            existingImages.forEach(img => {
+                formData.append('images', img.filename)
+            })
+
+            // Append new images (Files)
             newImages.forEach(img => {
                 formData.append('images', img)
             })
@@ -367,13 +387,20 @@ export default function EditEquipmentPage({
 
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {/* Existing images */}
-                        {existingImages.map((url, index) => (
+                        {existingImages.map((img, index) => (
                             <div key={`existing-${index}`} className="relative group">
                                 <img
-                                    src={url}
+                                    src={img.url}
                                     alt={`Image ${index + 1}`}
                                     className="w-full h-32 object-cover rounded-lg"
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => removeExistingImage(index)}
+                                    className="absolute top-2 right-2 p-1 bg-red-600 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                                >
+                                    <X className="w-4 h-4" />
+                                </button>
                             </div>
                         ))}
 
