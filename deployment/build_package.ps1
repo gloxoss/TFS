@@ -32,4 +32,4 @@ Copy-Item "deployment\install.sh" -Destination "$distDir\install.sh"
 
 Write-Host "✨ Build Complete!" -ForegroundColor Green
 Write-Host "📦 Package location: $distDir" -ForegroundColor Yellow
-Write-Host "👉 Zip this folder and send it to the client." -ForegroundColor Yellow
+Write-Host "-> Zip this folder and send it to the client." -ForegroundColor Yellow
