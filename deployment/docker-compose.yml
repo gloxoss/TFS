@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  web:
+    image: tfs-web:latest
+    restart: always
+    environment:
+      - NEXT_PUBLIC_POCKETBASE_URL=https://tfs.zouskym.com
+      - PORT=3000
+    networks:
+      - tfs-network
+
+  pocketbase:
+    image: tfs-pb:latest
+    restart: always
+    volumes:
+      - ./pb_data:/pb/pb_data
+    networks:
+      - tfs-network
+
+  nginx:
+    image: nginx:alpine
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      # Mount SSL certs here if needed, or use a separate Certbot container
+      # - ./certbot/conf:/etc/letsencrypt
+      # - ./certbot/www:/var/www/certbot
+    depends_on:
+      - web
+      - pocketbase
+    networks:
+      - tfs-network
+
+networks:
+  tfs-network:
+    driver: bridge

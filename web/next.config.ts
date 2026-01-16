@@ -14,6 +14,10 @@ const nextConfig: NextConfig = {
     minimumCacheTTL: 86400,
     remotePatterns: [
       {
+        protocol: 'https',
+        hostname: 'tfs.zouskym.com',
+      },
+      {
         protocol: 'http',
         hostname: '72.62.27.47',
         port: '8090',

@@ -75,6 +75,7 @@ export function getCSPImageSources(): string {
         'https://*.cloudinary.com',
         'https://*.unsplash.com',
         'https://grainy-gradients.vercel.app',
+        'https://tfs.zouskym.com',
     ]
     return sources.join(' ')
 }
