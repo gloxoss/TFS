@@ -61,7 +61,7 @@ export const PlusCard: React.FC<PlusCardProps> = ({
     )
 }
 
-const CornerPlusIcons = () => (
+export const CornerPlusIcons = () => (
     <>
         <PlusIcon className="absolute -top-3 -left-3" />
         <PlusIcon className="absolute -top-3 -right-3" />
@@ -70,7 +70,7 @@ const CornerPlusIcons = () => (
     </>
 )
 
-const PlusIcon = ({ className }: { className?: string }) => (
+export const PlusIcon = ({ className }: { className?: string }) => (
     <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
