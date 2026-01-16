@@ -34,9 +34,16 @@ export default function EditEquipmentPage({
     const [visibility, setVisibility] = useState(true)
     const [featured, setFeatured] = useState(false)
     const [availabilityStatus, setAvailabilityStatus] = useState('available')
-    const [existingImages, setExistingImages] = useState<{ url: string; filename: string }[]>([])
-    const [newImages, setNewImages] = useState<File[]>([])
-    const [newImagePreviews, setNewImagePreviews] = useState<string[]>([])
+
+    // Image State
+    const [mainImage, setMainImage] = useState<{ url: string; filename: string } | null>(null)
+    const [newMainImage, setNewMainImage] = useState<File | null>(null)
+    const [newMainImagePreview, setNewMainImagePreview] = useState<string | null>(null)
+    const [deleteMainImage, setDeleteMainImage] = useState(false)
+
+    const [galleryImages, setGalleryImages] = useState<{ url: string; filename: string }[]>([])
+    const [newGalleryImages, setNewGalleryImages] = useState<File[]>([])
+    const [newGalleryImagePreviews, setNewGalleryImagePreviews] = useState<string[]>([])
 
     // Categories
     const [categories, setCategories] = useState<Array<{ id: string; name: string; slug: string }>>([])
@@ -70,15 +77,19 @@ export default function EditEquipmentPage({
                 setFeatured(item.featured)
                 setAvailabilityStatus(item.availabilityStatus)
 
-                // Map URLs and filenames
-                // item.images contains filenames, item.imageUrls contains full URLs
-                // We assume they are in the same order
-                const mappedImages = item.imageUrls.map((url, index) => ({
-                    url,
-                    filename: item.images[index] || '' // Fallback if index mismatch, though unlikely
-                })).filter(img => img.filename) // Ensure we have a filename
+                // Main Image
+                if (item.mainImage) {
+                    setMainImage({ url: item.mainImage, filename: 'main-image' })
+                }
 
-                setExistingImages(mappedImages)
+                // Gallery Images
+                // item.images contains filenames, item.galleryImages contains full URLs
+                const mappedGallery = item.galleryImages.map((url, index) => ({
+                    url,
+                    filename: item.images[index] || ''
+                })).filter(img => img.filename)
+
+                setGalleryImages(mappedGallery)
             } else {
                 setError('Equipment not found')
             }
@@ -92,29 +103,53 @@ export default function EditEquipmentPage({
         load()
     }, [id])
 
-    // Handle image upload
-    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Handle Main Image Upload
+    const handleMainImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (file) {
+            setNewMainImage(file)
+            setDeleteMainImage(false) // Reset delete flag if new image uploaded
+            const reader = new FileReader()
+            reader.onload = (e) => {
+                setNewMainImagePreview(e.target?.result as string)
+            }
+            reader.readAsDataURL(file)
+        }
+    }
+
+    // Remove Main Image (Mark for deletion or clear new upload)
+    const removeMainImage = () => {
+        if (newMainImage) {
+            setNewMainImage(null)
+            setNewMainImagePreview(null)
+        } else {
+            setDeleteMainImage(true)
+        }
+    }
+
+    // Handle Gallery Image Upload
+    const handleGalleryImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || [])
-        setNewImages(prev => [...prev, ...files])
+        setNewGalleryImages(prev => [...prev, ...files])
 
         files.forEach(file => {
             const reader = new FileReader()
             reader.onload = (e) => {
-                setNewImagePreviews(prev => [...prev, e.target?.result as string])
+                setNewGalleryImagePreviews(prev => [...prev, e.target?.result as string])
             }
             reader.readAsDataURL(file)
         })
     }
 
-    // Remove new image
-    const removeNewImage = (index: number) => {
-        setNewImages(prev => prev.filter((_, i) => i !== index))
-        setNewImagePreviews(prev => prev.filter((_, i) => i !== index))
+    // Remove new gallery image
+    const removeNewGalleryImage = (index: number) => {
+        setNewGalleryImages(prev => prev.filter((_, i) => i !== index))
+        setNewGalleryImagePreviews(prev => prev.filter((_, i) => i !== index))
     }
 
-    // Remove existing image
-    const removeExistingImage = (index: number) => {
-        setExistingImages(prev => prev.filter((_, i) => i !== index))
+    // Remove existing gallery image
+    const removeExistingGalleryImage = (index: number) => {
+        setGalleryImages(prev => prev.filter((_, i) => i !== index))
     }
 
     // Submit form
@@ -138,15 +173,28 @@ export default function EditEquipmentPage({
             formData.append('featured', String(featured))
             formData.append('availability_status', availabilityStatus)
 
-            // Append existing images (filenames) to keep
-            existingImages.forEach(img => {
-                formData.append('images', img.filename)
+            // Main Image Logic
+            if (newMainImage) {
+                formData.append('main_image', newMainImage)
+            } else if (deleteMainImage) {
+                formData.append('main_image', 'DELETE')
+            }
+
+            // Gallery Images Logic
+            // 1. Existing images to keep
+            galleryImages.forEach(img => {
+                formData.append('gallery_images', img.filename)
             })
 
-            // Append new images (Files)
-            newImages.forEach(img => {
-                formData.append('images', img)
+            // 2. New images to add
+            newGalleryImages.forEach(img => {
+                formData.append('gallery_images', img)
             })
+
+            // 3. Flag if cleared (to ensure backend knows if list is empty)
+            if (galleryImages.length === 0 && newGalleryImages.length === 0) {
+                formData.append('gallery_images_cleared', 'true')
+            }
 
             const result = await updateEquipment(id, formData)
 
@@ -381,22 +429,73 @@ export default function EditEquipmentPage({
                     </div>
                 </div>
 
-                {/* Images */}
+                {/* Main Image */}
                 <div className="bg-zinc-900/30 rounded-xl border border-zinc-800 p-6 space-y-4">
-                    <h2 className="font-semibold text-white">Images</h2>
+                    <h2 className="font-semibold text-white">Main Image (Hero)</h2>
+                    <p className="text-sm text-zinc-500">This image will be displayed on the listing card and as the main image on the detail page.</p>
+
+                    <div className="flex items-start gap-6">
+                        {/* Current Main Image */}
+                        {!deleteMainImage && (newMainImagePreview || mainImage) ? (
+                            <div className="relative group w-48 h-48">
+                                <img
+                                    src={newMainImagePreview || mainImage?.url}
+                                    alt="Main"
+                                    className="w-full h-full object-cover rounded-lg border border-zinc-700"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={removeMainImage}
+                                    className="absolute top-2 right-2 p-1 bg-red-600 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                                >
+                                    <X className="w-4 h-4" />
+                                </button>
+                                {newMainImagePreview && (
+                                    <span className="absolute bottom-2 left-2 text-xs bg-green-600 px-2 py-0.5 rounded text-white">New</span>
+                                )}
+                            </div>
+                        ) : (
+                            <div className="w-48 h-48 bg-zinc-800 rounded-lg flex items-center justify-center border border-zinc-700 border-dashed">
+                                <span className="text-zinc-500 text-sm">No Main Image</span>
+                            </div>
+                        )}
+
+                        {/* Upload Button */}
+                        <div className="flex-1">
+                            <label className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg cursor-pointer transition-colors">
+                                <ImageIcon className="w-4 h-4" />
+                                <span>{mainImage || newMainImage ? 'Change Main Image' : 'Upload Main Image'}</span>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleMainImageUpload}
+                                    className="hidden"
+                                />
+                            </label>
+                            {deleteMainImage && (
+                                <p className="mt-2 text-sm text-red-400">Main image marked for deletion.</p>
+                            )}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Gallery Images */}
+                <div className="bg-zinc-900/30 rounded-xl border border-zinc-800 p-6 space-y-4">
+                    <h2 className="font-semibold text-white">Gallery Images</h2>
+                    <p className="text-sm text-zinc-500">Additional images for the product gallery.</p>
 
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {/* Existing images */}
-                        {existingImages.map((img, index) => (
+                        {galleryImages.map((img, index) => (
                             <div key={`existing-${index}`} className="relative group">
                                 <img
                                     src={img.url}
-                                    alt={`Image ${index + 1}`}
+                                    alt={`Gallery ${index + 1}`}
                                     className="w-full h-32 object-cover rounded-lg"
                                 />
                                 <button
                                     type="button"
-                                    onClick={() => removeExistingImage(index)}
+                                    onClick={() => removeExistingGalleryImage(index)}
                                     className="absolute top-2 right-2 p-1 bg-red-600 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity"
                                 >
                                     <X className="w-4 h-4" />
@@ -405,7 +504,7 @@ export default function EditEquipmentPage({
                         ))}
 
                         {/* New image previews */}
-                        {newImagePreviews.map((preview, index) => (
+                        {newGalleryImagePreviews.map((preview, index) => (
                             <div key={`new-${index}`} className="relative group">
                                 <img
                                     src={preview}
@@ -414,7 +513,7 @@ export default function EditEquipmentPage({
                                 />
                                 <button
                                     type="button"
-                                    onClick={() => removeNewImage(index)}
+                                    onClick={() => removeNewGalleryImage(index)}
                                     className="absolute top-2 right-2 p-1 bg-red-600 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity"
                                 >
                                     <X className="w-4 h-4" />
@@ -425,12 +524,12 @@ export default function EditEquipmentPage({
 
                         <label className="h-32 border-2 border-dashed border-zinc-700 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-red-900/50 transition-colors">
                             <ImageIcon className="w-8 h-8 text-zinc-600 mb-2" />
-                            <span className="text-xs text-zinc-500">Add Image</span>
+                            <span className="text-xs text-zinc-500">Add Images</span>
                             <input
                                 type="file"
                                 accept="image/*"
                                 multiple
-                                onChange={handleImageUpload}
+                                onChange={handleGalleryImageUpload}
                                 className="hidden"
                             />
                         </label>

@@ -24,6 +24,9 @@ export interface EquipmentItem {
     descriptionFr: string
     dailyRate: number
     stock: number
+    mainImage: string | null
+    galleryImages: string[]
+    // Deprecated but kept for compatibility if needed, though we should rely on the above
     images: string[]
     imageUrls: string[]
     visibility: boolean
@@ -46,21 +49,17 @@ export interface EquipmentListResponse {
  * Transform PocketBase record to EquipmentItem
  */
 function transformEquipment(record: Record<string, any>, baseUrl: string): EquipmentItem {
-    // Handle both 'images' array field and 'image' singular field
-    const imagesArray = Array.isArray(record.images) ? record.images : []
+    // 'image' is the single main image
+    const mainImage = record.image ? `${baseUrl}/api/files/${record.collectionId}/${record.id}/${record.image}` : null
 
-    // Build image URLs - prioritize 'images' array, fall back to 'image' singular
-    let imageUrls: string[] = []
+    // 'images' is the array of gallery images
+    const galleryImagesArray = Array.isArray(record.images) ? record.images : []
+    const galleryImages = galleryImagesArray.map((img: string) =>
+        `${baseUrl}/api/files/${record.collectionId}/${record.id}/${img}`
+    )
 
-    if (imagesArray.length > 0) {
-        // Use multi-file 'images' field
-        imageUrls = imagesArray.map((img: string) =>
-            `${baseUrl}/api/files/${record.collectionId}/${record.id}/${img}`
-        )
-    } else if (record.image) {
-        // Fall back to single 'image' field (hero image)
-        imageUrls = [`${baseUrl}/api/files/${record.collectionId}/${record.id}/${record.image}`]
-    }
+    // Combined for backward compatibility or list views that just want "an image"
+    const allImages = mainImage ? [mainImage, ...galleryImages] : galleryImages
 
     return {
         id: record.id,
@@ -68,15 +67,16 @@ function transformEquipment(record: Record<string, any>, baseUrl: string): Equip
         nameEn: record.name_en || record.name || '',
         nameFr: record.name_fr || '',
         slug: record.slug || '',
-        // Use expanded category name if available, otherwise fall back to ID
         category: record.expand?.category?.name || record.expand?.category?.name_en || record.category || '',
         brand: record.brand || '',
         descriptionEn: record.description_en || '',
         descriptionFr: record.description_fr || '',
         dailyRate: record.daily_rate || 0,
         stock: record.stock || 0,
-        images: imagesArray.length > 0 ? imagesArray : (record.image ? [record.image] : []),
-        imageUrls,
+        mainImage,
+        galleryImages,
+        images: galleryImagesArray, // Raw filenames of gallery
+        imageUrls: allImages,
         visibility: record.visibility ?? true,
         featured: record.featured || false,
         availabilityStatus: record.availability_status || 'available',
@@ -98,7 +98,6 @@ export async function getEquipmentList(
     }
 ): Promise<EquipmentListResponse> {
     try {
-        // Products managers and admins can access inventory
         const hasAccess = await verifyInventoryAccess()
         if (!hasAccess) {
             return { success: false, items: [], totalItems: 0, totalPages: 0, page, error: 'Unauthorized' }
@@ -106,7 +105,6 @@ export async function getEquipmentList(
 
         const client = await createAdminClient()
 
-        // Build filter
         const filterParts: string[] = []
         if (filters?.category) {
             filterParts.push(`category = "${filters.category}"`)
@@ -156,14 +154,15 @@ export async function getEquipmentById(id: string): Promise<{
     error?: string
 }> {
     try {
-        // Products managers and admins can access inventory
         const hasAccess = await verifyInventoryAccess()
         if (!hasAccess) {
             return { success: false, item: null, error: 'Unauthorized' }
         }
 
         const client = await createAdminClient()
-        const record = await client.collection('equipment').getOne(id)
+        const record = await client.collection('equipment').getOne(id, {
+            expand: 'category'
+        })
 
         return {
             success: true,
@@ -188,62 +187,53 @@ export async function createEquipment(formData: FormData): Promise<{
     error?: string
 }> {
     try {
-        // Products managers and admins can create equipment
         const hasAccess = await verifyInventoryAccess()
         if (!hasAccess) {
             return { success: false, error: 'Unauthorized' }
         }
 
         const client = await createAdminClient()
-
-        // Prepare data
         const data = new FormData()
-        data.append('name_en', formData.get('name_en') as string)
-        data.append('name_fr', formData.get('name_fr') as string || formData.get('name_en') as string)
-        data.append('slug', formData.get('slug') as string)
 
-        // Handle Category
+        // Text fields
+        const textFields = ['name_en', 'name_fr', 'slug', 'brand', 'description_en', 'description_fr', 'availability_status']
+        textFields.forEach(field => {
+            const value = formData.get(field)
+            if (value) data.append(field, value as string)
+        })
+
+        // Category
         let category = formData.get('category') as string
-        console.log('[AdminInventory] Raw category input:', category)
-        if (category) {
+        if (category && category.length !== 15) {
             try {
-                // If it looks like a slug (not length 15 record ID), try to find it
-                if (category.length !== 15) {
-                    const catRecord = await client.collection('categories').getFirstListItem(`slug="${category}" || name="${category}"`)
-                    category = catRecord.id
-                    console.log('[AdminInventory] Resolved category slug to ID:', category)
-                }
-            } catch (err) {
-                console.error('[AdminInventory] Failed to resolve category slug:', err)
+                const catRecord = await client.collection('categories').getFirstListItem(`slug="${category}" || name="${category}"`)
+                category = catRecord.id
+            } catch (e) {
+                console.error('Failed to resolve category', e)
             }
         }
-        data.append('category', category)
+        if (category) data.append('category', category)
 
-        data.append('brand', formData.get('brand') as string || '')
-        data.append('description_en', formData.get('description_en') as string || '')
-        data.append('description_fr', formData.get('description_fr') as string || '')
+        // Numbers & Booleans
+        data.append('daily_rate', (formData.get('daily_rate') || '1').toString())
+        data.append('stock', (formData.get('stock') || '1').toString())
+        data.append('stock_available', (formData.get('stock') || '1').toString()) // Init available stock
+        data.append('visibility', (formData.get('visibility') || 'true').toString())
+        data.append('featured', (formData.get('featured') || 'false').toString())
 
-        // Handle Numbers (with explicit defaults)
-        const dailyRate = formData.get('daily_rate')
-        const stock = formData.get('stock')
+        // Main Image
+        const mainImage = formData.get('main_image')
+        if (mainImage instanceof File && mainImage.size > 0) {
+            data.append('image', mainImage)
+        }
 
-        data.append('daily_rate', dailyRate ? dailyRate.toString() : '1')
-        data.append('stock', stock ? stock.toString() : '1')
-        data.append('stock_available', stock ? stock.toString() : '1')
-
-        data.append('visibility', formData.get('visibility') as string || 'true')
-        data.append('featured', formData.get('featured') as string || 'false')
-        data.append('availability_status', formData.get('availability_status') as string || 'available')
-
-        // Handle images
-        const images = formData.getAll('images')
-        images.forEach(img => {
+        // Gallery Images
+        const galleryImages = formData.getAll('gallery_images')
+        galleryImages.forEach(img => {
             if (img instanceof File && img.size > 0) {
                 data.append('images', img)
             }
         })
-
-
 
         const record = await client.collection('equipment').create(data)
 
@@ -253,7 +243,6 @@ export async function createEquipment(formData: FormData): Promise<{
         return { success: true, id: record.id }
     } catch (error) {
         console.error('[AdminInventory] Error creating equipment:', error)
-
         return {
             success: false,
             error: error instanceof Error ? error.message : 'Failed to create equipment'
@@ -269,36 +258,78 @@ export async function updateEquipment(id: string, formData: FormData): Promise<{
     error?: string
 }> {
     try {
-        // Products managers and admins can update equipment
         const hasAccess = await verifyInventoryAccess()
         if (!hasAccess) {
             return { success: false, error: 'Unauthorized' }
         }
 
         const client = await createAdminClient()
-
-        // Prepare data
         const data = new FormData()
 
-        // Only include fields that are being updated
+        // Fields to update
         const fields = ['name_en', 'name_fr', 'slug', 'category', 'brand',
             'description_en', 'description_fr', 'daily_rate',
             'stock', 'visibility', 'featured', 'availability_status']
 
-        fields.forEach(field => {
+        fields.forEach(async field => {
+            // Skip category here, we handle it separately
+            if (field === 'category') return
+
             const value = formData.get(field)
             if (value !== null) {
                 data.append(field, value as string)
             }
         })
 
-        // Handle images (both new Files and existing filenames to keep)
-        // PocketBase requires sending ALL images you want to keep (existing filenames) + new files
-        const images = formData.getAll('images')
-        images.forEach(img => {
+        // Handle Category specifically
+        let category = formData.get('category') as string
+        if (category) {
+            try {
+                // If it looks like a slug (not length 15 record ID), try to find it
+                if (category.length !== 15) {
+                    const catRecord = await client.collection('categories').getFirstListItem(`slug="${category}" || name="${category}"`)
+                    category = catRecord.id
+                }
+            } catch (err) {
+                console.error('[AdminInventory] Failed to resolve category slug:', err)
+                // If we can't resolve it, we probably shouldn't send it, or PB will error.
+                // But let's try sending it anyway or maybe just don't append if failed?
+                // If we don't append, it won't update, which is better than crashing.
+            }
+            data.append('category', category)
+        }
+
+        // Handle Main Image
+        const mainImage = formData.get('main_image')
+        if (mainImage === 'DELETE') {
+            data.append('image', '') // PocketBase: empty string deletes file
+        } else if (mainImage instanceof File && mainImage.size > 0) {
+            data.append('image', mainImage)
+        }
+
+        // Handle Gallery Images
+        // 1. Get current record to compare images
+        const currentRecord = await client.collection('equipment').getOne(id)
+        const currentImages = Array.isArray(currentRecord.images) ? currentRecord.images : []
+
+        // 2. Identify images to keep (passed as strings from frontend)
+        const galleryImages = formData.getAll('gallery_images')
+        const keptImages = galleryImages.filter(img => typeof img === 'string') as string[]
+
+        // 3. Identify images to delete
+        const imagesToDelete = currentImages.filter((img: string) => !keptImages.includes(img))
+
+        // 4. Perform deletion if needed
+        if (imagesToDelete.length > 0) {
+            // We use a separate update call with the 'images-' modifier to remove specific files
+            await client.collection('equipment').update(id, {
+                'images-': imagesToDelete
+            })
+        }
+
+        // 5. Add NEW images to FormData (to be appended)
+        galleryImages.forEach(img => {
             if (img instanceof File && img.size > 0) {
-                data.append('images', img)
-            } else if (typeof img === 'string' && img.length > 0) {
                 data.append('images', img)
             }
         })
@@ -312,6 +343,10 @@ export async function updateEquipment(id: string, formData: FormData): Promise<{
         return { success: true }
     } catch (error) {
         console.error('[AdminInventory] Error updating equipment:', error)
+        // Log detailed error if available (PocketBase ClientResponseError)
+        if (typeof error === 'object' && error !== null && 'data' in error) {
+            console.error('[AdminInventory] Detailed PB Error:', JSON.stringify((error as any).data, null, 2))
+        }
         return {
             success: false,
             error: error instanceof Error ? error.message : 'Failed to update equipment'
@@ -327,7 +362,6 @@ export async function deleteEquipment(id: string): Promise<{
     error?: string
 }> {
     try {
-        // Only admins can delete equipment (not products managers)
         const canDelete = await canDeleteProducts()
         if (!canDelete) {
             return { success: false, error: 'Delete permission denied. Only admins can delete products.' }
@@ -358,7 +392,6 @@ export async function toggleEquipmentVisibility(id: string): Promise<{
     error?: string
 }> {
     try {
-        // Products managers and admins can toggle visibility
         const hasAccess = await verifyInventoryAccess()
         if (!hasAccess) {
             return { success: false, error: 'Unauthorized' }
@@ -392,7 +425,6 @@ export async function getEquipmentCategories(): Promise<{
     error?: string
 }> {
     try {
-        // Products managers and admins can fetch categories
         const hasAccess = await verifyInventoryAccess()
         if (!hasAccess) {
             return { success: false, categories: [], error: 'Unauthorized' }
