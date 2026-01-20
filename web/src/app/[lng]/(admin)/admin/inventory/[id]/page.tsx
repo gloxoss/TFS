@@ -9,7 +9,7 @@
 import { use, useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Save, Package, Image as ImageIcon, X, Trash2 } from 'lucide-react'
+import { ArrowLeft, Save, Package, Image as ImageIcon, X, Trash2, Plus } from 'lucide-react'
 import { getEquipmentById, updateEquipment, deleteEquipment, getEquipmentCategories } from '@/lib/actions/admin-inventory'
 import { slugify } from '@/lib/utils/slugify'
 
@@ -34,6 +34,9 @@ export default function EditEquipmentPage({
     const [visibility, setVisibility] = useState(true)
     const [featured, setFeatured] = useState(false)
     const [availabilityStatus, setAvailabilityStatus] = useState('available')
+
+    // Specifications State
+    const [specs, setSpecs] = useState<Array<{ key: string; value: string }>>([])
 
     // Image State
     const [mainImage, setMainImage] = useState<{ url: string; filename: string } | null>(null)
@@ -67,7 +70,7 @@ export default function EditEquipmentPage({
                 setNameEn(item.nameEn)
                 setNameFr(item.nameFr)
                 setSlug(item.slug)
-                setCategory(item.category)
+                // Category will be set after categories load
                 setBrand(item.brand)
                 setDescriptionEn(item.descriptionEn)
                 setDescriptionFr(item.descriptionFr)
@@ -76,6 +79,15 @@ export default function EditEquipmentPage({
                 setVisibility(item.visibility)
                 setFeatured(item.featured)
                 setAvailabilityStatus(item.availabilityStatus)
+
+                // Specifications
+                if (item.specs && typeof item.specs === 'object') {
+                    const specsArray = Object.entries(item.specs).map(([key, value]) => ({
+                        key,
+                        value: String(value)
+                    }))
+                    setSpecs(specsArray)
+                }
 
                 // Main Image
                 if (item.mainImage) {
@@ -90,6 +102,23 @@ export default function EditEquipmentPage({
                 })).filter(img => img.filename)
 
                 setGalleryImages(mappedGallery)
+
+                // Set category after we have the categories list
+                if (categoriesResult.success && categoriesResult.categories.length > 0) {
+                    // Find matching category by name (case-insensitive)
+                    const matchedCat = categoriesResult.categories.find(
+                        cat => cat.name.toLowerCase() === item.category?.toLowerCase() ||
+                            cat.slug === item.category ||
+                            cat.id === item.category
+                    )
+                    if (matchedCat) {
+                        setCategory(matchedCat.name)
+                    } else {
+                        setCategory(item.category)
+                    }
+                } else {
+                    setCategory(item.category)
+                }
             } else {
                 setError('Equipment not found')
             }
@@ -172,6 +201,15 @@ export default function EditEquipmentPage({
             formData.append('visibility', String(visibility))
             formData.append('featured', String(featured))
             formData.append('availability_status', availabilityStatus)
+
+            // Specs Logic - convert array to object
+            const specsObject: Record<string, string> = {}
+            specs.forEach(spec => {
+                if (spec.key.trim()) {
+                    specsObject[spec.key.trim()] = spec.value
+                }
+            })
+            formData.append('specs', JSON.stringify(specsObject))
 
             // Main Image Logic
             if (newMainImage) {
@@ -335,7 +373,7 @@ export default function EditEquipmentPage({
                             >
                                 <option value="">Select a category</option>
                                 {categories.map(cat => (
-                                    <option key={cat.id} value={cat.slug}>{cat.name}</option>
+                                    <option key={cat.id} value={cat.name}>{cat.name}</option>
                                 ))}
                             </select>
                         </div>
@@ -377,6 +415,65 @@ export default function EditEquipmentPage({
                             className="w-full px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-white focus:outline-none focus:border-red-900/50 resize-none"
                         />
                     </div>
+                </div>
+
+                {/* Specifications */}
+                <div className="bg-zinc-900/30 rounded-xl border border-zinc-800 p-6 space-y-4">
+                    <div className="flex items-center justify-between">
+                        <h2 className="font-semibold text-white">Specifications</h2>
+                        <button
+                            type="button"
+                            onClick={() => setSpecs([...specs, { key: '', value: '' }])}
+                            className="flex items-center gap-1 px-3 py-1.5 text-sm bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg transition-colors"
+                        >
+                            <Plus className="w-4 h-4" />
+                            Add Spec
+                        </button>
+                    </div>
+                    <p className="text-xs text-zinc-500">Add technical specifications like sensor_size, codec, max_fps, mount, etc.</p>
+
+                    {specs.length === 0 ? (
+                        <div className="text-center py-8 text-zinc-500 border border-dashed border-zinc-700 rounded-lg">
+                            No specifications yet. Click "Add Spec" to add one.
+                        </div>
+                    ) : (
+                        <div className="space-y-3">
+                            {specs.map((spec, index) => (
+                                <div key={index} className="flex items-center gap-3">
+                                    <input
+                                        type="text"
+                                        value={spec.key}
+                                        onChange={(e) => {
+                                            const newSpecs = [...specs]
+                                            newSpecs[index].key = e.target.value.toLowerCase().replace(/\s+/g, '_')
+                                            setSpecs(newSpecs)
+                                        }}
+                                        placeholder="Key (e.g. sensor_size)"
+                                        className="w-1/3 px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-white text-sm focus:outline-none focus:border-red-900/50"
+                                    />
+                                    <span className="text-zinc-600">→</span>
+                                    <input
+                                        type="text"
+                                        value={spec.value}
+                                        onChange={(e) => {
+                                            const newSpecs = [...specs]
+                                            newSpecs[index].value = e.target.value
+                                            setSpecs(newSpecs)
+                                        }}
+                                        placeholder="Value (e.g. 28.0 x 19.2mm)"
+                                        className="flex-1 px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-white text-sm focus:outline-none focus:border-red-900/50"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setSpecs(specs.filter((_, i) => i !== index))}
+                                        className="p-2 text-zinc-500 hover:text-red-400 hover:bg-red-900/20 rounded-lg transition-colors"
+                                    >
+                                        <X className="w-4 h-4" />
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 {/* Pricing & Stock */}

@@ -32,6 +32,7 @@ export interface EquipmentItem {
     visibility: boolean
     featured: boolean
     availabilityStatus: 'available' | 'rented' | 'maintenance'
+    specs: Record<string, string> | null
     created: string
     updated: string
 }
@@ -67,7 +68,7 @@ function transformEquipment(record: Record<string, any>, baseUrl: string): Equip
         nameEn: record.name_en || record.name || '',
         nameFr: record.name_fr || '',
         slug: record.slug || '',
-        category: record.expand?.category?.name || record.expand?.category?.name_en || record.category || '',
+        category: record.category || '',
         brand: record.brand || '',
         descriptionEn: record.description_en || '',
         descriptionFr: record.description_fr || '',
@@ -80,9 +81,28 @@ function transformEquipment(record: Record<string, any>, baseUrl: string): Equip
         visibility: record.visibility ?? true,
         featured: record.featured || false,
         availabilityStatus: record.availability_status || 'available',
+        specs: parseSpecs(record.specs),
         created: record.created,
         updated: record.updated
     }
+}
+
+/**
+ * Parse specs from various formats (string JSON, object, null)
+ */
+function parseSpecs(specsRaw: unknown): Record<string, string> | null {
+    if (!specsRaw) return null
+    if (typeof specsRaw === 'string') {
+        try {
+            return JSON.parse(specsRaw)
+        } catch {
+            return null
+        }
+    }
+    if (typeof specsRaw === 'object') {
+        return specsRaw as Record<string, string>
+    }
+    return null
 }
 
 /**
@@ -333,6 +353,21 @@ export async function updateEquipment(id: string, formData: FormData): Promise<{
                 data.append('images', img)
             }
         })
+
+        // Handle Specs (JSON)
+        const specsJson = formData.get('specs')
+        if (specsJson !== null) {
+            try {
+                const specsObj = typeof specsJson === 'string' ? JSON.parse(specsJson) : specsJson
+                const specsString = JSON.stringify(specsObj)
+                data.append('specs', specsString)
+                data.append('specs_en', specsString)
+                data.append('specs_fr', specsString)
+            } catch {
+                // Invalid JSON, skip specs update
+                console.warn('[AdminInventory] Invalid specs JSON, skipping')
+            }
+        }
 
         await client.collection('equipment').update(id, data)
 

@@ -29,7 +29,7 @@ export function StickyProductFooter({
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: 100, opacity: 0 }}
                     transition={{ type: 'spring', damping: 20, stiffness: 300 }}
-                    className="fixed bottom-12 left-4 right-4 z-40 mx-auto max-w-4xl"
+                    className="fixed bottom-12 left-4 right-20 sm:right-4 z-40 mx-auto max-w-4xl"
                 >
                     <div className="bg-zinc-900/90 backdrop-blur-lg border border-zinc-800 rounded-2xl shadow-2xl p-4 flex items-center justify-between gap-4">
                         {/* Info */}

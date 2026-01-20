@@ -399,6 +399,25 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
   // Visibility State for Essentials Logic
   const [visibleSlots, setVisibleSlots] = useState<string[]>([])
 
+  // Intersection Observer: Hide sticky footer when Add to Quote section is visible
+  const addToQuoteSectionRef = useRef<HTMLDivElement>(null)
+  const [isAddToQuoteSectionVisible, setIsAddToQuoteSectionVisible] = useState(false)
+
+  useEffect(() => {
+    const section = addToQuoteSectionRef.current
+    if (!section) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsAddToQuoteSectionVisible(entry.isIntersecting)
+      },
+      { threshold: 0.3 } // Trigger when 30% of the section is visible
+    )
+
+    observer.observe(section)
+    return () => observer.disconnect()
+  }, [isPageReady])
+
   // Selected variant options state (for products with variantOptions like lighting with wattage selection)
   const [selectedVariantOptions, setSelectedVariantOptions] = useState<Record<string, string>>(() => {
     // Initialize with first option of each variant type
@@ -703,8 +722,10 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
     console.log('[DEBUG] All Slots:', slotData.map(s => s.slotName))
     console.log('[DEBUG] Visible Slots:', visibleSlots)
 
-    // Filter visible slots
-    const visibleSlotData = slotData.filter(s => visibleSlots.includes(s.slotName))
+    // Filter visible slots - MAP over visibleSlots to preserve insertion order
+    const visibleSlotData = visibleSlots
+      .map(slotName => slotData.find(s => s.slotName === slotName))
+      .filter((s): s is SlotDisplayData => s !== undefined)
     const hiddenSlotData = slotData.filter(s => !visibleSlots.includes(s.slotName))
 
     // Calculate total selected items for footer
@@ -1270,6 +1291,7 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
 
           {/* Add to Quote Section - Sticky Bottom on Mobile */}
           <motion.div
+            ref={addToQuoteSectionRef}
             variants={fadeInBlur}
             initial="hidden"
             animate="visible"
@@ -1338,7 +1360,7 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
         </motion.div >
 
         <StickyProductFooter
-          isVisible={true} // Always show on Kit pages
+          isVisible={!isAddToQuoteSectionVisible} // Hide when in-page section is visible
           productName={product.name}
           selectedCount={totalSelectedItems}
           isAvailable={product.isAvailable}

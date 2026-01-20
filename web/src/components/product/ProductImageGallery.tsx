@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import { Package } from 'lucide-react'
@@ -16,7 +16,7 @@ interface ProductImageGalleryProps {
     productName: string
     categoryBadge?: string
     className?: string
-    /** Compact mode for kit layout */
+    /** Compact mode for kit layout (desktop only) */
     compact?: boolean
 }
 
@@ -29,7 +29,7 @@ const imageVariants = {
     center: {
         opacity: 1,
         scale: 1,
-        transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] }
+        transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] as const }
     },
     exit: {
         opacity: 0,
@@ -50,6 +50,20 @@ export function ProductImageGallery({
     className,
     compact = false
 }: ProductImageGalleryProps) {
+    // Detect mobile to disable compact mode constraints
+    const [isMobile, setIsMobile] = useState(false)
+
+    useEffect(() => {
+        if (typeof window === 'undefined') return
+        const checkMobile = () => setIsMobile(window.innerWidth < 768)
+        checkMobile()
+        window.addEventListener('resize', checkMobile)
+        return () => window.removeEventListener('resize', checkMobile)
+    }, [])
+
+    // On mobile, ignore compact mode to maximize image visibility
+    const effectiveCompact = compact && !isMobile
+
     // Combine mainImage with images array (mainImage first, deduplicated)
     const allImages = (() => {
         const combined: string[] = []
@@ -70,12 +84,12 @@ export function ProductImageGallery({
         return (
             <div className={cn(
                 "relative rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800",
-                compact ? "w-full max-w-md" : "w-full",
+                effectiveCompact ? "w-full max-w-md" : "w-full",
                 className
             )}>
                 <div className={cn(
-                    "flex items-center justify-center",
-                    compact ? "h-64" : "h-80 md:h-96"
+                    "flex items-center justify-center aspect-square",
+                    effectiveCompact ? "max-h-80" : ""
                 )}>
                     <Package className="w-24 h-24 text-zinc-700" />
                 </div>
@@ -89,12 +103,12 @@ export function ProductImageGallery({
     }
 
     return (
-        <div className={cn("flex flex-col gap-4", className)}>
+        <div className={cn("flex flex-col gap-4 w-full", className)}>
             {/* Main Image */}
             <div
                 className={cn(
                     "relative rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800",
-                    compact ? "max-w-md" : "w-full"
+                    effectiveCompact ? "max-w-md" : "w-full"
                 )}
             >
                 <AnimatePresence mode="wait">
@@ -104,18 +118,14 @@ export function ProductImageGallery({
                         initial="enter"
                         animate="center"
                         exit="exit"
-                        className="relative"
+                        className="relative aspect-square w-full"
                     >
                         <Image
                             src={currentImage!}
                             alt={`${productName} - Image ${activeIndex + 1}`}
-                            width={compact ? 500 : 600}
-                            height={compact ? 400 : 500}
-                            className={cn(
-                                "block w-full object-contain",
-                                compact ? "max-h-[400px]" : "max-h-[500px]"
-                            )}
-                            sizes={compact ? "(max-width: 768px) 100vw, 500px" : "(max-width: 1024px) 100vw, 50vw"}
+                            fill
+                            className="object-contain"
+                            sizes={isMobile ? "100vw" : effectiveCompact ? "400px" : "(max-width: 1024px) 100vw, 50vw"}
                             priority
                         />
                     </motion.div>
@@ -145,7 +155,7 @@ export function ProductImageGallery({
                             onClick={() => setActiveIndex(index)}
                             className={cn(
                                 "relative flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all duration-200",
-                                compact ? "w-16 h-16" : "w-20 h-20",
+                                effectiveCompact ? "w-16 h-16" : "w-20 h-20",
                                 index === activeIndex
                                     ? "border-amber-500 ring-2 ring-amber-500/30"
                                     : "border-zinc-700 hover:border-zinc-500"
