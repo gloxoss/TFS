@@ -9,10 +9,20 @@ pb_data/
 # Environment files
 /web/.env.local
 /web/.env
+*.env
+prod.env
 
 # Deployment notes
 /deploy.md
 
+# Build Artifacts
+dist/
+*.tar
+
+# Logs
+*.log
+
 # Pocketbase binary
 /pocketbase
+*.exe
 
