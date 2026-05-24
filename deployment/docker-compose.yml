@@ -5,7 +5,20 @@ services:
     image: tfs-web:latest
     restart: always
     environment:
-      - NEXT_PUBLIC_POCKETBASE_URL=https://tfs.zouskym.com
+      - NEXT_PUBLIC_POCKETBASE_URL=https://tfs.ma
+      - POCKETBASE_URL=http://pocketbase:8090
+      - POCKETBASE_ADMIN_EMAIL=zakiossama28@gmail.com
+      - POCKETBASE_ADMIN_PASSWORD=GloXoss123.
+      - NEXT_PUBLIC_SITE_URL=https://tfs.ma
+      - NEXT_PUBLIC_SITE_NAME=TFS Equipment Rentals
+      - RESEND_API_KEY=re_QvDHbKzY_NyPwDXss25gr818B1CmuiUui
+      - EMAIL_FROM=TFS <noreply@zouskym.com>
+      - ADMIN_EMAIL=zakiossama28@gmail.com
+      - AI_PROVIDER=openrouter
+      - OPENROUTER_API_KEY=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
+      - AI_MODEL=z-ai/glm-4.5-air:free
+      - NEXT_PUBLIC_ENABLE_DIGITAL_SIGNATURE=true
+      - ENABLE_CLIENT_PORTAL=false
       - PORT=3000
     networks:
       - tfs-network
@@ -26,12 +39,21 @@ services:
       - "443:443"
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-      # Mount SSL certs here if needed, or use a separate Certbot container
-      # - ./certbot/conf:/etc/letsencrypt
-      # - ./certbot/www:/var/www/certbot
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
     depends_on:
       - web
       - pocketbase
+    networks:
+      tfs-network:
+        aliases:
+          - tfs.ma
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
     networks:
       - tfs-network
 

@@ -52,7 +52,7 @@ export default async function PublicLayout({
     return (
         <SiteSettingsProvider settings={settings}>
             <SmoothScroll>
-                <div className="cursor-none md:cursor-none">
+                <div>
                     <CustomCursor />
                     <ProgressiveBlur />
                     <EffectsLayer />

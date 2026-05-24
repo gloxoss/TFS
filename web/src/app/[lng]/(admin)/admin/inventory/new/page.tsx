@@ -10,7 +10,7 @@ import { use, useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Save, Package, Image as ImageIcon, X } from 'lucide-react'
-import { createEquipment, getEquipmentCategories } from '@/lib/actions/admin-inventory'
+import { createEquipment, getEquipmentCategories, getAttributes } from '@/lib/actions/admin-inventory'
 import { slugify } from '@/lib/utils/slugify'
 
 export default function NewEquipmentPage({ params }: { params: Promise<{ lng: string }> }) {
@@ -36,6 +36,10 @@ export default function NewEquipmentPage({ params }: { params: Promise<{ lng: st
     // Categories
     const [categories, setCategories] = useState<Array<{ id: string; name: string; slug: string }>>([])
 
+    // Dynamic Specs
+    const [specs, setSpecs] = useState<Record<string, string>>({})
+    const [dynamicAttributes, setDynamicAttributes] = useState<Array<{ id: string; name: string; slug: string; type: string; options: string[] }>>([])
+
     // UI state
     const [saving, setSaving] = useState(false)
     const [error, setError] = useState('')
@@ -48,6 +52,26 @@ export default function NewEquipmentPage({ params }: { params: Promise<{ lng: st
             }
         })
     }, [])
+
+    // Load attributes when category changes
+    useEffect(() => {
+        if (category) {
+            // Find category ID from slug
+            const cat = categories.find(c => c.slug === category)
+            if (cat) {
+                getAttributes(cat.id).then(result => {
+                    if (result.success) {
+                        setDynamicAttributes(result.attributes)
+                        // Reset specs when category changes
+                        setSpecs({})
+                    }
+                })
+            }
+        } else {
+            setDynamicAttributes([])
+            setSpecs({})
+        }
+    }, [category, categories])
 
     // Auto-generate slug
     const handleNameChange = (value: string) => {
@@ -104,6 +128,7 @@ export default function NewEquipmentPage({ params }: { params: Promise<{ lng: st
             formData.append('visibility', String(visibility))
             formData.append('featured', String(featured))
             formData.append('availability_status', 'available')
+            formData.append('specs', JSON.stringify(specs))
 
             images.forEach(img => {
                 formData.append('images', img)
@@ -219,6 +244,53 @@ export default function NewEquipmentPage({ params }: { params: Promise<{ lng: st
                         </select>
                     </div>
                 </div>
+
+                {/* Dynamic Specifications */}
+                {dynamicAttributes.length > 0 && (
+                    <div className="bg-zinc-900/30 rounded-xl border border-zinc-800 p-6 space-y-4">
+                        <h2 className="font-semibold text-white flex items-center gap-2">
+                            Specifications
+                            <span className="text-xs font-normal text-zinc-500">({dynamicAttributes.length} fields)</span>
+                        </h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {dynamicAttributes.map(attr => (
+                                <div key={attr.id}>
+                                    <label className="block text-sm text-zinc-400 mb-2">{attr.name}</label>
+                                    {attr.type === 'select' ? (
+                                        <select
+                                            value={specs[attr.slug] || ''}
+                                            onChange={(e) => setSpecs({ ...specs, [attr.slug]: e.target.value })}
+                                            className="w-full px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-white focus:outline-none focus:border-red-900/50"
+                                        >
+                                            <option value="">Select {attr.name}</option>
+                                            {attr.options?.map(opt => (
+                                                <option key={opt} value={opt}>{opt}</option>
+                                            ))}
+                                        </select>
+                                    ) : attr.type === 'boolean' ? (
+                                        <select
+                                            value={specs[attr.slug] || ''}
+                                            onChange={(e) => setSpecs({ ...specs, [attr.slug]: e.target.value })}
+                                            className="w-full px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-white focus:outline-none focus:border-red-900/50"
+                                        >
+                                            <option value="">Select</option>
+                                            <option value="true">Yes</option>
+                                            <option value="false">No</option>
+                                        </select>
+                                    ) : (
+                                        <input
+                                            type={attr.type === 'number' ? 'number' : 'text'}
+                                            value={specs[attr.slug] || ''}
+                                            onChange={(e) => setSpecs({ ...specs, [attr.slug]: e.target.value })}
+                                            className="w-full px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-white focus:outline-none focus:border-red-900/50"
+                                            placeholder={`Enter ${attr.name.toLowerCase()}`}
+                                        />
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
 
                 {/* Description */}
                 <div className="bg-zinc-900/30 rounded-xl border border-zinc-800 p-6 space-y-4">

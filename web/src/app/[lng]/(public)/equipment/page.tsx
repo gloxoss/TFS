@@ -10,28 +10,39 @@ import { EquipmentCatalogClient } from './equipment-client'
 
 interface EquipmentPageProps {
   params: Promise<{ lng: string }>
-  searchParams: Promise<{
-    category?: string
-    search?: string
-    page?: string
-  }>
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
 export default async function EquipmentPage({ params, searchParams }: EquipmentPageProps) {
   const { lng } = await params
-  const { category, search, page } = await searchParams
+  const resolvedSearchParams = await searchParams
+  const { category, search, page } = resolvedSearchParams
 
-  // Fetch initial data server-side
-  const [productsResult, categories] = await Promise.all([
-    productService().getProducts(
+  // Parse dynamic attribute filters (prefix: spec_)
+  const specs: Record<string, string | string[]> = {}
+  Object.entries(resolvedSearchParams).forEach(([key, value]) => {
+    if (key.startsWith('spec_') && value) {
+      const slug = key.replace('spec_', '')
+      specs[slug] = value
+    }
+  })
+
+  // Get the product service
+  const service = productService()
+
+  // Fetch initial data server-side (including attributes for filters)
+  const [productsResult, categories, attributes] = await Promise.all([
+    service.getProducts(
       {
-        categorySlug: category || undefined,
-        search: search || undefined,
+        categorySlug: typeof category === 'string' ? category : undefined,
+        search: typeof search === 'string' ? search : undefined,
+        specs, // Pass dynamic specs filters
       },
-      parseInt(page || '1', 10),
+      parseInt(typeof page === 'string' ? page : '1', 10),
       12
     ),
-    productService().getCategories(),
+    service.getCategories(),
+    service.getAttributes(), // Fetch all attributes for filters
   ])
 
   return (
@@ -44,8 +55,9 @@ export default async function EquipmentPage({ params, searchParams }: EquipmentP
         totalItems: productsResult.totalItems,
       }}
       categories={categories}
-      initialCategory={category || null}
-      initialSearch={search || ''}
+      attributes={attributes}
+      initialCategory={typeof category === 'string' ? category : null}
+      initialSearch={typeof search === 'string' ? search : ''}
     />
   )
 }

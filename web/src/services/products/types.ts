@@ -80,4 +80,5 @@ export interface Category {
   description?: string
   thumbnail?: string
   productCount?: number
+  sortOrder?: number
 }

@@ -76,6 +76,16 @@ export interface QuoteReadyNotificationPayload extends Omit<EmailPayload, 'subje
 }
 
 /**
+ * Contact form message email payload (sent to admin)
+ */
+export interface ContactMessageEmailPayload extends EmailPayload {
+  senderName: string
+  senderEmail: string
+  messageSubject: string
+  messageBody: string
+}
+
+/**
  * Email send result
  */
 export interface EmailResult {
@@ -94,6 +104,7 @@ export interface EmailResult {
  * Implementations must handle:
  * - Customer quote confirmation emails
  * - Admin notification emails
+ * - Contact form notification emails
  * - Error handling with graceful degradation
  */
 export interface IEmailService {
@@ -111,6 +122,11 @@ export interface IEmailService {
    * Send quote ready notification to customer (with magic link)
    */
   sendQuoteReadyNotification(payload: QuoteReadyNotificationPayload): Promise<EmailResult>
+
+  /**
+   * Send contact form message notification to admin
+   */
+  sendContactNotification(payload: ContactMessageEmailPayload): Promise<EmailResult>
 
   /**
    * Generic send method for custom emails

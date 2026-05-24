@@ -38,7 +38,6 @@ export default function CenteredSignUpWithAnimatedForm() {
                             >
                                 <Form validationBehavior="native" onSubmit={(e) => e.preventDefault()} className="flex flex-col gap-3">
                                     <Input
-                                        autoFocus
                                         isRequired
                                         label="Email Address"
                                         name="email"

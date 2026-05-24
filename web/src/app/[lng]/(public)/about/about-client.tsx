@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Shield, Zap, Wrench } from "lucide-react";
 import { BackgroundCircles } from "@/components/ui/background-circles";
 import AboutDescriptionSection from "@/components/marketing/about/about-description";
+import AboutNarrativeSection from "@/components/marketing/about/about-narrative-section";
 import AboutStorySection from "@/components/marketing/about/about-story-section";
 import GlobalOperationsGrid from "@/components/marketing/global-operations-grid";
 import TeamSection from "@/components/marketing/about/team-section";
@@ -51,14 +52,17 @@ export function AboutClient({ lng }: { lng: string }) {
       {/* 2. Text Reveal Description */}
       <AboutDescriptionSection lng={lng} />
 
-      {/* 3. Story Section */}
+      {/* 3. Company Evolution Narrative */}
+      <AboutNarrativeSection lng={lng} />
+
+      {/* 4. Expertise / Services wheel */}
       <AboutStorySection lng={lng} />
 
       {/* 4. Global Operations (Bento Grid) */}
       <GlobalOperationsGrid lng={lng} />
 
-      {/* 5. Team Section */}
-      <TeamSection lng={lng} />
+      {/* 5. Team Section - Hidden per user request */}
+      {/* <TeamSection lng={lng} /> */}
 
       {/* 5. CTA */}
       <CTASection

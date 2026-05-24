@@ -32,12 +32,14 @@ export function SearchBar({
   className,
 }: SearchBarProps) {
   const [localValue, setLocalValue] = useState(value)
+  const [prevValue, setPrevValue] = useState(value)
   const [isFocused, setIsFocused] = useState(false)
 
-  // Sync external value changes
-  useEffect(() => {
+  // Sync external value changes safely during render
+  if (value !== prevValue) {
+    setPrevValue(value)
     setLocalValue(value)
-  }, [value])
+  }
 
   // Debounced onChange
   useEffect(() => {

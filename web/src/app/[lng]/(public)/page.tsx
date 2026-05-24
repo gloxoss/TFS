@@ -27,8 +27,9 @@
  */
 
 import { createServerClient } from "@/lib/pocketbase/server";
-import { useTranslation } from "@/app/i18n";
+import { useTranslation as getTranslation } from "@/app/i18n";
 import { getBlogService, getServicesService } from "@/services";
+import { homePage } from "@/data/site-content";
 import HeroImpact from "@/components/marketing/hero-impact";
 import SocialProof from "@/components/marketing/social-proof";
 import CTASection from "@/components/marketing/cta-section";
@@ -40,7 +41,7 @@ import { ExpertiseBento } from "@/components/marketing/v2/expert-bento";
 export default async function Page({ params }: { params: Promise<{ lng: string }> }) {
   const { lng } = await params;
   const client = await createServerClient();
-  const { t } = await useTranslation(lng, 'home');
+  const { t } = await getTranslation(lng, 'home');
 
   // Fetch services from PocketBase
   const servicesService = getServicesService(client);
@@ -51,13 +52,19 @@ export default async function Page({ params }: { params: Promise<{ lng: string }
   const blogPosts = await blogService.getLatestPosts(4, lng);
 
   // Map blog posts to NewsSection format
-  const NEWS_ITEMS = blogPosts.length > 0
-    ? blogPosts.map((post) => ({
-      category: post.category || 'news',
-      title: post.title,
-      slug: post.slug,
-      image: post.coverImage,
-    }))
+  // Map blog posts to NewsSection format
+  const mappedBlogPosts = blogPosts.map((post) => ({
+    category: post.category || 'news',
+    title: post.title,
+    slug: post.slug,
+    image: post.coverImage,
+    videoUrl: post.videoUrl,
+  }));
+
+  console.log('[HomePage] Mapped Posts:', mappedBlogPosts);
+
+  const NEWS_ITEMS = mappedBlogPosts.length > 0
+    ? mappedBlogPosts
     : [
       { category: t('news.items.0.category'), title: t('news.items.0.title'), image: t('news.items.0.image') },
       { category: t('news.items.1.category'), title: t('news.items.1.title'), image: t('news.items.1.image') },
@@ -94,6 +101,7 @@ export default async function Page({ params }: { params: Promise<{ lng: string }
         title={t('cta.title')}
         subtitle={t('cta.subtitle')}
         buttonText={t('cta.button')}
+        href={`/${lng}${homePage.bottomCta?.href || '/equipment'}`}
       />
     </main>
   );

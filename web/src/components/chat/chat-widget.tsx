@@ -40,7 +40,7 @@ const STARTER_CHIPS = [
 export function ChatWidget() {
     const [isOpen, setIsOpen] = useState(false)
     const [hasInteracted, setHasInteracted] = useState(false)
-    const [showGreeting, setShowGreeting] = useState(false)
+
     const [input, setInput] = useState('')
     const messagesEndRef = useRef<HTMLDivElement>(null)
     const inputRef = useRef<HTMLTextAreaElement>(null)
@@ -78,15 +78,7 @@ export function ChatWidget() {
         }
     }, [isOpen])
 
-    // Show greeting bubble after delay
-    useEffect(() => {
-        if (!hasInteracted && !isOpen) {
-            const timer = setTimeout(() => setShowGreeting(true), 3000)
-            return () => clearTimeout(timer)
-        } else {
-            setShowGreeting(false)
-        }
-    }, [hasInteracted, isOpen])
+
 
     const handleStarterClick = (query: string) => {
         setHasInteracted(true)
@@ -120,29 +112,12 @@ export function ChatWidget() {
             <AnimatePresence>
                 {!isOpen && (
                     <motion.div
-                        initial={{ scale: 0, opacity: 0 }}
+                        initial={{ scale: 0.95, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
-                        exit={{ scale: 0, opacity: 0 }}
-                        className="fixed bottom-12 right-6 z-40 group flex items-center pr-1"
+                        exit={{ scale: 0.95, opacity: 0 }}
+                        className="fixed bottom-12 right-6 z-[60] group flex items-center pr-1"
                     >
-                        {/* Greeting Bubble */}
-                        <AnimatePresence>
-                            {showGreeting && (
-                                <motion.div
-                                    initial={{ opacity: 0, x: 20, scale: 0.8 }}
-                                    animate={{ opacity: 1, x: 0, scale: 1 }}
-                                    exit={{ opacity: 0, x: 10, scale: 0.8 }}
-                                    className="mr-4 px-4 py-2 bg-zinc-900/90 backdrop-blur border border-zinc-800 rounded-2xl shadow-xl max-w-[200px]"
-                                >
-                                    <p className="text-xs text-zinc-300 font-medium whitespace-nowrap flex items-center gap-2">
-                                        <Sparkles className="w-3 h-3 text-amber-500 animate-pulse" />
-                                        Need help building your kit?
-                                    </p>
-                                    {/* Arrow pointing right */}
-                                    <div className="absolute top-1/2 -right-1.5 -translate-y-1/2 w-3 h-3 bg-zinc-900 border-t border-r border-zinc-800 rotate-45" />
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
+
                         <Button
                             isIconOnly
                             className="w-14 h-14 bg-zinc-950/90 backdrop-blur-md border border-zinc-800 shadow-2xl hover:shadow-[0_0_30px_rgba(255,255,255,0.1)] hover:border-zinc-700 transition-all duration-500 relative overflow-hidden"
@@ -172,7 +147,7 @@ export function ChatWidget() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.95 }}
                         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                        className="fixed bottom-20 right-6 z-40 w-[400px] max-w-[calc(100vw-48px)] h-[600px] max-h-[calc(100vh-120px)]"
+                        className="fixed bottom-20 right-6 z-[60] w-[400px] max-w-[calc(100vw-48px)] h-[600px] max-h-[calc(100vh-120px)]"
                     >
                         <Card className="h-full bg-zinc-950/90 backdrop-blur-2xl border border-white/10 shadow-2xl rounded-3xl overflow-hidden">
                             {/* Header */}
@@ -252,8 +227,8 @@ export function ChatWidget() {
 
                                             {/* Tool invocations - Generative UI */}
                                             {message.role === 'assistant' && 'parts' in message && Array.isArray(message.parts) && message.parts.map((part, partIndex) => {
-                                                if (part.type === 'tool-invocation' && part.toolInvocation?.state === 'result') {
-                                                    const tool = part.toolInvocation
+                                                if (part.type === 'tool-invocation' && 'toolInvocation' in part && (part as any).toolInvocation?.state === 'result') {
+                                                    const tool = (part as any).toolInvocation
                                                     // Handle equipment lookup
                                                     if (tool.toolName === 'lookup_equipment') {
                                                         const result = tool.result as { equipment?: Array<{ id: string; name: string; slug: string; category?: string; description?: string; imageUrl?: string; isAvailable?: boolean }> }

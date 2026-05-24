@@ -17,6 +17,12 @@
     "info": {
         "title": "Visitez-Nous",
         "subtitle": "Notre showroom d'équipement à Casablanca.",
+        "labels": {
+            "headquarters": "Siège Social",
+            "address": "Adresse",
+            "phone": "Téléphone",
+            "email": "Email"
+        },
         "casablanca": {
             "city": "Casablanca, Maroc",
             "address": "55-57, Rue Souleimane el Farissi, 20330",
@@ -28,6 +34,10 @@
         "title": "Heures d'Ouverture",
         "weekdays": "Lundi - Vendredi: 9h00 - 18h00",
         "saturday": "Samedi: 10h00 - 14h00",
-        "sunday": "Dimanche: Fermé"
+        "sunday": "Dimanche: Fermé",
+        "weekdaysLabel": "Lun - Ven",
+        "weekdaysTime": "9h00 - 18h00",
+        "weekendLabel": "Samedi / Dimanche",
+        "weekendStatus": "Fermé"
     }
 }

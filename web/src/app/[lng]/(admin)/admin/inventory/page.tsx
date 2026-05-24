@@ -6,9 +6,9 @@
 
 import { Suspense } from 'react'
 import Link from 'next/link'
-import { getEquipmentList, toggleEquipmentVisibility, deleteEquipment } from '@/lib/actions/admin-inventory'
-import { Package, Plus, Search, Eye, EyeOff, Edit, Trash2, Image as ImageIcon } from 'lucide-react'
-import { EquipmentRow } from './admin-inventory-client'
+import { getEquipmentList, getEquipmentCategories, getAttributes, toggleEquipmentVisibility, deleteEquipment } from '@/lib/actions/admin-inventory'
+import { Package, Plus, Search, Eye, EyeOff, Edit, Trash2, Image as ImageIcon, Layers, Settings } from 'lucide-react'
+import { EquipmentRow, CategoryFilter, AttributeFilters } from './admin-inventory-client'
 
 
 
@@ -32,13 +32,30 @@ function TableSkeleton() {
 // Main Content
 async function InventoryContent({ lng, searchParams }: {
     lng: string
-    searchParams: { page?: string; search?: string; category?: string }
+    searchParams: { page?: string; search?: string; category?: string;[key: string]: string | undefined }
 }) {
     const page = parseInt(searchParams.page || '1')
-    const result = await getEquipmentList(page, 20, {
-        search: searchParams.search,
-        category: searchParams.category
-    })
+
+    // Parse spec filters from URL (spec_mount=EF -> specs: { mount: 'EF' })
+    const specs: Record<string, string> = {}
+    for (const [key, value] of Object.entries(searchParams)) {
+        if (key.startsWith('spec_') && value) {
+            specs[key.replace('spec_', '')] = value
+        }
+    }
+
+    const [result, categoriesResult, attributesResult] = await Promise.all([
+        getEquipmentList(page, 20, {
+            search: searchParams.search,
+            category: searchParams.category,
+            specs: Object.keys(specs).length > 0 ? specs : undefined
+        }),
+        getEquipmentCategories(),
+        getAttributes()
+    ])
+
+    const categories = categoriesResult.categories || []
+    const attributes = attributesResult.attributes || []
 
     return (
         <div className="space-y-6">
@@ -51,17 +68,33 @@ async function InventoryContent({ lng, searchParams }: {
                     </h1>
                     <p className="text-zinc-500 mt-1">Manage your equipment catalog</p>
                 </div>
-                <Link
-                    href={`/${lng}/admin/inventory/new`}
-                    className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors"
-                >
-                    <Plus className="w-4 h-4" />
-                    Add Equipment
-                </Link>
+                <div className="flex gap-3">
+                    <Link
+                        href={`/${lng}/admin/inventory/categories`}
+                        className="flex items-center gap-2 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg font-medium transition-colors border border-zinc-700"
+                    >
+                        <Layers className="w-4 h-4" />
+                        Manage Categories
+                    </Link>
+                    <Link
+                        href={`/${lng}/admin/inventory/attributes`}
+                        className="flex items-center gap-2 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg font-medium transition-colors border border-zinc-700"
+                    >
+                        <Settings className="w-4 h-4" />
+                        Manage Specs
+                    </Link>
+                    <Link
+                        href={`/${lng}/admin/inventory/new`}
+                        className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors"
+                    >
+                        <Plus className="w-4 h-4" />
+                        Add Equipment
+                    </Link>
+                </div>
             </div>
 
             {/* Search & Filters */}
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col md:flex-row gap-4">
                 <form className="flex-1 relative" action={`/${lng}/admin/inventory`}>
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
                     <input
@@ -72,6 +105,10 @@ async function InventoryContent({ lng, searchParams }: {
                         className="w-full pl-10 pr-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-red-900/50"
                     />
                 </form>
+                <div className="flex gap-2 flex-wrap">
+                    <CategoryFilter categories={categories} />
+                    <AttributeFilters attributes={attributes} />
+                </div>
             </div>
 
             {/* Stats */}

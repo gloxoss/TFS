@@ -140,8 +140,15 @@ export default function GlobalOperationsGrid({ lng }: GlobalOperationsGridProps)
 // Placeholder Skeletons for Bento Cards
 
 const SkeletonOne = () => (
-    <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-900 to-neutral-800 border border-white/5 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1580674684081-7617fbf3d745?q=80&w=800&auto=format&fit=crop')] bg-cover bg-center opacity-40 hover:opacity-60 transition-opacity duration-500" />
+    <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-900 to-neutral-800 border border-white/5 relative overflow-hidden group">
+        <div className="absolute inset-0">
+            <Image
+                src="/images/casablanca-hq.jpg"
+                alt="Casablanca HQ"
+                fill
+                className="object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-500"
+            />
+        </div>
         <div className="absolute bottom-4 left-4 bg-black/50 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
             <span className="text-xs text-white font-mono">HUB: CMN</span>
         </div>

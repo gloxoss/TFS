@@ -3,7 +3,11 @@
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Search, Globe, ExternalLink, ChevronDown, Package, Truck, FileCheck, Users, MapPin, Utensils, Hotel, Car, UserCheck } from "lucide-react";
+import { 
+    Search, Globe, ExternalLink, ChevronDown, Package, Truck, FileCheck, 
+    Users, MapPin, Utensils, Hotel, Car, UserCheck, Film, Plane, Wrench,
+    Video, Clapperboard, Activity, Shield
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { languages } from "@/app/i18n/settings";
 import { motion, AnimatePresence } from "framer-motion";
@@ -29,20 +33,14 @@ const SERVICE_ICONS: Record<string, React.ReactNode> = {
     'accommodation': <Hotel className="w-4 h-4" />,
     'transportation': <Car className="w-4 h-4" />,
     'casting': <UserCheck className="w-4 h-4" />,
+    'post-production': <Film className="w-4 h-4" />,
+    'aerial-services': <Plane className="w-4 h-4" />,
+    'production-support': <Wrench className="w-4 h-4" />,
+    'video-production': <Video className="w-4 h-4" />,
+    'film-production': <Clapperboard className="w-4 h-4" />,
+    'sporting-events': <Activity className="w-4 h-4" />,
+    'security-services': <Shield className="w-4 h-4" />,
 };
-
-// Core TFS services - only these will be shown
-const CORE_SERVICE_SLUGS = [
-    'equipment-hire',
-    'film-shipping',
-    'film-permits',
-    'crewing',
-    'scouting',
-    'catering',
-    'accommodation',
-    'transportation',
-    'casting'
-];
 
 export function MobileMenu({
     isOpen,
@@ -57,16 +55,32 @@ export function MobileMenu({
     const [servicesExpanded, setServicesExpanded] = useState(false);
     const [services, setServices] = useState<ServiceItem[]>([]);
 
-    // Fetch services using server action (filtered to core services)
+    // Fetch services using server action (filter out hub/hub_alt sub-services)
     useEffect(() => {
         if (!isOpen) return;
 
         async function fetchServices() {
             try {
                 const allServices = await getServicesForNav();
-                // Filter to only core TFS services
-                const coreServices = allServices.filter(s => CORE_SERVICE_SLUGS.includes(s.slug));
-                setServices(coreServices);
+                
+                // Collect all sub-service slugs from hub services (both 'hub' and 'hub_alt' templates)
+                const subServiceSlugs = new Set<string>();
+                allServices.forEach(service => {
+                    if ((service.template === 'hub' || service.template === 'hub_alt') && service.sub_services) {
+                        try {
+                            const subs = typeof service.sub_services === 'string'
+                                ? JSON.parse(service.sub_services)
+                                : service.sub_services;
+                            if (Array.isArray(subs)) {
+                                subs.forEach((slug: string) => subServiceSlugs.add(slug));
+                            }
+                        } catch (e) { }
+                    }
+                });
+
+                // Filter out sub-services from menu (they're accessed via hub page)
+                const mainServices = allServices.filter(s => !subServiceSlugs.has(s.slug));
+                setServices(mainServices);
             } catch (error) {
                 console.error('Failed to fetch services:', error);
             }
@@ -91,7 +105,7 @@ export function MobileMenu({
     };
 
     return (
-        <div className="absolute top-full right-0 mt-4 w-72 max-h-[80vh] overflow-y-auto bg-zinc-900/95 border border-white/10 rounded-2xl p-4 flex flex-col gap-2 backdrop-blur-xl md:hidden shadow-2xl">
+        <div className="absolute top-full right-0 mt-4 w-72 max-h-[80vh] overflow-y-auto z-[100] bg-zinc-900/95 border border-white/10 rounded-2xl p-4 flex flex-col gap-2 backdrop-blur-xl md:hidden shadow-2xl">
             {/* Mobile Search */}
             <button
                 onClick={() => {
@@ -234,7 +248,7 @@ export function MobileMenu({
 
                 {/* IMDB Button */}
                 <a
-                    href="https://www.imdb.com/company/co0891334"
+                    href="https://www.imdb.com/fr/user/ur212569790/?ref_=hm_nv_profile"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center gap-1.5 px-4 py-3 rounded-xl font-bold bg-[#F5C518] text-black hover:bg-[#E0B015] transition-colors text-sm"

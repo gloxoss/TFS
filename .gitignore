@@ -1,4 +1,4 @@
-# PocketBase database files - NEVER commit these
+﻿# PocketBase database files - NEVER commit these
 pb_data/
 /pocketbase/pb_data/
 /pocketbase/pb_data/auxiliary.db-wal
@@ -26,3 +26,36 @@ dist/
 /pocketbase
 *.exe
 
+# IDE & System
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+*.swp
+
+# Python Virtual Envs & Caches
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.venv/
+venv/
+env/
+
+# PHP Composer & Cache
+vendor/
+**/vendor/
+composer.lock
+
+# Large Binary Exclusions (Detected during onboarding)
+v1 (1).zip
+v2.zip
+v5.zip
+deployment/pb_data_backup/backups/v1.zip
+dist/TFS_App_v1.0/tfs-pb.tar
+dist/TFS_App_v1.0/tfs-web.tar
+pb_data_backup_20260203124901/backups/v3.zip
+pb_data_bak_20260129_1438/backups/v1.zip
+web/.next/cache/webpack/client-production/0.pack
+web/.next/cache/webpack/server-production/0.pack
+web/node_modules/@next/swc-win32-x64-msvc/next-swc.win32-x64-msvc.node

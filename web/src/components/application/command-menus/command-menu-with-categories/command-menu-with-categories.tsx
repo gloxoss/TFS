@@ -227,7 +227,7 @@ export default function CommandMenuWithCategories() {
     const slots = useMemo(() => cmdk(), []);
     const flattenedData = useMemo(() => flattenSearchData(), []);
     const groupedData = useMemo(() => groupedSearchData(flattenedData), [flattenedData]);
-    const eventRef = useRef<"mouse" | "keyboard">();
+    const eventRef = useRef<"mouse" | "keyboard">(undefined);
     const listRef = useRef<HTMLDivElement>(null);
     const [isOpen, setIsOpen] = useState(true);
     const [commandKey, setCommandKey] = useState<"ctrl" | "command">("command");
@@ -500,7 +500,7 @@ export default function CommandMenuWithCategories() {
                             "p-0": item?.component?.attributes?.screenshot?.fullWidth,
                         })}
                     >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        {/* eslint_disable-next-line @next/next/no-img-element */}
                         <img
                             alt={`${item.component?.name}`}
                             className={cn("h-auto w-full object-scale-down", {
@@ -774,7 +774,6 @@ export default function CommandMenuWithCategories() {
                         <div className={slots.header()}>
                             <Search className={slots.searchIcon()} size={20} />
                             <Command.Input
-                                autoFocus={!isWebKit()}
                                 className={slots.input()}
                                 placeholder="Search component..."
                                 value={query}

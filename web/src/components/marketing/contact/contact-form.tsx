@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Loader2, Send } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { submitContactMessage } from "@/lib/actions/contact";
 
 interface ContactFormProps {
     lng: string;
@@ -21,15 +22,35 @@ export default function ContactForm({ lng }: ContactFormProps) {
 
     async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
+        // Capture form ref before any async call — React nullifies event.currentTarget after await
+        const form = event.currentTarget;
         setIsLoading(true);
 
-        // Simulate API call
-        setTimeout(() => {
-            setIsLoading(false);
+        try {
+            const formData = new FormData(form);
+            const result = await submitContactMessage({
+                name: formData.get("name") as string,
+                email: formData.get("email") as string,
+                subject: formData.get("subject") as string,
+                message: formData.get("message") as string,
+            });
+
+            if (!result.success) {
+                throw new Error(result.error || "Failed to send message");
+            }
+
             setIsSuccess(true);
-            // Reset after a delay
+            // Reset form — use captured ref, not event.currentTarget (null after await)
+            form.reset();
+
+            // Reset success state after a delay
             setTimeout(() => setIsSuccess(false), 3000);
-        }, 1500);
+        } catch (error) {
+            console.error("Contact form error:", error);
+            alert(t("form.error") || "Something went wrong. Please try again.");
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     return (
@@ -52,22 +73,22 @@ export default function ContactForm({ lng }: ContactFormProps) {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                         <Label htmlFor="name" className="text-zinc-400">{t("form.name")}</Label>
-                        <Input id="name" required className="bg-white/5 border-white/10 text-white focus:border-[#D00000] focus:ring-[#D00000]/20 min-h-[50px]" />
+                        <Input id="name" name="name" required className="bg-white/5 border-white/10 text-white focus:border-[#D00000] focus:ring-[#D00000]/20 min-h-[50px]" />
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="email" className="text-zinc-400">{t("form.email")}</Label>
-                        <Input id="email" type="email" required className="bg-white/5 border-white/10 text-white focus:border-[#D00000] focus:ring-[#D00000]/20 min-h-[50px]" />
+                        <Input id="email" name="email" type="email" required className="bg-white/5 border-white/10 text-white focus:border-[#D00000] focus:ring-[#D00000]/20 min-h-[50px]" />
                     </div>
                 </div>
 
                 <div className="space-y-2">
                     <Label htmlFor="subject" className="text-zinc-400">{t("form.subject")}</Label>
-                    <Input id="subject" required className="bg-white/5 border-white/10 text-white focus:border-[#D00000] focus:ring-[#D00000]/20 min-h-[50px]" />
+                    <Input id="subject" name="subject" required className="bg-white/5 border-white/10 text-white focus:border-[#D00000] focus:ring-[#D00000]/20 min-h-[50px]" />
                 </div>
 
                 <div className="space-y-2">
                     <Label htmlFor="message" className="text-zinc-400">{t("form.message")}</Label>
-                    <Textarea id="message" required className="bg-white/5 border-white/10 text-white focus:border-[#D00000] focus:ring-[#D00000]/20 min-h-[150px]" />
+                    <Textarea id="message" name="message" required className="bg-white/5 border-white/10 text-white focus:border-[#D00000] focus:ring-[#D00000]/20 min-h-[150px]" />
                 </div>
 
                 <Button

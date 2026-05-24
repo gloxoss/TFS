@@ -1,0 +1,3507 @@
+{
+  "Cameras": {
+    "slug": "cameras",
+    "id": "xp1sm19jbb5umww",
+    "items": [
+      {
+        "id": "arr001a35000000",
+        "name": "ARRI Alexa 35",
+        "slug": "arri-alexa-35",
+        "brand": "ARRI",
+        "rate": 0,
+        "stock": 1,
+        "specs": {
+          "codec": "ProRes, ARRIRAW",
+          "dynamic_range": "17 Stops",
+          "max_fps": "120fps",
+          "max_resolution": "4608 x 3164",
+          "media_type": "Codex Compact Drive",
+          "mount": "LPL (PL Adapter incl.)",
+          "sensor_size": "28.0 x 19.2mm"
+        },
+        "type": "",
+        "description": "Arri's compact Alexa 35 features a 4.6K Super 35-format sensor capable of capturing 17 stops of dynamic range. With an exposure index adjustable from 160 to 6400, the camera incorporates four built-in motorized ND filters (clear, 0.6, 1.2, and 1.8) and offers a maximum frame rate of 120 fps.\n\nIncludes:\n● ARRI MVF-2 Viewfinder\n● ARRI B-Mount Power Distribution Module (PDM-1)\n● ARRI PL-to-LPL Mount Adapter\n● Codex Compact Drive 1TB / 2TB\n● Codex Compact Drive Reader\n● Full Licensing (ARRIRAW, ProRes, Open Gate, 4:3, Anamorphic)"
+      },
+      {
+        "id": "son002ven200000",
+        "name": "Sony Venice 2 8K",
+        "slug": "sony-venice-2-8k",
+        "brand": "Sony",
+        "rate": 0,
+        "stock": 1,
+        "specs": {
+          "codec": "X-OCN, ProRes",
+          "dynamic_range": "16 Stops",
+          "max_fps": "90fps",
+          "max_resolution": "8640 x 5760",
+          "media_type": "AXS Memory / Codex",
+          "mount": "PL / E-mount",
+          "sensor_size": "35.9mm x 23.93mm"
+        },
+        "type": "",
+        "description": "Building on the original Venice, Venice 2 features a compact design, internal recording, and an 8.6K full-frame CMOS sensor that can capture 16 stops of dynamic range. The camera also offers a dual-base ISO of 800/3200 and 8 stops of built-in ND filters. The Panavision Modular accessory system adds further functionality.\n\nIncludes:\n● Sony VENICE Accessory Cage / Top Plate Kit\n● Sony OLED Viewfinder\n● Power Distribution Module\n● Lens Mount Adapter options\n● Codex Compact Drives / AXS-R7\n● Full Licensing (Full Frame, 8.6K, Anamorphic, SLog)"
+      },
+      {
+        "id": "arr003mlf000000",
+        "name": "ARRI Alexa Mini LF",
+        "slug": "arri-alexa-mini-lf",
+        "brand": "ARRI",
+        "rate": 0,
+        "stock": 1,
+        "specs": {
+          "codec": "ProRes, ARRIRAW",
+          "dynamic_range": "14+ Stops",
+          "max_fps": "90fps",
+          "max_resolution": "4448 x 3096",
+          "media_type": "Codex Compact Drive",
+          "mount": "LPL",
+          "sensor_size": "36.7mm x 25.5mm"
+        },
+        "type": "",
+        "description": "The Alexa Mini LF combines the Alexa Mini's compact form factor with the Alexa LF's large-format sensor. Exclusively from Panavision, the Mini LF can be rented with the Panavision Modular accessory system and a Panavised lens mount.\n\nIncludes:\n● ARRI Advanced Accessory Cage\n● ARRI MVF-2\n● BEBOB Power Splitting Box\n● ARRI PL-LPL Mount Adapter\n● Codex Compact Drives\n● ARRI Codex SXR Capture Drive Dock\n● Full Licensing (4:3, ARRIRAW)"
+      },
+      {
+        "id": "arr004mini00000",
+        "name": "ARRI Alexa Mini",
+        "slug": "arri-alexa-mini",
+        "brand": "ARRI",
+        "rate": 0,
+        "stock": 1,
+        "specs": {
+          "codec": "ProRes, ARRIRAW",
+          "dynamic_range": "14+ Stops",
+          "max_fps": "200fps",
+          "max_resolution": "3168 x 2202",
+          "media_type": "CFast 2.0",
+          "mount": "PL",
+          "sensor_size": "28.3mm x 18.2mm"
+        },
+        "type": "",
+        "description": "The compact and lightweight Alexa Mini can be fitted with a Panavision lens mount for compatibility with Panavision optics, and its versatility can be further enhanced with the custom Panavision Modular accessory system.\n\nIncludes:\n● ARRI MVF-1\n● CFast 2.0 Cards\n● CFast 2.0 Reader (USB-A, USB-C)\n● Full Licensing (4:3, ARRIRAW)"
+      },
+      {
+        "id": "arr005amira0000",
+        "name": "ARRI Amira",
+        "slug": "arri-amira",
+        "brand": "ARRI",
+        "rate": 0,
+        "stock": 1,
+        "specs": {
+          "codec": "ProRes, ARRIRAW",
+          "dynamic_range": "14+ Stops",
+          "max_fps": "200fps",
+          "max_resolution": "3200 x 1800",
+          "media_type": "CFast 2.0",
+          "mount": "PL",
+          "sensor_size": "28.3mm x 18.2mm"
+        },
+        "type": "",
+        "description": "Arri's Amira offers an ergonomic design that's well-suited to handheld, shoulder-mount operation. As with the Alexa cameras, the Amira can be Panavised with a Panavision lens mount and Panavision Modular accessories.\n\nIncludes:\n● ARRI MVF-1\n● CFast 2.0 Cards\n● CFast 2.0 Reader\n● Servo Lens Interface\n● Full Licensing (4:3, ARRIRAW)"
+      },
+      {
+        "id": "pan006vlt000000",
+        "name": "Panasonic VariCam LT",
+        "slug": "panasonic-varicam-lt",
+        "brand": "Panasonic",
+        "rate": 0,
+        "stock": 1,
+        "specs": {
+          "codec": "AVC-Intra, ProRes",
+          "dynamic_range": "14+ Stops",
+          "max_fps": "240fps",
+          "max_resolution": "4096 x 2160",
+          "media_type": "expressP2 card",
+          "mount": "EF / PL",
+          "sensor_size": "24.6mm x 12.9mm"
+        },
+        "type": "",
+        "description": "The VariCam LT packages the VariCam 35's 4K Super 35mm sensor in a lightweight, single-body design. Both the VariCam 35 and the VariCam LT can be fully outfitted with Panavision Modular accessories, including custom-engineered baseplates, top plates, handles, side rods, and more.\n\nIncludes:\n● ARRI MVF-1\n● CFast 2.0 Cards\n● CFast 2.0 Reader\n● Servo Lens Interface\n● Full Licensing"
+      },
+      {
+        "id": "son007fx9000000",
+        "name": "Sony PXW-FX9",
+        "slug": "sony-pxw-fx9",
+        "brand": "Sony",
+        "rate": 0,
+        "stock": 1,
+        "specs": {
+          "codec": "XAVC, ProRes (via Ext)",
+          "dynamic_range": "15 Stops",
+          "max_fps": "60fps (FF 6K)",
+          "max_resolution": "6048 x 4032",
+          "media_type": "XQD Card",
+          "mount": "E-Mount / PL Adapter",
+          "sensor_size": "35.7mm x 18.8mm"
+        },
+        "type": "",
+        "description": "The Sony FX9 packages Sony's 6K full-frame Exmor R sensor into a compact, lightweight, single-body cinema camera designed for both documentary and narrative production.\n\nIncludes:\n● SONY XDCA-FX9 Extension Unit\n● Sony XQD G Series Cards\n● Sony XQD Card Reader\n● PL-E Mount Adapter\n● EF-E Metabones Adapter"
+      },
+      {
+        "id": "son008fx3000000",
+        "name": "Sony FX3",
+        "slug": "sony-fx3",
+        "brand": "Sony",
+        "rate": 0,
+        "stock": 1,
+        "specs": {
+          "codec": "XAVC S-I, ProRes RAW (Ext)",
+          "dynamic_range": "15+ Stops",
+          "max_fps": "120fps",
+          "max_resolution": "4096 x 2160",
+          "media_type": "CFexpress Type A / SD",
+          "mount": "E-Mount",
+          "sensor_size": "35.6 x 23.8 mm"
+        },
+        "type": "",
+        "description": "Inspired by Sony's high-end cinema cameras, the FX3 is a compact full-frame camera that delivers stunning 4K footage with 15 stops of dynamic range. It features dual base ISO (800/12,800) for excellent low-light performance and a built-in cooling system for extended shoots.\n\nIncludes:\n● SONY NP-FZ100 Batteries\n● SONY CFexpress Type-A Cards\n● SONY Card Reader\n● XLR-K3M Audio Handle\n● EF-E Metabones Adapter"
+      },
+      {
+        "id": "son009f55000000",
+        "name": "Sony F55",
+        "slug": "sony-f55",
+        "brand": "Sony",
+        "rate": 0,
+        "stock": 1,
+        "specs": {
+          "codec": "XAVC, X-OCN",
+          "dynamic_range": "14 Stops",
+          "max_fps": "240fps (2K)",
+          "max_resolution": "4096 x 2160",
+          "media_type": "SxS / AXS",
+          "mount": "FZ (PL Adapter)",
+          "sensor_size": "24mm x 12.7mm"
+        },
+        "type": "",
+        "description": "The Super 35-format Sony F55 captures 16-bit image files at up to 4K raw. Enhancing the user experience, Panavision has developed and manufactured the custom-designed Panavision Modular accessory package.\n\nIncludes:\n● ARRI Cage for Sony F5/F55 VCT-U14\n● Sony AXS-R5 Recorder\n● Sony Pro+ SxS Cards\n● Sony AXS S24 / SxS Cards\n● Sony AXS Card Reader\n● Servo Lens Interface"
+      },
+      {
+        "id": "red010mon000000",
+        "name": "DSMC2 Monstro 8K",
+        "slug": "dsmc2-monstro-8k",
+        "brand": "RED",
+        "rate": 0,
+        "stock": 1,
+        "specs": {
+          "codec": "R3D, ProRes, DNxHD",
+          "dynamic_range": "17+ Stops",
+          "max_fps": "60fps (8K FF)",
+          "max_resolution": "8192 x 4320",
+          "media_type": "RED Mini Mag",
+          "mount": "PL / EF",
+          "sensor_size": "40.96mm x 21.6mm"
+        },
+        "type": "",
+        "description": "The RED Monstro 8K VV sensor can capture up to 60 fps when recording full format. The sensor is housed in a DSMC2 camera body, which can be further enhanced with Panavision Modular accessories and a Panavised lens mount.\n\nIncludes:\n● RED PRO TOUCH 7.0\n● RED Mini Mags\n● RED Mini Mags Card Reader\n● RED EVF"
+      },
+      {
+        "id": "y5inafa2l6bo9v3",
+        "name": "Arri Alexa 35 Xtreme",
+        "slug": "arri-alexa-35-xtreme",
+        "brand": "ARRI",
+        "rate": 1800,
+        "stock": 2,
+        "specs": {
+          "codec": "ProRes 4444 XQ, ARRIRAW",
+          "dynamic_range": "14+ Stops",
+          "max_fps": "120 fps (2K/HD)",
+          "max_resolution": "4608 x 3164",
+          "media_type": "CFast 2.0",
+          "mount": "LPL / PL",
+          "sensor_size": "28.0 x 19.2 mm (Super 35)"
+        },
+        "type": "",
+        "description": "A major revision of the industry’s trusted workhorse. Introduces powerful new hardware and higher speeds for breathtaking slow-motion images."
+      },
+      {
+        "id": "s17y1hlyudbfj2m",
+        "name": "Sony FX6 Full-Frame",
+        "slug": "sony-fx6",
+        "brand": "Sony",
+        "rate": 350,
+        "stock": 2,
+        "specs": {
+          "codec": "XAVC-I, XAVC-L",
+          "dynamic_range": "15+ Stops",
+          "max_fps": "120 fps (4K)",
+          "max_resolution": "4096 x 2160",
+          "media_type": "CFexpress Type A / SDXC",
+          "mount": "Sony E-mount",
+          "sensor_size": "35.6 x 23.8 mm (Full Frame)"
+        },
+        "type": "",
+        "description": "Versatile, cine-style imaging in a truly compact form. Captures up to 15+ stops of dynamic range with S-Cinetone gamma."
+      }
+    ]
+  },
+  "Lenses": {
+    "slug": "lenses",
+    "id": "akow04rq4m10jpp",
+    "items": [
+      {
+        "id": "bzlv16ozob1jdsv",
+        "name": "Cooke S4/i Prime Set",
+        "slug": "cooke-s4i-set",
+        "brand": "Cooke",
+        "rate": 1200,
+        "stock": 2,
+        "specs": {
+          "aperture": "T2.0",
+          "features": "/i Technology",
+          "mount": "PL",
+          "range": "12mm - 180mm"
+        },
+        "type": "",
+        "description": "Cooke S4/i focal lengths range from 12mm to 180mm, all with a wide-open aperture of T2. Offers excellent optical and mechanical performance."
+      },
+      {
+        "id": "em7i1h46jotcng7",
+        "name": "ARRI / ZEISS Master Anamorphic Set",
+        "slug": "arri-zeiss-master-anamorphic",
+        "brand": "ZEISS",
+        "rate": 1800,
+        "stock": 2,
+        "specs": {
+          "aperture": "T1.9",
+          "mount": "PL",
+          "range": "28mm - 135mm",
+          "type": "Anamorphic"
+        },
+        "type": "",
+        "description": "Focal lengths range from 28mm to 135mm, all with a wide-open aperture of T1.9. Designed for premium anamorphic cinematography with exceptional sharpness."
+      },
+      {
+        "id": "9x07ieyr1e5mmeu",
+        "name": "ARRI Signature Prime Set",
+        "slug": "arri-signature-primes",
+        "brand": "ARRI",
+        "rate": 1600,
+        "stock": 2,
+        "specs": {
+          "aperture": "T1.8",
+          "coverage": "Large Format",
+          "mount": "LPL",
+          "range": "12mm - 280mm"
+        },
+        "type": "",
+        "description": "Focal lengths range from 12mm to 280mm, T1.8. Designed for large-format cinematography, delivering a clean, natural image with smooth focus fall-off."
+      },
+      {
+        "id": "igrrsswlgtzdxzg",
+        "name": "ZEISS Supreme Prime Set",
+        "slug": "zeiss-supreme-primes",
+        "brand": "ZEISS",
+        "rate": 1500,
+        "stock": 2,
+        "specs": {
+          "aperture": "T1.5",
+          "coverage": "Full Frame / VV",
+          "front_diameter": "95mm",
+          "mount": "PL/LPL/EF"
+        },
+        "type": "",
+        "description": "Covering an image circle of 46.3mm, Zeiss Supreme Prime lenses offer a T1.5 maximum aperture across most of the range. Compact design."
+      },
+      {
+        "id": "mevkrt5vp4j9t0k",
+        "name": "ARRI / ZEISS Master Prime Set",
+        "slug": "arri-zeiss-master-primes",
+        "brand": "ZEISS",
+        "rate": 1400,
+        "stock": 2,
+        "specs": {
+          "aperture": "T1.3",
+          "features": "No Breathing",
+          "mount": "PL",
+          "range": "12mm - 150mm"
+        },
+        "type": "",
+        "description": "Master Primes offer focal lengths from 12mm to 150mm, with a common aperture of T1.3. High contrast, resolution, and virtually no breathing."
+      },
+      {
+        "id": "o9ndrkhn5crjj25",
+        "name": "ZEISS Super Speed MK III Set",
+        "slug": "zeiss-super-speed-mk3",
+        "brand": "ZEISS",
+        "rate": 800,
+        "stock": 2,
+        "specs": {
+          "aperture": "T1.3",
+          "mount": "PL",
+          "range": "18mm - 85mm",
+          "style": "Vintage/Classic"
+        },
+        "type": "",
+        "description": "Focal lengths from 18mm to 85mm, T1.3. Renowned for their classic cinematic look, Super Speed MK III primes offer high light-gathering capability."
+      },
+      {
+        "id": "68yf3e1c7d80kic",
+        "name": "ZEISS Compact Prime CP.3 Set",
+        "slug": "zeiss-cp3-set",
+        "brand": "ZEISS",
+        "rate": 600,
+        "stock": 2,
+        "specs": {
+          "aperture": "T2.1",
+          "coverage": "Full Frame",
+          "mount": "Interchangeable (PL/EF/E/MFT)",
+          "range": "15mm - 135mm"
+        },
+        "type": "",
+        "description": "Focal lengths range from 15mm to 135mm, T2.1. Building on the CP.2 design, CP.3 lenses deliver improved mechanics and refined optical performance."
+      },
+      {
+        "id": "p2hyz2ztu5cprnz",
+        "name": "ZEISS Ultra Prime Set",
+        "slug": "zeiss-ultra-primes",
+        "brand": "ZEISS",
+        "rate": 900,
+        "stock": 2,
+        "specs": {
+          "aperture": "T1.9 - T2.8",
+          "match": "Matches Master Primes",
+          "mount": "PL",
+          "range": "8mm - 180mm"
+        },
+        "type": "",
+        "description": "Focal lengths from 8mm to 180mm, with apertures ranging from T1.9 to T2.8. High-contrast, high-resolution lenses with even field illumination."
+      },
+      {
+        "id": "iwtc8hpgl1i3yd6",
+        "name": "Atlas Orion Anamorphic Set",
+        "slug": "atlas-orion-anamorphic",
+        "brand": "Atlas Lens Co.",
+        "rate": 1000,
+        "stock": 2,
+        "specs": {
+          "aperture": "T2.0",
+          "mount": "PL / EF",
+          "range": "32mm - 100mm",
+          "squeeze": "2x"
+        },
+        "type": "",
+        "description": "Atlas Orion Anamorphic primes (32mm to 100mm, T2) deliver a classic anamorphic look with controlled flares, smooth oval bokeh, and minimal distortion."
+      },
+      {
+        "id": "rjlljtlwshltngd",
+        "name": "ARRI Macro Prime Set",
+        "slug": "arri-macro-primes",
+        "brand": "ARRI",
+        "rate": 600,
+        "stock": 2,
+        "specs": {
+          "aperture": "T2.0",
+          "mount": "PL",
+          "range": "50mm - 150mm",
+          "type": "Macro"
+        },
+        "type": "",
+        "description": "Focal lengths range from 50mm to 150mm, T2.0. Designed for close-focus cinematography, delivering exceptional sharpness and flat field performance."
+      },
+      {
+        "id": "959xlmzc8vdi85k",
+        "name": "ARRI 9.5-18mm T2.9 Ultra Wide Zoom",
+        "slug": "arri-uwz-9.5-18mm",
+        "brand": "ARRI",
+        "rate": 800,
+        "stock": 2,
+        "specs": {
+          "aperture": "T2.9",
+          "coverage": "Open Gate (34.5mm)",
+          "mount": "PL",
+          "range": "9.5mm - 18mm"
+        },
+        "type": "Zoom",
+        "description": "The 9.5-18mm T2.9 Ultra Wide Zoom Lens from ARRI delivers optimal image quality, suiting it for plate shots and VFX applications. Covers Open Gate."
+      },
+      {
+        "id": "42vkhfw4cu4w1w4",
+        "name": "ARRI Alura 45-250mm T2.6 Studio Zoom",
+        "slug": "arri-alura-45-250mm",
+        "brand": "ARRI",
+        "rate": 650,
+        "stock": 2,
+        "specs": {
+          "aperture": "T2.6",
+          "coverage": "Super 35",
+          "mount": "PL",
+          "range": "45mm - 250mm"
+        },
+        "type": "Zoom",
+        "description": "The ARRI/Fujinon 45-250mm Alura Studio Zoom features a fast T2.6 aperture throughout its zoom range and cine-style lens ergonomics."
+      },
+      {
+        "id": "mzx2c4uwb8jb3a9",
+        "name": "ARRI Alura 18-80mm T2.6 Studio Zoom",
+        "slug": "arri-alura-18-80mm",
+        "brand": "ARRI",
+        "rate": 650,
+        "stock": 2,
+        "specs": {
+          "aperture": "T2.6",
+          "coverage": "Super 35",
+          "mount": "PL",
+          "range": "18mm - 80mm"
+        },
+        "type": "Zoom",
+        "description": "ARRI Alura 18–80mm T2.6 F Wide-Angle Studio Zoom offers a versatile focal range with a constant T2.6 aperture. Designed to match ARRI prime lenses."
+      },
+      {
+        "id": "wa26deg3tgzo62m",
+        "name": "Fujinon ZK19-90mm T2.9 Cabrio",
+        "slug": "fujinon-cabrio-19-90mm",
+        "brand": "Fujinon",
+        "rate": 550,
+        "stock": 2,
+        "specs": {
+          "aperture": "T2.9",
+          "features": "Detachable Servo",
+          "mount": "PL",
+          "range": "19mm - 90mm"
+        },
+        "type": "Zoom",
+        "description": "The Fujinon ZK19-90mm T2.9 Cabrio Lens features a detachable servo drive unit, making it suitable for both cine and ENG-style shooting."
+      },
+      {
+        "id": "dgrfbptlzgccbpm",
+        "name": "Fujinon ZK85-300mm T2.9-4.0 Cabrio",
+        "slug": "fujinon-cabrio-85-300mm",
+        "brand": "Fujinon",
+        "rate": 600,
+        "stock": 2,
+        "specs": {
+          "aperture": "T2.9 - T4.0",
+          "features": "Detachable Servo",
+          "mount": "PL",
+          "range": "85mm - 300mm"
+        },
+        "type": "Zoom",
+        "description": "Lightweight telephoto zoom for Super35. Features detachable servo unit. Aperture ramps from T2.9 to T4.0 at the long end."
+      },
+      {
+        "id": "sg8yfj0rpjlvtgl",
+        "name": "Fujinon XK20-120mm T3.5 Cabrio",
+        "slug": "fujinon-cabrio-20-120mm",
+        "brand": "Fujinon",
+        "rate": 450,
+        "stock": 2,
+        "specs": {
+          "aperture": "T3.5",
+          "coverage": "Super 35",
+          "mount": "PL",
+          "range": "20mm - 120mm"
+        },
+        "type": "Zoom",
+        "description": "Wide-to-telephoto zoom lens for Super35 cameras. Features standard 0.8 Mod gears. Servo unit sold separately (Lens Only version)."
+      },
+      {
+        "id": "00xpr9n3frq1d02",
+        "name": "Canon CN-E 15.5-47mm T2.8 L SP",
+        "slug": "canon-cne-15.5-47mm",
+        "brand": "Canon",
+        "rate": 350,
+        "stock": 2,
+        "specs": {
+          "aperture": "T2.8",
+          "coverage": "Super 35",
+          "mount": "PL",
+          "range": "15.5mm - 47mm"
+        },
+        "type": "Zoom",
+        "description": "Wide-angle cinema zoom designed for 4K production. Compact and lightweight, covering Super 35mm sensors."
+      },
+      {
+        "id": "mg1ge5n0n0tip1t",
+        "name": "Canon Cine-Servo 17-120mm T2.95",
+        "slug": "canon-cine-servo-17-120mm",
+        "brand": "Canon",
+        "rate": 500,
+        "stock": 2,
+        "specs": {
+          "aperture": "T2.95-3.9",
+          "features": "Servo Grip",
+          "mount": "PL / EF",
+          "range": "17mm - 120mm"
+        },
+        "type": "Zoom",
+        "description": "Combines broadcast servo functionality with cinema optics. Ideal for documentary and broadcast use."
+      },
+      {
+        "id": "w9c50mx3khouqmr",
+        "name": "Angenieux Optimo Style 30-76mm",
+        "slug": "angenieux-optimo-style-30-76mm",
+        "brand": "Angenieux",
+        "rate": 450,
+        "stock": 2,
+        "specs": {
+          "aperture": "T2.8",
+          "mount": "PL",
+          "range": "30mm - 76mm",
+          "weight": "Lightweight"
+        },
+        "type": "Zoom",
+        "description": "Lightweight compact zoom offering 4K+ resolution. Matches Optimo DP series. 2.5x zoom range."
+      },
+      {
+        "id": "qhhnxhtixrbvkrp",
+        "name": "Angenieux Optimo Style 16-40mm",
+        "slug": "angenieux-optimo-style-16-40mm",
+        "brand": "Angenieux",
+        "rate": 450,
+        "stock": 2,
+        "specs": {
+          "aperture": "T2.8",
+          "mount": "PL",
+          "range": "16mm - 40mm",
+          "weight": "Lightweight"
+        },
+        "type": "Zoom",
+        "description": "Wide angle lightweight zoom. Perfect companion to the 30-76mm. Internal focus and no breathing."
+      },
+      {
+        "id": "n3u7dfrvum1vqy3",
+        "name": "Sigma 50-100mm T2 High-Speed Zoom",
+        "slug": "sigma-50-100mm-t2",
+        "brand": "Sigma",
+        "rate": 200,
+        "stock": 2,
+        "specs": {
+          "aperture": "T2.0",
+          "coverage": "Super 35",
+          "mount": "PL",
+          "range": "50mm - 100mm"
+        },
+        "type": "Zoom",
+        "description": "High speed T2 zoom lens covering Super 35 sensors. Outstanding sharpness and compact form factor."
+      },
+      {
+        "id": "g90084668hav64q",
+        "name": "Fujinon ZK14-35mm T2.9 Cabrio",
+        "slug": "fujinon-cabrio-14-35mm",
+        "brand": "Fujinon",
+        "rate": 550,
+        "stock": 2,
+        "specs": {
+          "aperture": "T2.9",
+          "mount": "PL",
+          "range": "14-35mm"
+        },
+        "type": "Prime",
+        "description": "Wide angle zoom for Super 35mm. Detachable servo unit."
+      },
+      {
+        "id": "jbh4pqudd171y9p",
+        "name": "Canon CINE-SERVO 15-120mm T2.95",
+        "slug": "canon-cine-servo-15-120mm",
+        "brand": "Canon",
+        "rate": 550,
+        "stock": 2,
+        "specs": {
+          "aperture": "T2.95-3.9",
+          "mount": "PL",
+          "range": "15-120mm"
+        },
+        "type": "Prime",
+        "description": "Full-frame/Super35 zoom with SS-41-IASD full servo kit."
+      },
+      {
+        "id": "h71ojsu1glzcuzj",
+        "name": "Canon CINE-SERVO 25-250mm T2.95",
+        "slug": "canon-cine-servo-25-250mm",
+        "brand": "Canon",
+        "rate": 600,
+        "stock": 2,
+        "specs": {
+          "aperture": "T2.95",
+          "mount": "PL",
+          "range": "25-250mm"
+        },
+        "type": "Prime",
+        "description": "Broadcast lens servo setup with cinema optics. Compact and lightweight."
+      },
+      {
+        "id": "8ohunnkkngucopj",
+        "name": "Angenieux Optimo 28-76mm",
+        "slug": "angenieux-optimo-28-76mm",
+        "brand": "Angenieux",
+        "rate": 450,
+        "stock": 2,
+        "specs": {
+          "aperture": "T2.6",
+          "mount": "PL",
+          "range": "28-76mm"
+        },
+        "type": "Prime",
+        "description": "Lightweight Wide-Angle Zoom. Swappable mounts (PL/EF)."
+      },
+      {
+        "id": "wp5yk2d73bwj8bx",
+        "name": "Angenieux Optimo Style 48-130mm",
+        "slug": "angenieux-optimo-style-48-130mm",
+        "brand": "Angenieux",
+        "rate": 450,
+        "stock": 2,
+        "specs": {
+          "aperture": "T3",
+          "mount": "PL",
+          "range": "48-130mm"
+        },
+        "type": "Prime",
+        "description": "Mid-range lightweight zoom. 2.7x zoom ratio, minimal breathing."
+      },
+      {
+        "id": "zc2r2x5e4j7f8gz",
+        "name": "Angenieux Optimo 19.5-94mm",
+        "slug": "angenieux-optimo-19.5-94mm",
+        "brand": "Angenieux",
+        "rate": 600,
+        "stock": 2,
+        "specs": {
+          "aperture": "T2.6",
+          "mount": "PL",
+          "range": "19.5-94mm"
+        },
+        "type": "Prime",
+        "description": "Maximized for high-res digital production. Superb homogeneity."
+      },
+      {
+        "id": "lxv0ys0uvfu5000",
+        "name": "ZEISS CZ.2 15-30mm Compact Zoom",
+        "slug": "zeiss-cz2-15-30mm",
+        "brand": "ZEISS",
+        "rate": 350,
+        "stock": 2,
+        "specs": {
+          "aperture": "T2.9",
+          "mount": "PL/E/EF",
+          "range": "15-30mm"
+        },
+        "type": "Zoom",
+        "description": "Full-frame wide angle zoom. Color matched to Zeiss primes."
+      },
+      {
+        "id": "rxggdxebtxvlcr9",
+        "name": "Tokina 11-16mm T3.0",
+        "slug": "tokina-11-16mm",
+        "brand": "Tokina",
+        "rate": 150,
+        "stock": 2,
+        "specs": {
+          "aperture": "T3.0",
+          "mount": "PL",
+          "range": "11-16mm"
+        },
+        "type": "Prime",
+        "description": "Ideal for wide-angle cinematography, landscapes, and architecture."
+      },
+      {
+        "id": "dwasbf0e61mpuoh",
+        "name": "ZEISS Compact Prime CP.2 Set",
+        "slug": "zeiss-cp2-set",
+        "brand": "ZEISS",
+        "rate": 450,
+        "stock": 2,
+        "specs": {
+          "aperture": "T2.1",
+          "mount": "PL/EF",
+          "range": "15mm-135mm"
+        },
+        "type": "Prime",
+        "description": "Versatile compact primes with interchangeable mounts. Full frame coverage."
+      },
+      {
+        "id": "l82o5hvhvo69rwx",
+        "name": "ZEISS Standard Prime Set",
+        "slug": "zeiss-standard-primes",
+        "brand": "ZEISS",
+        "rate": 300,
+        "stock": 2,
+        "specs": {
+          "aperture": "T2.1",
+          "mount": "PL",
+          "range": "16mm-85mm"
+        },
+        "type": "Prime",
+        "description": "Classic Zeiss look. Small, lightweight, sharp T2.1 lenses."
+      },
+      {
+        "id": "1twufga4k5w0enx",
+        "name": "ZEISS Master Macro Prime Set",
+        "slug": "zeiss-master-macro",
+        "brand": "ZEISS",
+        "rate": 700,
+        "stock": 2,
+        "specs": {
+          "aperture": "T2.0",
+          "mount": "PL",
+          "range": "50mm, 100mm"
+        },
+        "type": "Prime",
+        "description": "High-end macro cinematography. Exceptional sharpness from close focus to infinity."
+      },
+      {
+        "id": "h9mn8d7by84g57q",
+        "name": "Servicevision Scorpion Anamorphic Set",
+        "slug": "scorpion-anamorphic",
+        "brand": "Servicevision",
+        "rate": 1200,
+        "stock": 2,
+        "specs": {
+          "aperture": "T2.2",
+          "mount": "PL",
+          "squeeze": "2x"
+        },
+        "type": "Prime",
+        "description": "Lightweight anamorphic lenses. Classic character with oval bokeh."
+      },
+      {
+        "id": "i8r1m3mkcqtr42b",
+        "name": "Cooke S8/i Full-Frame T1.4 Set",
+        "slug": "cooke-s8i-set",
+        "brand": "Cooke",
+        "rate": 1600,
+        "stock": 4,
+        "specs": {
+          "aperture": "T1.4",
+          "coverage": "Full Frame Plus",
+          "mount": "PL"
+        },
+        "type": "Prime",
+        "description": "The renowned 'Cooke Look' for full-frame. T1.4 aperture. Organic feel and spherical bokeh."
+      },
+      {
+        "id": "9xtkdiawpf61ytg",
+        "name": "Sony FE 50mm f/1.2 GM",
+        "slug": "sony-fe-50mm-gm",
+        "brand": "Sony",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "aperture": "f/1.2",
+          "focal_length": "50mm",
+          "mount": "Sony E"
+        },
+        "type": "Prime",
+        "description": "Normal-length prime flexes a bright f/1.2 design and advanced optics."
+      },
+      {
+        "id": "ue4987mp1tsx51a",
+        "name": "Sony FE 24-70mm f/2.8 GM II",
+        "slug": "sony-fe-24-70mm-gm-ii",
+        "brand": "Sony",
+        "rate": 120,
+        "stock": 4,
+        "specs": {
+          "aperture": "f/2.8",
+          "mount": "Sony E",
+          "range": "24-70mm"
+        },
+        "type": "Zoom",
+        "description": "Refined fast standard zoom. Smaller and lighter than previous generation."
+      },
+      {
+        "id": "q4zxps3xwodknce",
+        "name": "Sony FE 35mm f/1.4 GM",
+        "slug": "sony-fe-35mm-gm",
+        "brand": "Sony",
+        "rate": 90,
+        "stock": 4,
+        "specs": {
+          "aperture": "f/1.4",
+          "focal_length": "35mm",
+          "mount": "Sony E"
+        },
+        "type": "Prime",
+        "description": "Versatile wide-normal prime built for both stills and cinematic video."
+      },
+      {
+        "id": "5sssb5bd9loax25",
+        "name": "Sony FE 16-35mm f/2.8 GM",
+        "slug": "sony-fe-16-35mm-gm",
+        "brand": "Sony",
+        "rate": 110,
+        "stock": 4,
+        "specs": {
+          "aperture": "f/2.8",
+          "mount": "Sony E",
+          "range": "16-35mm"
+        },
+        "type": "Zoom",
+        "description": "Wide-angle zoom covering ultra-wide to standard wide-angle fields of view."
+      },
+      {
+        "id": "hedxeqs4dk0v2g6",
+        "name": "Sony FE 85mm f/1.4 GM",
+        "slug": "sony-fe-85mm-gm",
+        "brand": "Sony",
+        "rate": 95,
+        "stock": 4,
+        "specs": {
+          "aperture": "f/1.4",
+          "focal_length": "85mm",
+          "mount": "Sony E"
+        },
+        "type": "Prime",
+        "description": "Fast short-telephoto prime perfect for portraiture and isolating subjects."
+      },
+      {
+        "id": "dw761wuic5pyki7",
+        "name": "Sony FE 70-200mm f/2.8 GM OSS",
+        "slug": "sony-fe-70-200mm-gm",
+        "brand": "Sony",
+        "rate": 130,
+        "stock": 4,
+        "specs": {
+          "aperture": "f/2.8",
+          "mount": "Sony E",
+          "range": "70-200mm"
+        },
+        "type": "Zoom",
+        "description": "Reliable telephoto zoom. High sharpness and smooth bokeh."
+      },
+      {
+        "id": "2b6nv1nkjoj4t39",
+        "name": "Sony FE PZ 28-135mm f/4 G OSS",
+        "slug": "sony-fe-pz-28-135mm",
+        "brand": "Sony",
+        "rate": 110,
+        "stock": 4,
+        "specs": {
+          "aperture": "f/4",
+          "feature": "Power Zoom",
+          "mount": "Sony E",
+          "range": "28-135mm"
+        },
+        "type": "Zoom",
+        "description": "Power Zoom lens designed for 4K video. Minimal breathing."
+      },
+      {
+        "id": "2knsy5uf1l9ejzs",
+        "name": "Fujinon ZK25-300mm T3.5 Cabrio",
+        "slug": "fujinon-cabrio-25-300mm",
+        "brand": "Fujinon",
+        "rate": 700,
+        "stock": 2,
+        "specs": {
+          "aperture": "T3.5 - T3.85",
+          "mount": "PL",
+          "range": "25-300mm"
+        },
+        "type": "Zoom",
+        "description": "12x zoom for Super35. PL Mount. Constant T3.5 aperture from 25-273mm."
+      },
+      {
+        "id": "5t2hye79qoqjar5",
+        "name": "Tokina Cinema AT-X 50-135mm T3.0",
+        "slug": "tokina-50-135mm",
+        "brand": "Tokina",
+        "rate": 200,
+        "stock": 2,
+        "specs": {
+          "aperture": "T3.0",
+          "mount": "EF / PL",
+          "range": "50-135mm"
+        },
+        "type": "Zoom",
+        "description": "Highly versatile zoom range in a compact design. Parfocal, reduced breathing."
+      },
+      {
+        "id": "ihkhtejd4jfjg3g",
+        "name": "Laowa 24mm T14 2x PeriProbe",
+        "slug": "laowa-24mm-periprobe",
+        "brand": "Venus Optics",
+        "rate": 180,
+        "stock": 2,
+        "specs": {
+          "aperture": "T14",
+          "feature": "Probe / Macro",
+          "focal_length": "24mm",
+          "mount": "PL"
+        },
+        "type": "Specialty",
+        "description": "Periscope-style probe lens with interchangeable ends (90° and Straight). 2x Macro magnification."
+      },
+      {
+        "id": "4f5qjz4oho08kg8",
+        "name": "Canon EJ 6mm T1.5 (B4)",
+        "slug": "canon-ej-6mm",
+        "brand": "Canon",
+        "rate": 150,
+        "stock": 2,
+        "specs": {
+          "aperture": "T1.5",
+          "focal_length": "6mm",
+          "mount": "B4"
+        },
+        "type": "Prime",
+        "description": "Ultra-wide professional broadcast lens. Fast T1.5 aperture. B4 Mount."
+      },
+      {
+        "id": "8k5b01a8xzu3dvk",
+        "name": "Canon EF 100mm f/2.8L Macro IS USM",
+        "slug": "canon-ef-100mm-macro",
+        "brand": "Canon",
+        "rate": 60,
+        "stock": 2,
+        "specs": {
+          "aperture": "f/2.8",
+          "feature": "Macro / IS",
+          "focal_length": "100mm",
+          "mount": "Canon EF"
+        },
+        "type": "Prime",
+        "description": "Mid-telephoto macro lens with Hybrid Image Stabilization. Life-size 1:1 magnification."
+      },
+      {
+        "id": "sklue8mx18kkdfo",
+        "name": "Canon TS-E 45mm f/2.8 Tilt-Shift",
+        "slug": "canon-tse-45mm",
+        "brand": "Canon",
+        "rate": 70,
+        "stock": 2,
+        "specs": {
+          "aperture": "f/2.8",
+          "feature": "Tilt-Shift",
+          "focal_length": "45mm",
+          "mount": "Canon EF"
+        },
+        "type": "Prime",
+        "description": "Tilt-shift lens offering complete control over depth of field and perspective."
+      },
+      {
+        "id": "rp1zf2h1h74stv4",
+        "name": "IB/E Optics PLx2 Extender",
+        "slug": "ibe-plx2-extender",
+        "brand": "IB/E Optics",
+        "rate": 150,
+        "stock": 2,
+        "specs": {
+          "magnification": "2x",
+          "max_input_aperture": "T1.9",
+          "mount": "PL"
+        },
+        "type": "Adapter",
+        "description": "2x Optical Extender for PL mount lenses. Covers large format sensors including Alexa LF/65."
+      }
+    ]
+  },
+  "Lens Control": {
+    "slug": "lens-control",
+    "id": "hlhx3wgwprghk3y",
+    "items": [
+      {
+        "id": "bd4i2ho1m1gzu3s",
+        "name": "Arri Hi-5 Wireless Set",
+        "slug": "arri-hi-5-wireless-set",
+        "brand": "ARRI",
+        "rate": 650,
+        "stock": 2,
+        "specs": {
+          "battery": "LBP-3500",
+          "channels": "14",
+          "compatibility": "Alexa 35, Mini LF, LF, Mini",
+          "frequency": "2400 MHz DSSS / FHSS",
+          "range": "Long range capable"
+        },
+        "type": "",
+        "description": "The versatile Hi-5 RX-TX 2400 Set from ARRI combines one Hi-5 wireless handheld FIZ unit with one white-coded RF-EMIP radio module, one Radio Interface Adapter RIA-1, two red-coded RF-2400 radio modules, and accessories."
+      },
+      {
+        "id": "uw9nc7e7o99piq1",
+        "name": "ARRI WCU-4 Wireless Compact Unit",
+        "slug": "arri-wcu-4",
+        "brand": "ARRI",
+        "rate": 450,
+        "stock": 2,
+        "specs": {
+          "axes": "3 (Focus, Iris, Zoom)",
+          "compatibility": "Alexa Mini, Plus, Studio, Amira",
+          "display": "Integrated Lens Data",
+          "features": "Vibrating Markers, Backlit Knob"
+        },
+        "type": "",
+        "description": "The ARRI WCU-4 Wireless Compact Unit is a 3-axis handheld controller featuring an integrated lens display. Control camera functions, focus, iris, and/or zoom from a distance."
+      },
+      {
+        "id": "fhmi4fdszzsx5pj",
+        "name": "ARRI SXU-1 Single Axis Unit",
+        "slug": "arri-sxu-1",
+        "brand": "ARRI",
+        "rate": 250,
+        "stock": 2,
+        "specs": {
+          "axes": "1 (Assignable)",
+          "compatibility": "WCU-4 systems, SMC-1",
+          "handgrip": "Ergonomic Wooden"
+        },
+        "type": "",
+        "description": "ARRI's SXU-1 Single Axis Unit is a wireless hand unit offering single-axis focus, iris, or zoom control. The compact SXU-1 features remote camera start/stop and tally."
+      },
+      {
+        "id": "53ta72u9jrsfsxf",
+        "name": "Teradek RT FIZ Wireless Kit",
+        "slug": "teradek-rt-fiz",
+        "brand": "Teradek",
+        "rate": 350,
+        "stock": 2,
+        "specs": {
+          "controller": "CTRL.5",
+          "motor": "MOTR.S Max",
+          "receiver": "MDR.X 3-Channel",
+          "technology": "FHSS"
+        },
+        "type": "",
+        "description": "Wirelessly control your lens focus, iris, and zoom with this RT FIZ Wireless Lens Control Kit from Teradek, featuring the CTRL.5 wireless lens controller and MDR.X 3-channel receiver."
+      },
+      {
+        "id": "8oolety0q1ji9gp",
+        "name": "Teradek CTRL.3 Controller",
+        "slug": "teradek-ctrl-3",
+        "brand": "Teradek",
+        "rate": 200,
+        "stock": 2,
+        "specs": {
+          "axes": "3",
+          "display": "OLED",
+          "range_indoor": "500 ft",
+          "range_outdoor": "5000 ft"
+        },
+        "type": "",
+        "description": "For precise lens control with your Teradek RT motors and receivers, the Teradek CTRL.3 Three-Axis Wireless Lens Controller can control focus, iris, or zoom with ease."
+      },
+      {
+        "id": "o0ihvh6f8g4phn9",
+        "name": "cmotion compact ONE",
+        "slug": "cmotion-compact-one",
+        "brand": "cmotion",
+        "rate": 200,
+        "stock": 2,
+        "specs": {
+          "compatibility": "ARRI CLM-4",
+          "design": "Lightweight",
+          "type": "1-Axis Wireless"
+        },
+        "type": "",
+        "description": "Ready-to-shoot one motor system. Lightweight and compact design for easy operation. Compatible with ARRI CLM-4 motor."
+      },
+      {
+        "id": "visuanosofzdt9v",
+        "name": "Tilta Nucleus-M",
+        "slug": "tilta-nucleus-m",
+        "brand": "Tilta",
+        "rate": 150,
+        "stock": 2,
+        "specs": {
+          "connectors": "7-pin",
+          "gears": "0.8 MOD",
+          "motors": "2x Brushless with Receiver",
+          "range": "1000 ft"
+        },
+        "type": "",
+        "description": "The Tilta Nucleus-M Wireless Lens Control System features a 1000' transmission range and comes with two lens drive motors with built-in wireless receivers."
+      },
+      {
+        "id": "62hyx9etdbufa7q",
+        "name": "ARRI FF-5 Cine Follow Focus",
+        "slug": "arri-ff-5-cine",
+        "brand": "ARRI",
+        "rate": 150,
+        "stock": 2,
+        "specs": {
+          "gear_ratio": "2:1",
+          "mechanism": "Snap-on bridge",
+          "rod_support": "15mm LWS (19mm via adapter)",
+          "style": "Cine-Style"
+        },
+        "type": "",
+        "description": "The ARRI FF-5 Cine Set Pro is a complete follow focus kit. Having a gear ratio of 2:1, the FF-5 Cine is designed for cine-style lenses."
+      },
+      {
+        "id": "j17jrtir8hh9kmh",
+        "name": "ARRI FF-4 Follow Focus",
+        "slug": "arri-ff-4",
+        "brand": "ARRI",
+        "rate": 100,
+        "stock": 2,
+        "specs": {
+          "gear_ratio": "1:2",
+          "operation": "Single-sided",
+          "rod_support": "15mm LWS"
+        },
+        "type": "",
+        "description": "The sleek ARRI FF-4 Basic Follow Focus Unit consists of a single-sided follow focus with one standard knob. The FF-4 is designed with a 1:2 knob-to-gear ratio."
+      },
+      {
+        "id": "w5xirkd6j2hsu5j",
+        "name": "ARRI FF-3 Follow Focus",
+        "slug": "arri-ff-3",
+        "brand": "ARRI",
+        "rate": 80,
+        "stock": 2,
+        "specs": {
+          "build": "Robust ARRI Standard",
+          "rod_support": "15mm LWS / 19mm Studio",
+          "type": "Mechanical"
+        },
+        "type": "",
+        "description": "Lightweight single-sided follow focus designed for cine and broadcast productions. Mounts on 15mm LWS rods with snap-on clamp."
+      },
+      {
+        "id": "91bje58iay50hf5",
+        "name": "Chrosziel DV Studio Rig",
+        "slug": "chrosziel-dv-studio",
+        "brand": "Chrosziel",
+        "rate": 75,
+        "stock": 2,
+        "specs": {
+          "gears": "6 Interchangeable included",
+          "rod_support": "15mm LWS",
+          "stops": "VariLock Dual Hard Stops"
+        },
+        "type": "",
+        "description": "Chrosziel's DV Studio Rig Follow Focus 6-Gear Kit is based around the Chrosziel DV Studio Rig, a 15mm lightweight standard follow focus."
+      }
+    ]
+  },
+  "Support": {
+    "slug": "support",
+    "id": "hm6zhyywck7v73g",
+    "items": [
+      {
+        "id": "8sjo1sq99rmdcx5",
+        "name": "OConnor Ultimate 2575D",
+        "slug": "oconnor-2575d",
+        "brand": "OConnor",
+        "rate": 250,
+        "stock": 2,
+        "specs": {
+          "base": "Mitchell / 150mm",
+          "counterbalance": "Sinusoidal",
+          "max_load": "90 lb (40.8 kg)",
+          "tilt_drag": "Stepless"
+        },
+        "type": "",
+        "description": "The OConnor Ultimate 2575D Fluid Head includes the sinusoidal counterbalance system for true, accurate balance and holds cameras up to 90 lb."
+      },
+      {
+        "id": "aujpujs711ek46o",
+        "name": "OConnor Ultimate 2560",
+        "slug": "oconnor-2560",
+        "brand": "OConnor",
+        "rate": 200,
+        "stock": 2,
+        "specs": {
+          "base": "Mitchell / 150mm",
+          "max_load": "66 lb (30 kg)",
+          "weight": "18 lb"
+        },
+        "type": "",
+        "description": "The Ultimate 2560 Fluid Head Package is designed for digital cinema cameras. It is capable of supporting camera payloads up to 66 pounds."
+      },
+      {
+        "id": "warptfuf671awab",
+        "name": "Cartoni Master MK2",
+        "slug": "cartoni-master-mk2",
+        "brand": "Cartoni",
+        "rate": 180,
+        "stock": 2,
+        "specs": {
+          "counterbalance": "Perfect Balance",
+          "drag": "Continuous",
+          "type": "Fluid Head"
+        },
+        "type": "",
+        "description": "The Master MK2 offers perfect counterbalance at any tilt angle and a consistent seamless fluid drag using Cartoni’s patented technology."
+      },
+      {
+        "id": "o556y1ci1vlx9or",
+        "name": "Cartoni Maxima 30",
+        "slug": "cartoni-maxima-30",
+        "brand": "Cartoni",
+        "rate": 180,
+        "stock": 2,
+        "specs": {
+          "load_range": "6.6 to 88 lb",
+          "mount": "Mitchell",
+          "pan_bar": "Telescopic"
+        },
+        "type": "",
+        "description": "The Maxima 30 Video Fluid Head covers the needs of video shooters using camera rigs weighing from 6.6 to 88 lb. Includes telescopic pan bar."
+      },
+      {
+        "id": "n7exyte46dd53m2",
+        "name": "Sachtler Video 30 II",
+        "slug": "sachtler-video-30-ii",
+        "brand": "Sachtler",
+        "rate": 150,
+        "stock": 2,
+        "specs": {
+          "balance": "SpeedBalance (18 steps)",
+          "bowl": "150mm",
+          "drag": "7-level",
+          "load_range": "3-32 kg"
+        },
+        "type": "",
+        "description": "The Sachtler Cine 30 fluid head features a 150mm bowl and supports heavy cameras ranging from 3 to 32 kg. Integrated Sideload platform."
+      },
+      {
+        "id": "nhnv6562pzpylxo",
+        "name": "Sachtler System 25 EFP 2",
+        "slug": "sachtler-system-25",
+        "brand": "Sachtler",
+        "rate": 180,
+        "stock": 2,
+        "specs": {
+          "head": "Video 25 Plus",
+          "legs": "CF-150 EFP 2CF",
+          "spreader": "Ground-Level"
+        },
+        "type": "",
+        "description": "Consisting of the Video 25 Plus fluid head, it features a seven-step damping system and an 18-step counterbalance."
+      },
+      {
+        "id": "g7yjjay94bwaktk",
+        "name": "ARRIHEAD 2 Geared Head",
+        "slug": "arrihead-2",
+        "brand": "ARRI",
+        "rate": 350,
+        "stock": 2,
+        "specs": {
+          "compatibility": "Arri Bottom Plates",
+          "mechanism": "Precision Gears",
+          "type": "Geared Head"
+        },
+        "type": "",
+        "description": "The ARRIHEAD 2 is a compact geared head designed to work with both film and digital cameras. It features a tilt-axis centered on the optical center."
+      }
+    ]
+  },
+  "Matte Boxes": {
+    "slug": "matte-boxes",
+    "id": "6f0d3izuqp1lmop",
+    "items": [
+      {
+        "id": "gy4ok1oacuf4u5e",
+        "name": "ARRI LMB 4x5 Pro Set",
+        "slug": "arri-lmb-4x5",
+        "brand": "ARRI",
+        "rate": 150,
+        "stock": 2,
+        "specs": {
+          "filters": "4x5.65 / 4x4",
+          "rod_support": "15mm LWS",
+          "stages": "3 (Rotatable)",
+          "type": "Clip-on / Rod"
+        },
+        "type": "",
+        "description": "Modular lightweight matte box. Includes 15mm LWS console, rotating filter stages, and various trays. Can be clip-on or rod mounted."
+      },
+      {
+        "id": "madm09vw9i1lw6b",
+        "name": "ARRI LMB-25 Set",
+        "slug": "arri-lmb-25",
+        "brand": "ARRI",
+        "rate": 120,
+        "stock": 2,
+        "specs": {
+          "filters": "4x5.65",
+          "stages": "3",
+          "type": "Clip-on / Rod"
+        },
+        "type": "",
+        "description": "Lightweight, modular matte box designed for professional cine applications. Supports up to three 4x5.65 filter stages."
+      },
+      {
+        "id": "hz6xlm4ye7wgh9j",
+        "name": "ARRI MB-28 6x6 Production Matte Box",
+        "slug": "arri-mb-28",
+        "brand": "ARRI",
+        "rate": 180,
+        "stock": 2,
+        "specs": {
+          "feature": "Swing-away",
+          "filters": "6.6x6.6",
+          "rod_support": "19mm Studio",
+          "stages": "3"
+        },
+        "type": "",
+        "description": "Swing-away matte box for 6.6x6.6 filters. Mounted with 19mm bracket. Ideal for large wide-angle zooms."
+      },
+      {
+        "id": "evqqwf3bhzrge7b",
+        "name": "ARRI MMB-2 LWS Set",
+        "slug": "arri-mmb-2",
+        "brand": "ARRI",
+        "rate": 80,
+        "stock": 2,
+        "specs": {
+          "filters": "4x5.65 / 4x4",
+          "rod_support": "15mm LWS",
+          "stages": "2"
+        },
+        "type": "",
+        "description": "Compact matte box with 15mm LWS rod bracket. Fits most lenses with 114mm front diameter."
+      },
+      {
+        "id": "1df4prqg8bejd7y",
+        "name": "Chrosziel 450-R11",
+        "slug": "chrosziel-450-r11",
+        "brand": "Chrosziel",
+        "rate": 60,
+        "stock": 2,
+        "specs": {
+          "filters": "4x5.65 / 4x4",
+          "rod_support": "15mm LWS",
+          "stages": "2"
+        },
+        "type": "",
+        "description": "Fits 15mm rods. Includes rotating filter stage for 4x4 or 4x5.65 filters. Ideal for compact camcorders and DSLR rigs."
+      },
+      {
+        "id": "uafmbkojrg4s6ie",
+        "name": "Tilta Mirage Matte Box",
+        "slug": "tilta-mirage-matte-box",
+        "brand": "Tilta",
+        "rate": 50,
+        "stock": 2,
+        "specs": {
+          "filter_type": "95mm Circular / 4x5.65 Tray",
+          "mount": "Clamp-on 95mm",
+          "weight": "Lightweight"
+        },
+        "type": "",
+        "description": "Modular component system that clips onto 95mm OD lenses. Weighs about the same as a standard 4x5.65 glass filter. Accepts 95mm round filters."
+      }
+    ]
+  },
+  "Monitors": {
+    "slug": "monitors",
+    "id": "isntchseq83ripq",
+    "items": [
+      {
+        "id": "ptair24k2rmg6hh",
+        "name": "SmallHD ULTRA 7 Bolt 6 RX 750",
+        "slug": "smallhd-ultra-7-bolt",
+        "brand": "SmallHD",
+        "rate": 350,
+        "stock": 2,
+        "specs": {
+          "brightness": "2300 nits",
+          "resolution": "1920 x 1080",
+          "screen_size": "7 inch",
+          "wireless": "Bolt 6 RX Built-in"
+        },
+        "type": "",
+        "description": "Ultra-bright 7-inch monitor with integrated Bolt 6 Receiver. 2300 nits brightness. V-Mount battery plate."
+      },
+      {
+        "id": "i9ysxmiju51rdxm",
+        "name": "SmallHD ULTRA 7",
+        "slug": "smallhd-ultra-7",
+        "brand": "SmallHD",
+        "rate": 250,
+        "stock": 2,
+        "specs": {
+          "brightness": "2300 nits",
+          "resolution": "1920 x 1200",
+          "screen_size": "7 inch",
+          "touch": "Yes"
+        },
+        "type": "",
+        "description": "Ultrabright 2300 nit 7-inch touchscreen monitor. Camera control capable for ARRI, Sony, RED."
+      },
+      {
+        "id": "qixvbq9pbuca61w",
+        "name": "SmallHD 703 Bolt Wireless",
+        "slug": "smallhd-703-bolt",
+        "brand": "SmallHD",
+        "rate": 300,
+        "stock": 2,
+        "specs": {
+          "brightness": "3000 nits",
+          "compatibility": "Bolt 500/1000/3000",
+          "screen_size": "7 inch",
+          "wireless": "Built-in Receiver"
+        },
+        "type": "",
+        "description": "All-in-one director's monitor with built-in Teradek receiver (Sidekick equivalent). 3000 nit daylight viewable display."
+      },
+      {
+        "id": "42hex4mojd6fafa",
+        "name": "SmallHD Cine 7 RED RCP2",
+        "slug": "smallhd-cine-7-red",
+        "brand": "SmallHD",
+        "rate": 220,
+        "stock": 2,
+        "specs": {
+          "brightness": "1800 nits",
+          "control": "RED RCP2",
+          "resolution": "1920 x 1200",
+          "screen_size": "7 inch"
+        },
+        "type": "",
+        "description": "Professional monitoring for KOMODO or RED DSMC3. Includes camera control software."
+      },
+      {
+        "id": "k36tb4494yvetst",
+        "name": "TVLogic VFM-055A OLED",
+        "slug": "tvlogic-vfm-055a",
+        "brand": "TVLogic",
+        "rate": 150,
+        "stock": 2,
+        "specs": {
+          "inputs": "3G-SDI / HDMI",
+          "panel": "OLED",
+          "resolution": "1920 x 1080",
+          "screen_size": "5.5 inch"
+        },
+        "type": "",
+        "description": "5.5-inch OLED display delivering deep blacks and accurate color reproduction. Waveform, vectorscope, focus assist."
+      },
+      {
+        "id": "c361i4sk5xwhmzo",
+        "name": "Sony PVMA170 17\" OLED",
+        "slug": "sony-pvma170",
+        "brand": "Sony",
+        "rate": 300,
+        "stock": 2,
+        "specs": {
+          "grade": "Reference",
+          "panel": "OLED",
+          "resolution": "1920 x 1080",
+          "screen_size": "17 inch"
+        },
+        "type": "",
+        "description": "17-inch Professional TRIMASTER EL OLED monitor. Ideal for critical evaluation in field or studio."
+      },
+      {
+        "id": "1x1x2b781ycyqnp",
+        "name": "Sony BVM-E251 24\" OLED",
+        "slug": "sony-bvm-e251",
+        "brand": "Sony",
+        "rate": 500,
+        "stock": 2,
+        "specs": {
+          "grade": "Master Reference",
+          "panel": "OLED",
+          "resolution": "1920 x 1080",
+          "screen_size": "24 inch"
+        },
+        "type": "",
+        "description": "Master Monitor 24-inch TRIMASTER EL OLED. The industry standard for color grading and critical viewing."
+      },
+      {
+        "id": "2hx0xfyastiguu5",
+        "name": "Blackmagic Video Assist 7\" 12G HDR",
+        "slug": "blackmagic-video-assist-7-12g",
+        "brand": "Blackmagic Design",
+        "rate": 150,
+        "stock": 2,
+        "specs": {
+          "brightness": "2500 nits",
+          "inputs": "12G-SDI / HDMI",
+          "recording": "ProRes / DNx / BRAW",
+          "screen_size": "7 inch"
+        },
+        "type": "",
+        "description": "7-inch HDR Recording Monitor. Records Blackmagic RAW from supported cameras. 2500 nits brightness."
+      },
+      {
+        "id": "adyietoi1357wl2",
+        "name": "Atomos Shogun 7 HDR",
+        "slug": "atomos-shogun-7",
+        "brand": "Atomos",
+        "rate": 180,
+        "stock": 2,
+        "specs": {
+          "brightness": "3000 nits",
+          "inputs": "SDI / HDMI",
+          "recording": "ProRes RAW",
+          "screen_size": "7 inch"
+        },
+        "type": "",
+        "description": "7-inch HDR Monitor-Recorder-Switcher. 3000 nits brightness. Records ProRes RAW."
+      },
+      {
+        "id": "5b6tiorafzne9ix",
+        "name": "TVLogic LQM-071W",
+        "slug": "tvlogic-lqm-071w",
+        "brand": "TVLogic",
+        "rate": 100,
+        "stock": 2,
+        "specs": {
+          "inputs": "4x SDI",
+          "size": "7 inch"
+        },
+        "type": "",
+        "description": "7-inch monitor with 4 auto-sensing inputs. Waveform/Vectorscope."
+      },
+      {
+        "id": "4tprwecso0aftid",
+        "name": "Marshall V-MD241 24\" LED",
+        "slug": "marshall-v-md241",
+        "brand": "Marshall",
+        "rate": 150,
+        "stock": 2,
+        "specs": {
+          "resolution": "1920x1080",
+          "size": "24 inch"
+        },
+        "type": "",
+        "description": "24-inch Full HD LED backlit LCD. Ideal for village monitoring."
+      },
+      {
+        "id": "0pkjhk4dvr9zovr",
+        "name": "Transvideo Starlite ARRI-WVS",
+        "slug": "transvideo-starlite",
+        "brand": "Transvideo",
+        "rate": 200,
+        "stock": 2,
+        "specs": {
+          "size": "5 inch",
+          "wireless": "ARRI WVS Built-in"
+        },
+        "type": "",
+        "description": "5-inch touchscreen monitor/recorder with built-in ARRI wireless receiver."
+      },
+      {
+        "id": "udkygm6qx6qlg7s",
+        "name": "Atomos Ninja Inferno",
+        "slug": "atomos-ninja-inferno",
+        "brand": "Atomos",
+        "rate": 120,
+        "stock": 2,
+        "specs": {
+          "recording": "ProRes / DNxHR",
+          "size": "7 inch"
+        },
+        "type": "",
+        "description": "7-inch 4K HDMI Recording Monitor. High brightness for HDR work."
+      },
+      {
+        "id": "f8gluht1fsegjit",
+        "name": "Video Devices PIX-E7",
+        "slug": "video-devices-pix-e7",
+        "brand": "Video Devices",
+        "rate": 150,
+        "stock": 2,
+        "specs": {
+          "recording": "ProRes 4K",
+          "size": "7 inch"
+        },
+        "type": "",
+        "description": "7-inch 4K Recording Monitor. Records to SpeedDrive SSDs. 1920x1200 Touchscreen."
+      },
+      {
+        "id": "wuwe6823lfanpk4",
+        "name": "TVLogic LVM-091W-M",
+        "slug": "tvlogic-lvm-091w",
+        "brand": "TVLogic",
+        "rate": 100,
+        "stock": 2,
+        "specs": {
+          "resolution": "960x540",
+          "size": "9 inch"
+        },
+        "type": "",
+        "description": "9-inch broadcast production monitor. High contrast anti-glare screen."
+      },
+      {
+        "id": "om8wfpke6czzqdh",
+        "name": "SmallHD CINE 5 Touchscreen",
+        "slug": "smallhd-cine-5",
+        "brand": "SmallHD",
+        "rate": 150,
+        "stock": 2,
+        "specs": {
+          "brightness": "2000 nits",
+          "inputs": "3G-SDI / HDMI",
+          "size": "5 inch"
+        },
+        "type": "",
+        "description": "Sharp 5-inch touchscreen monitor suitable for indoor/outdoor. 2000 nits brightness. Cross conversion supported."
+      },
+      {
+        "id": "tgj2xypck16de2t",
+        "name": "SWIT S-1051H 5\" HD-SDI/HDMI",
+        "slug": "swit-s1051h",
+        "brand": "SWIT",
+        "rate": 80,
+        "stock": 2,
+        "specs": {
+          "inputs": "SDI / HDMI",
+          "resolution": "800x480",
+          "size": "5 inch"
+        },
+        "type": "",
+        "description": "Compact 5-inch monitor with RGB backlight LED panel. Supports 2K/3G/HD/SD-SDI and HDMI."
+      },
+      {
+        "id": "ie42xnk6bb5rvcw",
+        "name": "RUIGE TL-701HDA",
+        "slug": "ruige-tl-701hda",
+        "brand": "RUIGE",
+        "rate": 70,
+        "stock": 2,
+        "specs": {
+          "inputs": "HDMI / SDI",
+          "resolution": "1024x600",
+          "size": "7 inch"
+        },
+        "type": "",
+        "description": "High-resolution, wide-viewing angle 7-inch LCD monitor. Widely used in film and field productions."
+      },
+      {
+        "id": "82uat1j97ec80ua",
+        "name": "Lilliput FS7 7\" 4K Monitor",
+        "slug": "lilliput-fs7",
+        "brand": "Lilliput",
+        "rate": 90,
+        "stock": 2,
+        "specs": {
+          "brightness": "500 nits",
+          "resolution": "1920x1200",
+          "size": "7 inch"
+        },
+        "type": "",
+        "description": "High-contrast 7-inch monitor with native 1920x1200 resolution. Supports 4K input via HDMI."
+      },
+      {
+        "id": "vnvcpgfeuyiuf36",
+        "name": "TVLogic F-7HS High Luminance",
+        "slug": "tvlogic-f7hs",
+        "brand": "TVLogic",
+        "rate": 180,
+        "stock": 2,
+        "specs": {
+          "brightness": "1800 nits",
+          "resolution": "1920x1080",
+          "size": "7 inch"
+        },
+        "type": "",
+        "description": "7-inch Full HD Field Monitor with Max Brightness of 1800 nits. Enhanced sharpness and peaking."
+      },
+      {
+        "id": "flkh1j23zr6bvjf",
+        "name": "SmallHD 702 Bright Black Edition",
+        "slug": "smallhd-702-bright",
+        "brand": "SmallHD",
+        "rate": 160,
+        "stock": 2,
+        "specs": {
+          "brightness": "1000 nits",
+          "resolution": "1920x1080",
+          "size": "7 inch"
+        },
+        "type": "",
+        "description": "Daylight viewable 7-inch monitor with 1000 nits brightness and Full HD 1080p display."
+      },
+      {
+        "id": "drcqb3t5lrdyybr",
+        "name": "SmallHD DP6-SDI 5.6\"",
+        "slug": "smallhd-dp6-sdi",
+        "brand": "SmallHD",
+        "rate": 60,
+        "stock": 2,
+        "specs": {
+          "inputs": "SDI / HDMI",
+          "resolution": "1280x800",
+          "size": "5.6 inch"
+        },
+        "type": "",
+        "description": "Lightweight, hi-res monitor with highly accurate Focus Assist. Accepts HDMI, Component, and HD-SDI."
+      }
+    ]
+  },
+  "Wireless Video": {
+    "slug": "wireless-video",
+    "id": "sznpscbb4eq400v",
+    "items": [
+      {
+        "id": "oqjt8hr3rhs5vfo",
+        "name": "Teradek Ranger MK II 750",
+        "slug": "teradek-ranger-mk-ii-750",
+        "brand": "Teradek",
+        "rate": 450,
+        "stock": 2,
+        "specs": {
+          "io": "12G-SDI / HDMI",
+          "latency": "< 1ms",
+          "range": "750 ft",
+          "video": "4K60 HDR"
+        },
+        "type": "",
+        "description": "Zero-delay 4K wireless transmission up to 750 ft. Inputs 12G-SDI or HDMI. Redesigned for broadcast and handheld."
+      },
+      {
+        "id": "7mj187o1ape6of9",
+        "name": "Teradek Bolt 6 LT 1500",
+        "slug": "teradek-bolt-6-lt-1500",
+        "brand": "Teradek",
+        "rate": 400,
+        "stock": 2,
+        "specs": {
+          "frequency": "6 GHz",
+          "io": "3G-SDI / HDMI",
+          "range": "1500 ft",
+          "video": "4K30 HDR"
+        },
+        "type": "",
+        "description": "Transmit and receive lossless HD video up to 1500 ft. Supports new 6 GHz frequency. 4K30 HDR capable."
+      },
+      {
+        "id": "hwszvfe23zf6ef1",
+        "name": "Teradek Bolt 6 LT 750",
+        "slug": "teradek-bolt-6-lt-750",
+        "brand": "Teradek",
+        "rate": 300,
+        "stock": 2,
+        "specs": {
+          "frequency": "6 GHz",
+          "io": "3G-SDI / HDMI",
+          "range": "750 ft",
+          "video": "4K30 HDR"
+        },
+        "type": "",
+        "description": "Transmit and receive lossless HD video up to 750 ft. Supports new 6 GHz frequency. 4K30 HDR capable."
+      },
+      {
+        "id": "yb9c9b5cwxi8qgc",
+        "name": "Teradek Bolt Pro 3000",
+        "slug": "teradek-bolt-pro-3000",
+        "brand": "Teradek",
+        "rate": 500,
+        "stock": 2,
+        "specs": {
+          "io": "3G-SDI / HDMI",
+          "range": "3000 ft",
+          "video": "1080p60"
+        },
+        "type": "",
+        "description": "Transmit uncompressed 1080p video wirelessly over 3000 feet. < 1ms latency. Multicast capable."
+      },
+      {
+        "id": "6z5htvu0vgtwzpp",
+        "name": "Teradek Bolt Sidekick II",
+        "slug": "teradek-bolt-sidekick-ii",
+        "brand": "Teradek",
+        "rate": 150,
+        "stock": 2,
+        "specs": {
+          "compatibility": "Bolt 500/1000/3000",
+          "io": "3G-SDI",
+          "range": "300 ft"
+        },
+        "type": "",
+        "description": "Universal receiver compatible with Bolt 500, 1000, and 3000 transmitters. Lightweight, designed for director's monitors."
+      },
+      {
+        "id": "tx3bwflgpf7cmyi",
+        "name": "Teradek Bolt 1000 XT",
+        "slug": "teradek-bolt-1000-xt",
+        "brand": "Teradek",
+        "rate": 350,
+        "stock": 2,
+        "specs": {
+          "io": "3G-SDI / HDMI",
+          "range": "1000 ft",
+          "video": "1080p60"
+        },
+        "type": "",
+        "description": "Zero-latency 1000 ft transmission. Features SDI/HDMI cross conversion and manual frequency selection."
+      },
+      {
+        "id": "srfgdtm6q42gbib",
+        "name": "Teradek Bolt 500 XT",
+        "slug": "teradek-bolt-500-xt",
+        "brand": "Teradek",
+        "rate": 250,
+        "stock": 2,
+        "specs": {
+          "io": "3G-SDI / HDMI",
+          "range": "500 ft",
+          "video": "1080p60"
+        },
+        "type": "",
+        "description": "Zero-latency 500 ft transmission. Compact and lightweight. SDI/HDMI cross conversion."
+      },
+      {
+        "id": "qn76vybpx2aw82v",
+        "name": "Hollyland Mars 400S PRO II",
+        "slug": "hollyland-mars-400s-pro-ii",
+        "brand": "Hollyland",
+        "rate": 100,
+        "stock": 2,
+        "specs": {
+          "io": "SDI / HDMI",
+          "latency": "70ms",
+          "range": "500 ft",
+          "video": "1080p60"
+        },
+        "type": "",
+        "description": "Cost-effective 500ft transmission with extremely low 70ms latency. SDI and HDMI monitoring."
+      },
+      {
+        "id": "16sjl8o0yq4rbx8",
+        "name": "SWIT CW-S300 Wireless System",
+        "slug": "swit-cw-s300",
+        "brand": "SWIT",
+        "rate": 100,
+        "stock": 2,
+        "specs": {
+          "latency": "<1ms",
+          "range": "300m"
+        },
+        "type": "",
+        "description": "Stable, low-latency video transmission. SDI/HDMI connectivity."
+      },
+      {
+        "id": "k5du5ohjzx5v69a",
+        "name": "Teradek Bolt Pro 2000",
+        "slug": "teradek-bolt-pro-2000",
+        "brand": "Teradek",
+        "rate": 300,
+        "stock": 2,
+        "specs": {
+          "inputs": "3G-SDI / HDMI",
+          "range": "2000 ft"
+        },
+        "type": "",
+        "description": "Latency free wireless transmission sending 4:2:2 1080p60 video up to 2000 ft over 5GHz band."
+      },
+      {
+        "id": "0q81kdmp6ydnge8",
+        "name": "Teradek Bolt Pro 1000",
+        "slug": "teradek-bolt-pro-1000",
+        "brand": "Teradek",
+        "rate": 250,
+        "stock": 2,
+        "specs": {
+          "inputs": "3G-SDI",
+          "range": "1000 ft"
+        },
+        "type": "",
+        "description": "Transmit uncompressed 1080p video wirelessly over 1000 feet line-of-sight. Multicast capable."
+      },
+      {
+        "id": "mc3f98ioxt99zln",
+        "name": "Teradek Bolt LT 500",
+        "slug": "teradek-bolt-lt-500",
+        "brand": "Teradek",
+        "rate": 150,
+        "stock": 2,
+        "specs": {
+          "inputs": "3G-SDI / HDMI",
+          "range": "500 ft"
+        },
+        "type": "",
+        "description": "Lightweight, smaller high-performance wireless video system. Zero delay."
+      },
+      {
+        "id": "nbriax9b0p1tawf",
+        "name": "Hollyland Cosmo C1 SDI/HDMI",
+        "slug": "hollyland-cosmo-c1",
+        "brand": "Hollyland",
+        "rate": 150,
+        "stock": 3,
+        "specs": {
+          "inputs": "SDI / HDMI",
+          "latency": "0.04s",
+          "range": "1000 ft (300m)",
+          "resolution": "1080p60",
+          "technology": "HEVO"
+        },
+        "type": "",
+        "description": "Wirelessly transmit high-resolution video up to 1080p60 over long distances up to 1000' to a single receiver. Operates on 5.1-5.9 GHz frequency."
+      },
+      {
+        "id": "dxu9keg2w7gudqv",
+        "name": "Hollyland MARS 400S SDI/HDMI",
+        "slug": "hollyland-mars-400s",
+        "brand": "Hollyland",
+        "rate": 80,
+        "stock": 3,
+        "specs": {
+          "features": "App Monitoring (iOS/Android)",
+          "inputs": "SDI / HDMI",
+          "range": "400 ft (120m)",
+          "resolution": "1080p60"
+        },
+        "type": "",
+        "description": "Entry-level 1080p60 transmitter/receiver system featuring a 400' line-of-sight range. SDI and HDMI connections. Supports app monitoring on up to 4 devices."
+      },
+      {
+        "id": "we43ivifr201ah2",
+        "name": "Teradek Bolt Pro 300 Wireless",
+        "slug": "teradek-bolt-pro-300",
+        "brand": "Teradek",
+        "rate": 120,
+        "stock": 2,
+        "specs": {
+          "inputs": "HD-SDI / HDMI",
+          "outputs": "HD-SDI / HDMI / USB 3.0",
+          "range": "300 ft"
+        },
+        "type": "",
+        "description": "Dual Format (HDMI/SDI) transmitter. Fan-less receiver with USB 3.0 output. 300ft range, zero delay (<1ms)."
+      }
+    ]
+  },
+  "Stabilization": {
+    "slug": "stabilization",
+    "id": "ynw6nbeigwc1diy",
+    "items": []
+  },
+  "Power": {
+    "slug": "power",
+    "id": "uvixmdbsqlhm0rg",
+    "items": [
+      {
+        "id": "9ia59lcede9zerb",
+        "name": "Bebob V200 Micro 196Wh",
+        "slug": "bebob-v200-micro",
+        "brand": "Bebob",
+        "rate": 45,
+        "stock": 4,
+        "specs": {
+          "capacity": "196Wh",
+          "mount": "V-Mount",
+          "output": "14.4V / 16A"
+        },
+        "type": "Battery",
+        "description": "Compact 14.4V Li-Ion Battery. 196Wh capacity, 16A max draw."
+      },
+      {
+        "id": "rfbk4hdx1j3suqf",
+        "name": "Bebob V290RM-CINE 293Wh",
+        "slug": "bebob-v290rm-cine",
+        "brand": "Bebob",
+        "rate": 60,
+        "stock": 4,
+        "specs": {
+          "capacity": "293Wh",
+          "mount": "V-Mount",
+          "output": "14.8V / 20A"
+        },
+        "type": "Battery",
+        "description": "High Load V-Mount Battery. Supports 20A continuous draw. 293Wh."
+      },
+      {
+        "id": "5wmjsuiec9zisj5",
+        "name": "Bebob B290CINE 4-Battery Kit (B-Mount)",
+        "slug": "bebob-b290cine-kit",
+        "brand": "Bebob",
+        "rate": 250,
+        "stock": 4,
+        "specs": {
+          "capacity": "4x 294Wh",
+          "kit": "4 Batts + Charger",
+          "mount": "B-Mount"
+        },
+        "type": "Battery",
+        "description": "Kit of 4x B290CINE 294Wh batteries with Quad Charger. B-Mount interface."
+      },
+      {
+        "id": "lxww13mhardez9w",
+        "name": "SWIT PB-R290S+ 290Wh Heavy-Duty",
+        "slug": "swit-pb-r290s",
+        "brand": "SWIT",
+        "rate": 55,
+        "stock": 4,
+        "specs": {
+          "capacity": "290Wh",
+          "mount": "V-Mount",
+          "protection": "IP54"
+        },
+        "type": "Battery",
+        "description": "IP54 Weatherproof V-Mount Battery. 290Wh, 250W/20A high load."
+      },
+      {
+        "id": "i6dc71cizfu996s",
+        "name": "SWIT 140Wh Pocket V-Mount",
+        "slug": "swit-pocket-140wh",
+        "brand": "SWIT",
+        "rate": 35,
+        "stock": 4,
+        "specs": {
+          "capacity": "140Wh",
+          "mount": "V-Mount",
+          "size": "Pocket/Compact"
+        },
+        "type": "Battery",
+        "description": "Ultracompact professional battery. 140Wh capacity, 12A max load."
+      },
+      {
+        "id": "xkpllo5wj3vumbi",
+        "name": "IDX DUO-C198P 193Wh",
+        "slug": "idx-duo-c198p",
+        "brand": "IDX",
+        "rate": 40,
+        "stock": 4,
+        "specs": {
+          "capacity": "193Wh",
+          "features": "D-Tap / USB",
+          "mount": "V-Mount"
+        },
+        "type": "Battery",
+        "description": "Compact High-Load Li-Ion V-Mount. 193Wh, 14A draw. Data display."
+      }
+    ]
+  },
+  "Lighting": {
+    "slug": "lighting",
+    "id": "bxi87q9bg6e5nv4",
+    "items": [
+      {
+        "id": "0462zrsp449e600",
+        "name": "ARRI T1 True Blue 1K",
+        "slug": "arri-t1-true-blue",
+        "brand": "ARRI",
+        "rate": 60,
+        "stock": 2,
+        "specs": {
+          "lens": "Fresnel",
+          "power": "1000W",
+          "type": "Tungsten"
+        },
+        "type": "Tungsten",
+        "description": "1000W Tungsten Fresnel. Improved cooling and light output compared to classic series."
+      },
+      {
+        "id": "19x3noukstnb1to",
+        "name": "Astera Titan Tube Set (8)",
+        "slug": "astera-titan-tube-set",
+        "brand": "Astera",
+        "rate": 400,
+        "stock": 2,
+        "specs": {
+          "battery": "Built-in (20h max)",
+          "cct": "1750K - 20,000K",
+          "pixels": "16 Segments",
+          "type": "LED"
+        },
+        "type": "LED",
+        "description": "Set of 8 wireless, battery-powered LED tubes. High CRI/TLCI. Perfect for effects and practicals."
+      },
+      {
+        "id": "l8s9avqskpwum0g",
+        "name": "Nanlite Forza 500B",
+        "slug": "nanlite-forza-500b",
+        "brand": "Nanlite",
+        "rate": 180,
+        "stock": 2,
+        "specs": {
+          "cct": "2700K - 6500K",
+          "mount": "Bowens",
+          "power": "500W",
+          "type": "LED"
+        },
+        "type": "LED",
+        "description": "Bi-Color LED Monolight. High output in a compact form factor. Bowens mount."
+      },
+      {
+        "id": "9b241ihjof08vv5",
+        "name": "LiteGear LiteMat 4 Spectrum",
+        "slug": "litemat-4-spectrum",
+        "brand": "LiteGear",
+        "rate": 300,
+        "stock": 2,
+        "specs": {
+          "pixels": "Individually addressable",
+          "size": "21\" x 40\"",
+          "type": "LED"
+        },
+        "type": "LED",
+        "description": "Large format, ultra-thin soft light. Full color spectrum control. Lightweight."
+      },
+      {
+        "id": "dqomswk1kg9qi5g",
+        "name": "Dedolight Dedo 150W Kit (4-Light)",
+        "slug": "dedolight-150w-kit",
+        "brand": "Dedolight",
+        "rate": 150,
+        "stock": 2,
+        "specs": {
+          "lens": "Aspheric",
+          "power": "150W x 4",
+          "type": "Tungsten"
+        },
+        "type": "LED",
+        "description": "Compact, high-precision lighting solution. Exceptional beam control."
+      },
+      {
+        "id": "7e610zpi9bbmog4",
+        "name": "DMG Lumiere MIX Series",
+        "slug": "dmg-lumiere-mix",
+        "brand": "DMG Lumiere",
+        "rate": 250,
+        "stock": 2,
+        "specs": {
+          "cct": "Full Color",
+          "cri": "95+",
+          "type": "LED"
+        },
+        "type": "LED",
+        "description": "High-performance full-color LED panels (Mini, SL1, Maxi). Advanced RGBWW."
+      },
+      {
+        "id": "tzddrm32q3yk6n8",
+        "name": "Amaran F21c / F22c Flex Mat",
+        "slug": "amaran-flex-mat",
+        "brand": "Amaran",
+        "rate": 100,
+        "stock": 2,
+        "specs": {
+          "power": "100W / 200W",
+          "type": "LED Flex"
+        },
+        "type": "LED",
+        "description": "RGBWW Flexible LED Mats. Lightweight and versatile."
+      },
+      {
+        "id": "gr5ptfl6wtg2rr6",
+        "name": "ARRI M18",
+        "slug": "arri-m18",
+        "brand": "ARRI",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "lens": "Open Face (MAX)",
+          "mount": "Spigot 28mm",
+          "power": "1800W"
+        },
+        "type": "HMI",
+        "description": "1800W Daylight fixture. MAX Technology reflector (lens-less). Combines advantages of PAR and Fresnel."
+      },
+      {
+        "id": "7c65x30i4xhix5v",
+        "name": "ARRI M40",
+        "slug": "arri-m40",
+        "brand": "ARRI",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "lens": "Open Face (MAX)",
+          "power": "4000W"
+        },
+        "type": "HMI",
+        "description": "4000W Daylight fixture. Brighter than a 4K PAR. Focusable 18-52°."
+      },
+      {
+        "id": "r1l8ats3t2ly0r5",
+        "name": "ARRI M90",
+        "slug": "arri-m90",
+        "brand": "ARRI",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "lens": "Open Face (MAX)",
+          "power": "9000W"
+        },
+        "type": "HMI",
+        "description": "9000W Daylight fixture. Extreme output for large scale cinema."
+      },
+      {
+        "id": "6mllu08z7x8wco4",
+        "name": "ARRISUN 5 (575W)",
+        "slug": "arrisun-5",
+        "brand": "ARRI",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "power": "575W",
+          "type": "PAR"
+        },
+        "type": "HMI",
+        "description": "575W PAR HMI. Compact punch light."
+      },
+      {
+        "id": "0biuw1o5vwcnqp0",
+        "name": "ARRISUN 12 (1.2kW)",
+        "slug": "arrisun-12",
+        "brand": "ARRI",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "power": "1200W",
+          "type": "PAR"
+        },
+        "type": "HMI",
+        "description": "1200W PAR HMI. The industry workhorse for daylight punch."
+      },
+      {
+        "id": "hv3hjs83kr7toyp",
+        "name": "ARRISUN 40/25 (2.5/4kW)",
+        "slug": "arrisun-40-25",
+        "brand": "ARRI",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "power": "2500W / 4000W",
+          "type": "PAR"
+        },
+        "type": "HMI",
+        "description": "Dual wattage 2.5kW / 4kW PAR HMI."
+      },
+      {
+        "id": "wlbh1rvihplm3c7",
+        "name": "ARRISUN 60 (6kW)",
+        "slug": "arrisun-60",
+        "brand": "ARRI",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "power": "6000W",
+          "type": "PAR"
+        },
+        "type": "HMI",
+        "description": "6000W PAR HMI. Intense beam for long throws."
+      },
+      {
+        "id": "9qyn79m4gkgf6ch",
+        "name": "ARRISUN 120 (12kW)",
+        "slug": "arrisun-120",
+        "brand": "ARRI",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "power": "12000W",
+          "type": "PAR"
+        },
+        "type": "HMI",
+        "description": "12000W PAR HMI. Sun simulation and large area lighting."
+      },
+      {
+        "id": "937xsyh07li5d0v",
+        "name": "Bron Kobold DW200",
+        "slug": "bron-kobold-dw200",
+        "brand": "Bron Kobold",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "power": "200W",
+          "weatherproof": "Yes"
+        },
+        "type": "HMI",
+        "description": "Compact 200W HMI. Convertible Open Face/PAR."
+      },
+      {
+        "id": "lvqfa9qjnopl6qw",
+        "name": "Bron Kobold DW400",
+        "slug": "bron-kobold-dw400",
+        "brand": "Bron Kobold",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "power": "400W",
+          "weatherproof": "IP54"
+        },
+        "type": "HMI",
+        "description": "400W Weatherproof HMI (IP54)."
+      },
+      {
+        "id": "wyjghc8k6tqig43",
+        "name": "Bron Kobold DW800",
+        "slug": "bron-kobold-dw800",
+        "brand": "Bron Kobold",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "power": "800W",
+          "weatherproof": "IP54"
+        },
+        "type": "HMI",
+        "description": "800W Focusable Daylight fixture. Compact and robust."
+      },
+      {
+        "id": "6bdiuo3c6lnzwvu",
+        "name": "ARRI Junior 150",
+        "slug": "arri-junior-150",
+        "brand": "ARRI",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "lens": "Fresnel",
+          "power": "150W"
+        },
+        "type": "Tungsten",
+        "description": "150W Fresnel. Perfect for hair light or small accents."
+      },
+      {
+        "id": "2a4tp9rwappth4n",
+        "name": "ARRI Junior 300 Plus",
+        "slug": "arri-junior-300",
+        "brand": "ARRI",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "lens": "Fresnel",
+          "power": "300W"
+        },
+        "type": "Tungsten",
+        "description": "300W Fresnel. Compact studio and location fixture."
+      },
+      {
+        "id": "g1580r2m1enc9tb",
+        "name": "ARRI Junior 650 Plus",
+        "slug": "arri-junior-650",
+        "brand": "ARRI",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "lens": "Fresnel",
+          "power": "650W"
+        },
+        "type": "Tungsten",
+        "description": "650W Fresnel. The standard interview key light."
+      },
+      {
+        "id": "wjx0bjxgh0jrxxf",
+        "name": "ARRI True Blue T1 (1kW)",
+        "slug": "arri-true-blue-t1",
+        "brand": "ARRI",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "power": "1000W",
+          "series": "True Blue"
+        },
+        "type": "Tungsten",
+        "description": "1000W High performance Fresnel with improved cooling."
+      },
+      {
+        "id": "7fbhxew9tmho1d1",
+        "name": "Arrilite 800 (Redhead)",
+        "slug": "arrilite-800",
+        "brand": "ARRI",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "power": "800W",
+          "style": "Open Face"
+        },
+        "type": "Tungsten",
+        "description": "800W Open Face 'Redhead'. Lightweight, variable beam 42-86 deg."
+      },
+      {
+        "id": "r7abr0fpnuxwjt0",
+        "name": "ARRI Blonde 2000",
+        "slug": "arri-blonde-2000",
+        "brand": "ARRI",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "power": "2000W",
+          "style": "Open Face"
+        },
+        "type": "Tungsten",
+        "description": "2000W Open Face 'Blonde'. Powerful punchy beam."
+      },
+      {
+        "id": "xooyuu0adq6otv6",
+        "name": "Dino Light 9x1kW (Maxi Brute)",
+        "slug": "dino-light-9k",
+        "brand": "Generic",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "lamps": "PAR64",
+          "power": "9000W"
+        },
+        "type": "Tungsten",
+        "description": "9-Light 1000W PAR 64 Bank. 9000W Total."
+      },
+      {
+        "id": "lrf84i62o0kyckz",
+        "name": "Dino Light 12x1kW (Maxi Brute)",
+        "slug": "dino-light-12k",
+        "brand": "Generic",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "lamps": "PAR64",
+          "power": "12000W"
+        },
+        "type": "Tungsten",
+        "description": "12-Light 1000W PAR 64 Bank. 12000W Total."
+      },
+      {
+        "id": "w4vq6yi19l4o2tu",
+        "name": "Dino Light 24x1kW (Maxi Brute)",
+        "slug": "dino-light-24k",
+        "brand": "Generic",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "lamps": "PAR64",
+          "power": "24000W"
+        },
+        "type": "Tungsten",
+        "description": "24-Light 1000W PAR 64 Bank. Massive 24000W Total."
+      },
+      {
+        "id": "u11qahoj7gizwjv",
+        "name": "PAR 64 Can",
+        "slug": "par-64-can",
+        "brand": "Kupo",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "mount": "Yoke",
+          "power": "1000W"
+        },
+        "type": "Tungsten",
+        "description": "Standard PAR 64 Can. Beam depends on bulb (CP60/61/62)."
+      },
+      {
+        "id": "0dip5pxa6qzb0so",
+        "name": "ETC Source 4 Profile 750W",
+        "slug": "etc-source-4",
+        "brand": "ETC",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "lamp": "HPL",
+          "power": "750W"
+        },
+        "type": "Tungsten",
+        "description": "750W Ellipsoidal. Crisp beam, gobo projection."
+      },
+      {
+        "id": "jx3pigfogdqze93",
+        "name": "Dedolight DLH4 150W Kit",
+        "slug": "dedolight-dlh4",
+        "brand": "Dedolight",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "lens": "Aspheric",
+          "power": "150W"
+        },
+        "type": "Tungsten",
+        "description": "Precision 150W fixture with aspheric lens. Clean beam, no stray light."
+      },
+      {
+        "id": "6tiyykkbn9mlzeu",
+        "name": "Dedolight DLH2 150W",
+        "slug": "dedolight-dlh2",
+        "brand": "Dedolight",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "lens": "Aspheric",
+          "power": "150W"
+        },
+        "type": "Tungsten",
+        "description": "150W fixture integrated power cable. Similar precision to DLH4."
+      },
+      {
+        "id": "5rsf5cz0n3bw8nx",
+        "name": "Creamsource Vortex8",
+        "slug": "creamsource-vortex8",
+        "brand": "Creamsource",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "cct": "2200K-15000K",
+          "ip": "IP65",
+          "power": "650W"
+        },
+        "type": "LED",
+        "description": "650W RGBW IP65 Panel. 14,000 lux output."
+      },
+      {
+        "id": "dv0wql60v0k2ju4",
+        "name": "ARRI SkyPanel S60-C",
+        "slug": "arri-skypanel-s60c",
+        "brand": "ARRI",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "cct": "2800K-10000K",
+          "power": "400W"
+        },
+        "type": "LED",
+        "description": "Softlight LED panel. Fully tunable CCT and RGBW."
+      },
+      {
+        "id": "ipn0v03sw5yapzc",
+        "name": "ARRI SkyPanel S30-C",
+        "slug": "arri-skypanel-s30c",
+        "brand": "ARRI",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "cct": "2800K-10000K",
+          "power": "200W"
+        },
+        "type": "LED",
+        "description": "Compact version of the S60. Portable softlight."
+      },
+      {
+        "id": "826gmt3ptngv1oa",
+        "name": "DMG Lumiere MINI MIX",
+        "slug": "dmg-mini-mix",
+        "brand": "DMG",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "cct": "1700K-10000K",
+          "power": "100W"
+        },
+        "type": "LED",
+        "description": "Compact RGBWW panel. High CRI."
+      },
+      {
+        "id": "mioqvk4pvkrvzzw",
+        "name": "DMG Lumiere SL1 MIX",
+        "slug": "dmg-sl1-mix",
+        "brand": "DMG",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "cct": "1700K-10000K",
+          "power": "200W"
+        },
+        "type": "LED",
+        "description": "Standard 120cm RGBWW panel."
+      },
+      {
+        "id": "yyulqtwoqomww7o",
+        "name": "DMG Lumiere MAXI MIX",
+        "slug": "dmg-maxi-mix",
+        "brand": "DMG",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "cct": "1700K-10000K",
+          "power": "360W"
+        },
+        "type": "LED",
+        "description": "Large format RGBWW panel. Foldable."
+      },
+      {
+        "id": "jyvn8k48j08br2m",
+        "name": "Astera Titan Tube FP1",
+        "slug": "astera-titan-fp1",
+        "brand": "Astera",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "battery": "Yes",
+          "length": "1m",
+          "pixels": "16"
+        },
+        "type": "LED",
+        "description": "The ultimate film lighting tube. High CRI/TLCI."
+      },
+      {
+        "id": "21v93jihcrwnd0l",
+        "name": "Astera AX1 Pixel Tube",
+        "slug": "astera-ax1",
+        "brand": "Astera",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "battery": "Yes",
+          "length": "1m"
+        },
+        "type": "LED",
+        "description": "Wireless Pixel Tube. RGBW."
+      },
+      {
+        "id": "om5hjhhbiu7zr38",
+        "name": "Astera AX2 PixelBar",
+        "slug": "astera-ax2",
+        "brand": "Astera",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "battery": "Yes",
+          "length": "1m"
+        },
+        "type": "LED",
+        "description": "Wireless LED Bar with high CRI."
+      },
+      {
+        "id": "l7km4aoc0yu2jdy",
+        "name": "Astera AX3 LightDrop",
+        "slug": "astera-ax3",
+        "brand": "Astera",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "battery": "Yes",
+          "power": "15W"
+        },
+        "type": "LED",
+        "description": "Compact magnetic spotlight. Battery powered."
+      },
+      {
+        "id": "t2vq9x417txj3t8",
+        "name": "Astera AX5 TriplePAR",
+        "slug": "astera-ax5",
+        "brand": "Astera",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "battery": "Yes",
+          "power": "45W"
+        },
+        "type": "LED",
+        "description": "Wireless LED PAR. RGBAW. 3x 15W LEDs."
+      },
+      {
+        "id": "nk17evc1sup9nfl",
+        "name": "Astera AX10 SpotMax",
+        "slug": "astera-ax10",
+        "brand": "Astera",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "battery": "Yes",
+          "power": "135W"
+        },
+        "type": "LED",
+        "description": "High output wireless PAR. 135W."
+      },
+      {
+        "id": "cff6s7im6e4tjfx",
+        "name": "Astera LunaBulb",
+        "slug": "astera-lunabulb",
+        "brand": "Astera",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "control": "CRMX",
+          "socket": "E27"
+        },
+        "type": "LED",
+        "description": "Smart LED Bulb. Looks like a classic practical."
+      },
+      {
+        "id": "e5amf6iwh4qdhhh",
+        "name": "Nanlite Forza 60B II",
+        "slug": "nanlite-forza-60b",
+        "brand": "Nanlite",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "cct": "Bi-Color",
+          "power": "60W"
+        },
+        "type": "LED",
+        "description": "Compact Bi-Color COB LED."
+      },
+      {
+        "id": "92sk8kmyzuz74s0",
+        "name": "Nanlite Forza 300",
+        "slug": "nanlite-forza-300",
+        "brand": "Nanlite",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "cct": "5600K",
+          "power": "300W"
+        },
+        "type": "LED",
+        "description": "Powerful Daylight COB."
+      },
+      {
+        "id": "f8pmfy5nlcrom9r",
+        "name": "Nanlite Forza 300B",
+        "slug": "nanlite-forza-300b",
+        "brand": "Nanlite",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "cct": "Bi-Color",
+          "power": "300W"
+        },
+        "type": "LED",
+        "description": "Bi-Color 300W COB."
+      },
+      {
+        "id": "84jo7fx9adakdp3",
+        "name": "Nanlite Forza 500",
+        "slug": "nanlite-forza-500",
+        "brand": "Nanlite",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "cct": "5600K",
+          "power": "500W"
+        },
+        "type": "LED",
+        "description": "High output 500W Daylight COB."
+      },
+      {
+        "id": "e4kr2cv7u5no29r",
+        "name": "Nanlite Forza 500B II",
+        "slug": "nanlite-forza-500b-ii",
+        "brand": "Nanlite",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "cct": "Bi-Color",
+          "power": "500W"
+        },
+        "type": "LED",
+        "description": "Bi-Color 500W COB."
+      },
+      {
+        "id": "5q7hsv86riu6ida",
+        "name": "Aputure STORM XT52",
+        "slug": "aputure-xt52",
+        "brand": "Aputure",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "ip": "IP65",
+          "power": "5200W"
+        },
+        "type": "LED",
+        "description": "5200W Tunable White LED."
+      },
+      {
+        "id": "vo6kuwlxbby13to",
+        "name": "Aputure Electro Storm CS15",
+        "slug": "aputure-cs15",
+        "brand": "Aputure",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "mount": "Electronic A-Mount",
+          "power": "1500W"
+        },
+        "type": "LED",
+        "description": "1500W Full Color LED."
+      },
+      {
+        "id": "cqfrfcp8wfzfy2r",
+        "name": "Aputure Electro Storm XT26",
+        "slug": "aputure-xt26",
+        "brand": "Aputure",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "mount": "Electronic A-Mount",
+          "power": "2600W"
+        },
+        "type": "LED",
+        "description": "2600W Bi-Color LED."
+      },
+      {
+        "id": "hivedr6sv75h7dq",
+        "name": "Aputure LS 1200d Pro",
+        "slug": "aputure-1200d-pro",
+        "brand": "Aputure",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "mount": "Bowens",
+          "power": "1200W"
+        },
+        "type": "LED",
+        "description": "1200W Daylight COB."
+      },
+      {
+        "id": "7vp6vj9ecg0zq8y",
+        "name": "Aputure LS 600c Pro II",
+        "slug": "aputure-600c-pro-ii",
+        "brand": "Aputure",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "cct": "RGBWW",
+          "power": "600W"
+        },
+        "type": "LED",
+        "description": "600W Full Color COB (Gen 2)."
+      },
+      {
+        "id": "s04edx1e8jhciwo",
+        "name": "Aputure LS 600c Pro",
+        "slug": "aputure-600c-pro",
+        "brand": "Aputure",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "cct": "RGBWW",
+          "power": "600W"
+        },
+        "type": "LED",
+        "description": "600W Full Color COB."
+      },
+      {
+        "id": "plrpoalgxc7s5im",
+        "name": "Aputure LS 600x Pro",
+        "slug": "aputure-600x-pro",
+        "brand": "Aputure",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "cct": "Bi-Color",
+          "power": "600W"
+        },
+        "type": "LED",
+        "description": "600W Bi-Color COB."
+      },
+      {
+        "id": "je7b7mlvgqvfg76",
+        "name": "Aputure LS 600d Pro",
+        "slug": "aputure-600d-pro",
+        "brand": "Aputure",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "cct": "5600K",
+          "power": "600W"
+        },
+        "type": "LED",
+        "description": "600W Daylight COB."
+      },
+      {
+        "id": "6cg1kljcofs6bi6",
+        "name": "Amaran 300c",
+        "slug": "amaran-300c",
+        "brand": "Amaran",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "cct": "RGBWW",
+          "power": "300W"
+        },
+        "type": "LED",
+        "description": "300W Full Color COB."
+      },
+      {
+        "id": "pztm3uqzl1nfmip",
+        "name": "Aputure LS 300d II",
+        "slug": "aputure-300d-ii",
+        "brand": "Aputure",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "cct": "5600K",
+          "power": "300W"
+        },
+        "type": "LED",
+        "description": "300W Daylight COB."
+      },
+      {
+        "id": "d52ft1iokx78dgu",
+        "name": "Aputure LS 60x",
+        "slug": "aputure-60x",
+        "brand": "Aputure",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "lens": "Focusable",
+          "power": "60W"
+        },
+        "type": "LED",
+        "description": "60W Bi-Color Focusing LED."
+      },
+      {
+        "id": "zy4o56t7y5jqlve",
+        "name": "Aputure MC Pro",
+        "slug": "aputure-mc-pro",
+        "brand": "Aputure",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "battery": "Yes",
+          "power": "5W"
+        },
+        "type": "LED",
+        "description": "Magnetic Mini RGBWW Panel."
+      },
+      {
+        "id": "u261zurvhfr9sge",
+        "name": "Amaran F21c Flex Mat",
+        "slug": "amaran-f21c",
+        "brand": "Amaran",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "power": "100W",
+          "type": "Flex"
+        },
+        "type": "LED",
+        "description": "2x1 RGBWW Flexible Mat. 100W."
+      },
+      {
+        "id": "dpfjxky736ee03n",
+        "name": "Amaran F22c Flex Mat",
+        "slug": "amaran-f22c",
+        "brand": "Amaran",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "power": "200W",
+          "type": "Flex"
+        },
+        "type": "LED",
+        "description": "2x2 RGBWW Flexible Mat. 200W."
+      },
+      {
+        "id": "lcd4ztbswcnhoj7",
+        "name": "LiteMat 2",
+        "slug": "litemat-2",
+        "brand": "LiteGear",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "cct": "Hybrid",
+          "size": "21x21"
+        },
+        "type": "LED",
+        "description": "21x21 inch Hybrid LED panel."
+      },
+      {
+        "id": "uoickyk76i4kl4q",
+        "name": "LiteMat 2L",
+        "slug": "litemat-2l",
+        "brand": "LiteGear",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "cct": "Hybrid",
+          "size": "11.5x40"
+        },
+        "type": "LED",
+        "description": "11.5x40 inch Long Hybrid LED panel."
+      },
+      {
+        "id": "cvgxpkc10edh2iz",
+        "name": "LiteMat 4",
+        "slug": "litemat-4",
+        "brand": "LiteGear",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "cct": "Hybrid",
+          "size": "21x40"
+        },
+        "type": "LED",
+        "description": "21x40 inch Large Hybrid LED panel."
+      },
+      {
+        "id": "3bcimly5yu0fbxi",
+        "name": "Kino Flo 4ft 4Bank",
+        "slug": "kinoflo-4ft-4bank",
+        "brand": "Kino Flo",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "length": "4ft",
+          "tubes": "4"
+        },
+        "type": "Fluorescent",
+        "description": "4ft 4-Tube fixture. Classic soft light."
+      },
+      {
+        "id": "5dl6gwlwb8m9u1i",
+        "name": "Kino Flo 2ft 4Bank",
+        "slug": "kinoflo-2ft-4bank",
+        "brand": "Kino Flo",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "length": "2ft",
+          "tubes": "4"
+        },
+        "type": "Fluorescent",
+        "description": "2ft 4-Tube fixture."
+      },
+      {
+        "id": "6j1n8r7ya4qkgt6",
+        "name": "SWIT S-2620 Flex",
+        "slug": "swit-s2620",
+        "brand": "SWIT",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "power": "50W",
+          "type": "Flex"
+        },
+        "type": "LED",
+        "description": "Flexible SMD-LED light. 280 LEDs."
+      },
+      {
+        "id": "iit72s6xm1193k1",
+        "name": "SWIT S-2610 Flex",
+        "slug": "swit-s2610",
+        "brand": "SWIT",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "power": "100W",
+          "type": "Flex"
+        },
+        "type": "LED",
+        "description": "Flexible SMD-LED light. 504 LEDs."
+      },
+      {
+        "id": "31wrblripd0ye1s",
+        "name": "Falconeyes AFEFT 100W",
+        "slug": "falconeyes-c100bl",
+        "brand": "Falconeyes",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "power": "100W",
+          "type": "Flex"
+        },
+        "type": "LED",
+        "description": "100W Flexible Cloth Lamp. Remote control."
+      }
+    ]
+  },
+  "Stabilizers": {
+    "slug": "stabilizers",
+    "id": "3z7c5p8e0n3fyzr",
+    "items": [
+      {
+        "id": "l2qs0e3d5hif1wj",
+        "name": "DJI Ronin 2 Professional Combo",
+        "slug": "dji-ronin-2",
+        "brand": "DJI",
+        "rate": 450,
+        "stock": 2,
+        "specs": {
+          "battery": "Dual Battery System",
+          "payload": "30 lbs (13.6kg)",
+          "speed": "Up to 75mph"
+        },
+        "type": "",
+        "description": "High-end 3-axis gimbal for professional cinema cameras. High payload capacity and advanced motor control."
+      },
+      {
+        "id": "prdtlbgx8fbctcg",
+        "name": "DJI RS 3 Pro Combo",
+        "slug": "dji-rs-3-pro",
+        "brand": "DJI",
+        "rate": 150,
+        "stock": 2,
+        "specs": {
+          "features": "Automated Axis Locks",
+          "payload": "10 lbs (4.5kg)",
+          "weight": "3.3 lbs"
+        },
+        "type": "",
+        "description": "Professional 3-axis gimbal for mirrorless and compact cinema cameras. Carbon fiber construction."
+      },
+      {
+        "id": "ctpum2i3mskfkk9",
+        "name": "DJI RS 4 Pro Combo",
+        "slug": "dji-rs-4-pro",
+        "brand": "DJI",
+        "rate": 180,
+        "stock": 2,
+        "specs": {
+          "features": "Native Vertical, Teflon Coated Arms",
+          "payload": "9.9 lbs (4.5kg)"
+        },
+        "type": "",
+        "description": "Enhanced efficiency with native vertical shooting. Supports up to 9.9lb payload. Includes Focus Pro Motor."
+      },
+      {
+        "id": "ds4wyxr4wqe5j1m",
+        "name": "DJI Force Pro",
+        "slug": "dji-force-pro",
+        "brand": "DJI",
+        "rate": 150,
+        "stock": 2,
+        "specs": {
+          "compatibility": "Ronin 2 / S",
+          "latency": "10ms",
+          "range": "1.8 miles"
+        },
+        "type": "",
+        "description": "Motion control system for Ronin 2 and Ronin-S. Precisely translates operator movement to gimbal."
+      },
+      {
+        "id": "kzxybzyhsozl77q",
+        "name": "Zhiyun CRANE 3S",
+        "slug": "zhiyun-crane-3s",
+        "brand": "Zhiyun",
+        "rate": 100,
+        "stock": 2,
+        "specs": {
+          "design": "Modular Handle",
+          "payload": "14.3 lbs"
+        },
+        "type": "",
+        "description": "Heavy duty handheld stabilizer. 14.3 lb payload capacity."
+      },
+      {
+        "id": "zivvsghn4gvh1c8",
+        "name": "Easyrig 2.5 600N",
+        "slug": "easyrig-2-5-600n",
+        "brand": "Easyrig",
+        "rate": 100,
+        "stock": 4,
+        "specs": {
+          "load_capacity": "600N (approx 12-15kg)",
+          "type": "Body Support"
+        },
+        "type": "",
+        "description": "Cost effective stabilizing support. Reduces static load on neck and shoulder muscles."
+      },
+      {
+        "id": "fa2yokjm8x2youz",
+        "name": "Easyrig Vario 5 Gimbal Rig",
+        "slug": "easyrig-vario-5-gimbal",
+        "brand": "Easyrig",
+        "rate": 180,
+        "stock": 4,
+        "specs": {
+          "arm": "5-inch Extended",
+          "load_range": "11-38 lb",
+          "vest": "Gimbal Rig"
+        },
+        "type": "",
+        "description": "Adjustable support for rigs 11-38 lb. Includes Gimbal Rig Vest and 5\" Extended Arm."
+      },
+      {
+        "id": "b84rreybwv89rfk",
+        "name": "Tilta Armor Man 3.0",
+        "slug": "tilta-armor-man-3",
+        "brand": "Tilta",
+        "rate": 200,
+        "stock": 4,
+        "specs": {
+          "compatibility": "Universal Gimbal",
+          "type": "Exoskeleton"
+        },
+        "type": "",
+        "description": "Exoskeleton support for gimbals. Supports Tilta Gravity, MōVI, Ronin. Spring-loaded arms."
+      },
+      {
+        "id": "eo6ga345tozi7qc",
+        "name": "Tilta Armor Man 2",
+        "slug": "tilta-armor-man-2",
+        "brand": "Tilta",
+        "rate": 150,
+        "stock": 4,
+        "specs": {
+          "feature": "V-Mount Plate",
+          "type": "Exoskeleton"
+        },
+        "type": "",
+        "description": "Designed to take weight off arms. Version with V-mount plate attached to vest."
+      }
+    ]
+  },
+  "Power & Cables": {
+    "slug": "power-distribution",
+    "id": "itisgoenxrqeqmt",
+    "items": []
+  },
+  "Filters": {
+    "slug": "filters",
+    "id": "mro7gfe3dzbophm",
+    "items": []
+  },
+  "Grip & Dollies": {
+    "slug": "grip",
+    "id": "n9dug7pnvlniigu",
+    "items": [
+      {
+        "id": "xes4pw5n43z0zfd",
+        "name": "Panther Husky Dolly",
+        "slug": "panther-husky-dolly",
+        "brand": "Panther",
+        "rate": 200,
+        "stock": 5,
+        "specs": {
+          "feature": "Foldable",
+          "payload": "250kg",
+          "type": "Dolly"
+        },
+        "type": "",
+        "description": "Foldable and lightweight dolly. Supports loads up to 250kg. Includes Vario Bazooka."
+      },
+      {
+        "id": "4x2bz2kgb9yt3va",
+        "name": "Chapman PeeWee Dolly",
+        "slug": "chapman-peewee",
+        "brand": "Chapman",
+        "rate": 350,
+        "stock": 5,
+        "specs": {
+          "steering": "Crab / Round / Conventional",
+          "type": "Dolly"
+        },
+        "type": "",
+        "description": "Industry standard hydraulic lift dolly. 3 steering modes: Crab, Round, Conventional."
+      },
+      {
+        "id": "flqtk0wqsuf793o",
+        "name": "MovieBird 45 Telescopic Crane",
+        "slug": "moviebird-45",
+        "brand": "MovieBird",
+        "rate": 1500,
+        "stock": 5,
+        "specs": {
+          "reach": "45 ft (13.7m)",
+          "type": "Telescopic Crane"
+        },
+        "type": "",
+        "description": "Telescopic crane with 35ft to 45ft reach. Fast extension speed."
+      },
+      {
+        "id": "jhrka20wi4jm79y",
+        "name": "Stanton Jimmy Jib Triangle",
+        "slug": "stanton-jimmy-jib",
+        "brand": "Stanton",
+        "rate": 400,
+        "stock": 5,
+        "specs": {
+          "control": "Remote Head",
+          "type": "Jib"
+        },
+        "type": "",
+        "description": "Modular remote controlled jib. Variable lengths. Standard industry workhorse."
+      },
+      {
+        "id": "7g8lt0gsagthh03",
+        "name": "Panther U-Bangi II",
+        "slug": "panther-u-bangi",
+        "brand": "Panther",
+        "rate": 150,
+        "stock": 5,
+        "specs": {
+          "payload": "80kg",
+          "type": "Slider / Offset"
+        },
+        "type": "",
+        "description": "Camera slider/offset system. Allows camera tracking with little effort."
+      },
+      {
+        "id": "yd9yde7w7blglyu",
+        "name": "GFM Mini Jib",
+        "slug": "gfm-mini-jib",
+        "brand": "GFM",
+        "rate": 150,
+        "stock": 5,
+        "specs": {
+          "size": "Mini",
+          "type": "Jib"
+        },
+        "type": "",
+        "description": "Stable and strong mini jib. Adjustable length front section."
+      },
+      {
+        "id": "9hfgufbhbvqh3yl",
+        "name": "Panther Straight Track (Set)",
+        "slug": "panther-straight-track",
+        "brand": "Panther",
+        "rate": 50,
+        "stock": 5,
+        "specs": {
+          "shape": "Straight",
+          "type": "Track",
+          "width": "62cm"
+        },
+        "type": "",
+        "description": "Precision aluminum dolly track. Standard width (62cm)."
+      },
+      {
+        "id": "s2p3ourzbtgw9u0",
+        "name": "Panther Curved Track (Set)",
+        "slug": "panther-curved-track",
+        "brand": "Panther",
+        "rate": 50,
+        "stock": 5,
+        "specs": {
+          "shape": "Curved",
+          "type": "Track",
+          "width": "62cm"
+        },
+        "type": "",
+        "description": "Precision aluminum curved dolly track. Allows for fluid arc shots."
+      },
+      {
+        "id": "935gm226tfn0qo7",
+        "name": "Manfrotto Autopoles (Pair)",
+        "slug": "manfrotto-autopoles",
+        "brand": "Manfrotto",
+        "rate": 30,
+        "stock": 5,
+        "specs": {
+          "mount": "Floor-to-Ceiling",
+          "type": "Rigging"
+        },
+        "type": "",
+        "description": "Floor-to-ceiling mounting poles. Quick single-action locking."
+      },
+      {
+        "id": "614tcj9o47wnbrd",
+        "name": "Phoenix Crane",
+        "slug": "phoenix-crane",
+        "brand": "Generic",
+        "rate": 1000,
+        "stock": 2,
+        "specs": {
+          "operator_required": "2-3",
+          "type": "Crane"
+        },
+        "type": "",
+        "description": "Large hybrid platform/remote crane. Very stable."
+      },
+      {
+        "id": "0a45seeaphyotkv",
+        "name": "Panther Pegasus Crane",
+        "slug": "panther-pegasus",
+        "brand": "Panther",
+        "rate": 800,
+        "stock": 2,
+        "specs": {
+          "build": "Modular",
+          "type": "Crane"
+        },
+        "type": "",
+        "description": "Modular crane made of steel and aluminum. Weather resistant."
+      },
+      {
+        "id": "x91w1dfg671vdlo",
+        "name": "ABC 120 Lightweight Crane",
+        "slug": "abc-120-crane",
+        "brand": "MovieTech",
+        "rate": 600,
+        "stock": 2,
+        "specs": {
+          "length": "12m Max",
+          "type": "Crane"
+        },
+        "type": "",
+        "description": "Lightweight true allrounder. Setup lengths: 9m, 10.5m, 12m."
+      },
+      {
+        "id": "dawufvi0i1j8ijh",
+        "name": "Gizmo Jib",
+        "slug": "gizmo-jib",
+        "brand": "MovieTech",
+        "rate": 300,
+        "stock": 2,
+        "specs": {
+          "range": "S to XXL",
+          "type": "Jib"
+        },
+        "type": "",
+        "description": "Modular camera jib system. Extendable front segment."
+      },
+      {
+        "id": "kb5yizqfd80n9ny",
+        "name": "Panther Lightweight Jib",
+        "slug": "panther-lightweight-jib",
+        "brand": "Panther",
+        "rate": 250,
+        "stock": 2,
+        "specs": {
+          "mount": "Dolly",
+          "type": "Jib"
+        },
+        "type": "",
+        "description": "Universal jib arm. Mounts on all Panther dollies."
+      },
+      {
+        "id": "dyxfzinnn897y6x",
+        "name": "Panther Boogie Wheels",
+        "slug": "panther-boogie-wheels",
+        "brand": "Panther",
+        "rate": 80,
+        "stock": 2,
+        "specs": {
+          "type": "Dolly Accessory"
+        },
+        "type": "",
+        "description": "Keeps dolly steady on straight or curved tracks."
+      },
+      {
+        "id": "o4qjt49y3gg6c6r",
+        "name": "MultiTower Scaffolding",
+        "slug": "multitower-scaffolding",
+        "brand": "Generic",
+        "rate": 100,
+        "stock": 2,
+        "specs": {
+          "height": "Max 13.2m",
+          "type": "Rigging"
+        },
+        "type": "",
+        "description": "Mobile scaffolding solution for safe and quick assembly."
+      },
+      {
+        "id": "tjv43i3mceujcx3",
+        "name": "System Low Rig / Gas Riser",
+        "slug": "low-rig-riser",
+        "brand": "Panther",
+        "rate": 100,
+        "stock": 2,
+        "specs": {
+          "type": "Rigging Accessory"
+        },
+        "type": "",
+        "description": "Includes Low Rig Snake Bracket and Gas Riser for low angles and height adjustment."
+      },
+      {
+        "id": "pxfhx9dzf291ilw",
+        "name": "Barracuda Bar",
+        "slug": "barracuda-bar",
+        "brand": "Generic",
+        "rate": 40,
+        "stock": 2,
+        "specs": {
+          "type": "Rigging"
+        },
+        "type": "",
+        "description": "Aluminum crossbars to hold spotlights without tripods."
+      },
+      {
+        "id": "sybn1i0s4j3aav7",
+        "name": "GFM Lite Dolly",
+        "slug": "gfm-lite-dolly",
+        "brand": "GFM",
+        "rate": 150,
+        "stock": 2,
+        "specs": {
+          "track_width": "62cm",
+          "type": "Dolly"
+        },
+        "type": "",
+        "description": "Pull-type trolley dolly. Usable on two directional wheels or track."
+      },
+      {
+        "id": "8rrp5b7r9t3ow26",
+        "name": "Egripment Javelin Crane",
+        "slug": "egripment-javelin",
+        "brand": "Egripment",
+        "rate": 600,
+        "stock": 2,
+        "specs": {
+          "style": "Modular",
+          "type": "Crane"
+        },
+        "type": "",
+        "description": "Modern modular crane system. Streamlined arm design minimizes visual obstruction."
+      },
+      {
+        "id": "xr4ocyjb1in2wkd",
+        "name": "Ball Adapter 150mm",
+        "slug": "ball-adapter-150mm",
+        "brand": "MovieTech",
+        "rate": 25,
+        "stock": 2,
+        "specs": {
+          "mount": "Euro to 150mm",
+          "type": "Adapter"
+        },
+        "type": "",
+        "description": "Machined aluminum adapter. Converts Euro mount to 150mm Bowl."
+      }
+    ]
+  }
+}

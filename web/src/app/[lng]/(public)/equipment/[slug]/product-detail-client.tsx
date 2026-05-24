@@ -45,10 +45,11 @@ import {
   ChevronRight
 } from 'lucide-react'
 import { Product } from '@/services/products/types'
-import { ResolvedKit } from '@/types/commerce'
+import { ResolvedKit, ResolvedKitSlot } from '@/types/commerce'
 import { useCartStore, useUIStore, KitDetailItem, useKitStore } from '@/stores'
 import { cn } from '@/lib/utils'
 import { resolveKit } from '@/lib/actions/cart'
+import { getProductsByCategory } from '@/lib/actions/products'
 import { ProductImageGallery } from '@/components/product'
 import { StickyProductFooter } from '@/components/product/sticky-product-footer'
 import {
@@ -56,8 +57,10 @@ import {
   PickerDropdown,
   PickerInline,
   PickerMinimal,
-  PickerSidebar
+  PickerSidebar,
+  SlotSimple
 } from '@/components/product/accessory-picker'
+import { useTranslation } from '../../../../i18n/client'
 
 // CONFIGURATION: Change this to switch designs ('chips' | 'dropdown' | 'inline' | 'sidebar' | 'minimal')
 const PICKER_STYLE: string = 'inline'
@@ -360,6 +363,7 @@ export interface SlotDisplayData {
 interface ProductDetailClientProps {
   product: Product
   lng: string
+  categories: { id: string; name: string; slug: string }[]
 }
 
 // ============================================================================
@@ -367,7 +371,8 @@ interface ProductDetailClientProps {
 // ============================================================================
 
 // Main Component
-export function ProductDetailClient({ product, lng }: ProductDetailClientProps) {
+export function ProductDetailClient({ product, lng, categories = [] }: ProductDetailClientProps) {
+  const { t } = useTranslation(lng, 'catalog')
   const addItem = useCartStore((state) => state.addItem)
   const openCartDrawer = useUIStore((state) => state.openCartDrawer)
   const addToast = useUIStore((state) => state.addToast)
@@ -398,6 +403,10 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
 
   // Visibility State for Essentials Logic
   const [visibleSlots, setVisibleSlots] = useState<string[]>([])
+
+  // Custom/Extra Slots (User added categories not in the kit template)
+  const [extraSlots, setExtraSlots] = useState<ResolvedKitSlot[]>([])
+  const [isAddingSlot, setIsAddingSlot] = useState(false)
 
   // Intersection Observer: Hide sticky footer when Add to Quote section is visible
   const addToQuoteSectionRef = useRef<HTMLDivElement>(null)
@@ -438,7 +447,7 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
     async function loadKit() {
       try {
         console.log('[KIT DEBUG] Loading kit for product:', product.id, product.name);
-        const result = await resolveKit(product.id)
+        const result = await resolveKit(product.id, lng)
 
         if (result.success && result.kit && result.kit.slots.length > 0) {
           console.log('[KIT DEBUG] Setting resolvedKit with', result.kit.slots.length, 'slots');
@@ -511,8 +520,9 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
     )
 
     if (resolvedKit && selectionsToUse) {
-      // REAL KIT: Iterate through all slots and find selected items
-      resolvedKit.slots.forEach(slot => {
+      // REAL KIT: Iterate through all slots (template + dynamically added) and find selected items
+      const allSlots = [...resolvedKit.slots, ...extraSlots]
+      allSlots.forEach(slot => {
         const selectedIds = selectionsToUse[slot.slotName] || []
 
         // Count occurrences of each ID to handle quantity
@@ -525,14 +535,24 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
         // Iterate unique IDs and add them to cart with calculated quantity
         Object.entries(idCounts).forEach(([id, count]) => {
           // Find the full Product option
-          const itemProduct = slot.availableOptions.find(opt => opt.id === id) || slot.defaultItems.find(def => def.product_id === id)
+          // Find the full Product option
+          // Priority: Check available options (Full Product)
+          const itemProduct = slot.availableOptions.find(opt => opt.id === id)
 
-          if (itemProduct) {
+          // NOTE: We do NOT fallback to defaultItems because they lack full product data (KitItem type)
+          // If it's not in availableOptions, we shouldn't add it as we lack details.
+
+          if (itemProduct && 'slug' in itemProduct) {
+            // Safe to add - it's a Product
+            // const totalQuantity = count * quantity
+            // ...
             // Add accessory as individual item
             // Multiply by main kit quantity (e.g. 2 Cameras -> 2 sets of accessories)
             const totalQuantity = count * quantity
             const itemVariants = resolvedKit ? getVariantSelections(product.id)?.[slot.slotName]?.[id] : undefined
-            addItem(itemProduct, totalQuantity, placeholderDates, undefined, undefined, itemVariants)
+            addItem(itemProduct as Product, totalQuantity, placeholderDates, undefined, undefined, itemVariants)
+          } else {
+            console.warn('Skipping item add - detail missing:', id)
           }
         })
       })
@@ -595,7 +615,10 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
   // Get current slot data (either from real kit or mock)
   const getSlotData = useCallback((): SlotDisplayData[] => {
     if (resolvedKit) {
-      return resolvedKit.slots.map(slot => ({
+      // Combine template slots with dynamically added extra slots
+      const allSlots = [...resolvedKit.slots, ...extraSlots]
+
+      return allSlots.map(slot => ({
         slotName: slot.slotName,
         selectionMode: slot.allowMultiple ? 'multi' as const : 'single' as const,
         items: slot.availableOptions.map(product => ({
@@ -619,14 +642,16 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
       }))
     }
     return []
-  }, [resolvedKit, useMockKit, kitSelections, mockSelections])
+  }, [resolvedKit, useMockKit, kitSelections, mockSelections, extraSlots])
 
   // ... (getItemDetails)
 
   // Helper to get item details for display
   const getItemDetails = useCallback((slotName: string, itemId: string) => {
     if (resolvedKit) {
-      const slot = resolvedKit.slots.find(s => s.slotName === slotName)
+      // Check both template slots and extra (dynamically added) slots
+      const allSlots = [...resolvedKit.slots, ...extraSlots]
+      const slot = allSlots.find(s => s.slotName === slotName)
       if (!slot) return null
       // Try finding in available options first (full product data)
       const option = slot.availableOptions.find(opt => opt.id === itemId)
@@ -642,7 +667,7 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
       return slot.items.find(i => i.id === itemId)
     }
     return null
-  }, [resolvedKit, useMockKit])
+  }, [resolvedKit, useMockKit, extraSlots])
 
   // Handle slot selection update VIA STORE
   const handleSlotUpdate = useCallback((slotName: string, selectedIds: string[], variants?: Record<string, Record<string, string>>) => {
@@ -726,10 +751,77 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
     const visibleSlotData = visibleSlots
       .map(slotName => slotData.find(s => s.slotName === slotName))
       .filter((s): s is SlotDisplayData => s !== undefined)
-    const hiddenSlotData = slotData.filter(s => !visibleSlots.includes(s.slotName))
+
+    // Calculate hidden slots (Existing slots not visible + New Categories not yet added)
+    const existingHiddenSlots = slotData.filter(s => !visibleSlots.includes(s.slotName)).map(s => ({ slotName: s.slotName }))
+
+    // Find categories that are NOT in current slots (resolved or extra)
+    // Also exclude the product's OWN category (e.g. don't show "Cameras" as an accessory for a Camera)
+    const currentSlotNames = slotData.map(s => s.slotName)
+    const productCategoryName = product.category?.name
+    const availableCategorySlots = categories
+      .filter(c => !currentSlotNames.includes(c.name) && c.name !== productCategoryName)
+      .map(c => ({ slotName: c.name }))
+
+    const hiddenSlotData: SlotSimple[] = [...existingHiddenSlots, ...availableCategorySlots]
 
     // Calculate total selected items for footer
     const totalSelectedItems = slotData.reduce((acc, slot) => acc + slot.selectedIds.length, 0)
+
+    // Handler for adding new slot (either existing hidden or new category)
+    const handleAddNewSlot = async (slotName: string) => {
+      console.log('[CLIENT] handleAddNewSlot triggered:', slotName);
+      console.log('[CLIENT] Available categories:', categories);
+      // 1. Is it an existing hidden slot?
+      const existing = slotData.find(s => s.slotName === slotName)
+      if (existing) {
+        setVisibleSlots(prev => [...prev, slotName])
+        return
+      }
+
+      // 2. It's a new category - Fetch data
+      const category = categories.find(c => c.name === slotName)
+      console.log('[CLIENT] Category match:', category);
+      if (!category) return
+
+      setIsAddingSlot(true)
+      try {
+        const products = await getProductsByCategory(category.slug)
+        console.log('[CLIENT] Fetched products:', products?.length);
+
+        // Create new ResolvedKitSlot
+        const newSlot: ResolvedKitSlot = {
+          slotName: category.name,
+          required: false,
+          allowMultiple: true,
+          defaultItems: [],
+          selectedItems: [],
+          availableOptions: products
+        }
+
+        setExtraSlots(prev => [...prev, newSlot])
+        setVisibleSlots(prev => [...prev, slotName])
+
+        // Initialize selection state for this new slot
+        setSelections(product.id, {
+          ...selections[product.id],
+          [slotName]: []
+        })
+
+        addToast({
+          type: 'success',
+          message: `${category.name} section added`
+        })
+      } catch (err) {
+        console.error('Failed to add category slot', err)
+        addToast({
+          type: 'error',
+          message: 'Failed to load products for this category'
+        })
+      } finally {
+        setIsAddingSlot(false)
+      }
+    }
 
     // Show loading skeleton until page is ready
     if (!isPageReady) {
@@ -796,7 +888,7 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
               className="inline-flex items-center gap-2 text-zinc-400 hover:text-white transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
-              Back to Catalog
+              {t('detail.backToCatalog')}
             </Link>
           </motion.div>
 
@@ -844,17 +936,17 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
                   className="mt-6"
                 >
                   <motion.div variants={fadeInBlurFast} className="bg-zinc-900/50 rounded-xl border border-zinc-800 p-5">
-                    <h3 className="text-sm font-semibold text-red-400 uppercase tracking-wider mb-4">Camera Specifications</h3>
-                    <div className="grid grid-cols-2 gap-x-6 gap-y-3">
+                    <h3 className="text-sm font-semibold text-red-400 uppercase tracking-wider mb-4">{t('detail.specifications')}</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
                       {product.specs && Object.entries(product.specs).slice(0, 8).map(([key, value]) => (
-                        <div key={key} className="flex justify-between border-b border-zinc-800/50 pb-2">
-                          <span className="text-xs text-zinc-500 capitalize">{key.replace(/_/g, ' ')}</span>
-                          <span className="text-xs text-zinc-200 font-medium">{String(value)}</span>
+                        <div key={key} className="flex justify-between gap-4 border-b border-zinc-800/50 pb-2">
+                          <span className="text-xs text-zinc-500 capitalize shrink-0">{key.replace(/_/g, ' ')}</span>
+                          <span className="text-xs text-zinc-200 font-medium text-right">{String(value)}</span>
                         </div>
                       ))}
                       {(!product.specs || Object.keys(product.specs).length === 0) && (
                         <div className="col-span-2 text-xs text-zinc-500 italic">
-                          No specifications available
+                          {t('search.noResults')}
                         </div>
                       )}
                     </div>
@@ -868,7 +960,7 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
                     className="mb-8 p-4 bg-zinc-900/30 rounded-xl border border-zinc-800"
                   >
                     <h3 className="text-sm font-medium text-zinc-400 uppercase tracking-wider mb-3">
-                      Select Options
+                      {t('detail.selectOptions')}
                     </h3>
                     <div className="space-y-3">
                       {Object.entries(product.variantOptions).map(([optionKey, values]) => (
@@ -901,7 +993,7 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
                   variants={fadeInBlurFast}
                   className="mt-6 flex items-center justify-between bg-zinc-900/50 rounded-xl border border-zinc-800 p-4"
                 >
-                  <span className="text-sm font-medium text-zinc-300">Quantity</span>
+                  <span className="text-sm font-medium text-zinc-300">{t('detail.quantity')}</span>
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => setQuantity((q) => Math.max(1, q - 1))}
@@ -945,8 +1037,8 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
                       <Layers className="w-6 h-6 text-red-400" />
                     </div>
                     <div>
-                      <h2 className="text-2xl font-bold text-white">Accessories</h2>
-                      <p className="text-zinc-500 text-sm">Configure the components included with your kit</p>
+                      <h2 className="text-2xl font-bold text-white">{t('detail.accessories')}</h2>
+                      <p className="text-zinc-500 text-sm">{t('detail.configureKit')}</p>
                     </div>
                   </div>
 
@@ -960,7 +1052,7 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
                           ? 'bg-red-700 text-white'
                           : 'text-zinc-400 hover:text-white hover:bg-zinc-700/50'
                       )}
-                      title="Grid view"
+                      title={t('detail.gridView')}
                     >
                       <LayoutGrid className="w-4 h-4" />
                     </button>
@@ -972,7 +1064,7 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
                           ? 'bg-red-700 text-white'
                           : 'text-zinc-400 hover:text-white hover:bg-zinc-700/50'
                       )}
-                      title="List view"
+                      title={t('detail.listView')}
                     >
                       <List className="w-4 h-4" />
                     </button>
@@ -982,7 +1074,7 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
                 {isLoadingKit ? (
                   <div className="bg-zinc-900/50 rounded-xl border border-zinc-800 p-8 text-center">
                     <div className="animate-spin w-8 h-8 border-2 border-zinc-600 border-t-red-500 rounded-full mx-auto mb-4" />
-                    <p className="text-zinc-400">Loading kit configuration...</p>
+                    <p className="text-zinc-400">{t('detail.loadingKit')}</p>
                   </div>
                 ) : (
                   <motion.div
@@ -1006,7 +1098,7 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
                             <div>
                               <h3 className="font-semibold text-white">{slot.slotName}</h3>
                               <span className="text-xs text-zinc-500">
-                                {slot.selectionMode === 'single' ? 'Select one' : 'Select multiple'} • {slot.selectedIds.length} selected
+                                {slot.selectionMode === 'single' ? t('detail.selectOne') : t('detail.selectMultiple')} • {slot.selectedIds.length} {t('detail.selected')}
                               </span>
                             </div>
                           </div>
@@ -1253,12 +1345,12 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
                               {/* Content Overlay */}
                               <div className="relative z-10 w-full h-full flex flex-col items-center justify-center">
                                 <Package className="w-10 h-10 text-zinc-600 mb-3" />
-                                <p className="text-zinc-500 text-sm font-medium">No items selected</p>
+                                <p className="text-zinc-500 text-sm font-medium">{t('detail.noItems')}</p>
                                 <button
                                   onClick={() => setEditingSlot(slot.slotName)}
                                   className="mt-3 text-red-500 hover:text-red-400 text-sm font-semibold transition-colors flex items-center gap-1 group"
                                 >
-                                  Add items
+                                  {t('detail.addItems')}
                                   <span className="group-hover:translate-x-0.5 transition-transform">→</span>
                                 </button>
                               </div>
@@ -1281,11 +1373,16 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
               animate="visible"
               className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-40"
             >
-              {PICKER_STYLE === 'chips' && <PickerChips hiddenSlots={hiddenSlotData} onAdd={(name) => setVisibleSlots(p => [...p, name])} />}
-              {PICKER_STYLE === 'dropdown' && <PickerDropdown hiddenSlots={hiddenSlotData} onAdd={(name) => setVisibleSlots(p => [...p, name])} />}
-              {PICKER_STYLE === 'inline' && <PickerInline hiddenSlots={hiddenSlotData} onAdd={(name) => setVisibleSlots(p => [...p, name])} />}
-              {PICKER_STYLE === 'sidebar' && <PickerSidebar hiddenSlots={hiddenSlotData} onAdd={(name) => setVisibleSlots(p => [...p, name])} />}
-              {PICKER_STYLE === 'minimal' && <PickerMinimal hiddenSlots={hiddenSlotData} onAdd={(name) => setVisibleSlots(p => [...p, name])} />}
+              {isAddingSlot && (
+                <div className="flex justify-center mb-4">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-500"></div>
+                </div>
+              )}
+              {PICKER_STYLE === 'chips' && <PickerChips hiddenSlots={hiddenSlotData} onAdd={handleAddNewSlot} />}
+              {PICKER_STYLE === 'dropdown' && <PickerDropdown hiddenSlots={hiddenSlotData} onAdd={handleAddNewSlot} />}
+              {PICKER_STYLE === 'inline' && <PickerInline hiddenSlots={hiddenSlotData} onAdd={handleAddNewSlot} />}
+              {PICKER_STYLE === 'sidebar' && <PickerSidebar hiddenSlots={hiddenSlotData} onAdd={handleAddNewSlot} />}
+              {PICKER_STYLE === 'minimal' && <PickerMinimal hiddenSlots={hiddenSlotData} onAdd={handleAddNewSlot} />}
             </motion.div>
           )}
 
@@ -1306,10 +1403,10 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
                 <div>
                   <h3 className="text-lg font-semibold text-white mb-2 flex items-center gap-2">
                     <ShoppingCart className="w-5 h-5 text-zinc-400" />
-                    Ready to Request Quote?
+                    {t('detail.readyToRequest')}
                   </h3>
                   <p className="text-zinc-400 text-sm">
-                    Rental dates & pricing will be provided after submission
+                    {t('detail.rentalDatesInfo')}
                   </p>
                 </div>
 
@@ -1337,7 +1434,7 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
                   ) : (
                     <>
                       <ShoppingCart className="w-5 h-5" />
-                      Add Kit to Quote
+                      {t('detail.addKitToQuote')}
                     </>
                   )}
                 </button>
@@ -1366,6 +1463,7 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
           isAvailable={product.isAvailable}
           isAdding={isAdding}
           onAdd={handleAddToCart}
+          lng={lng}
         />
       </AnimatePresence >
     )
@@ -1400,7 +1498,7 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
             className="inline-flex items-center gap-2 text-zinc-400 hover:text-white transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Catalog
+            {t('detail.backToCatalog')}
           </Link>
         </motion.div>
 
@@ -1445,7 +1543,7 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
               {product.specs && Object.keys(product.specs).length > 0 && (
                 <div className="mb-8">
                   <h3 className="text-xs font-medium text-zinc-500 uppercase tracking-widest mb-4">
-                    Specifications
+                    {t('detail.specifications')}
                   </h3>
                   <div className="space-y-0">
                     {Object.entries(product.specs).map(([key, value]) => (
@@ -1465,7 +1563,7 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
               {product.variantOptions && Object.keys(product.variantOptions).length > 0 && (
                 <div className="mb-8 p-4 bg-zinc-900/30 rounded-xl border border-zinc-800">
                   <h3 className="text-xs font-medium text-zinc-500 uppercase tracking-widest mb-3">
-                    Select Options
+                    {t('detail.selectOptions')}
                   </h3>
                   <div className="space-y-3">
                     {Object.entries(product.variantOptions).map(([optionKey, values]) => (
@@ -1497,14 +1595,14 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
               <div className="bg-zinc-900/50 rounded-xl border border-zinc-800 p-6 mt-auto">
                 <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
                   <ShoppingCart className="w-5 h-5 text-zinc-400" />
-                  Add to Quote
+                  {t('detail.addToQuote')}
                 </h3>
 
                 <div className="space-y-4">
                   {/* Quantity */}
                   <div>
                     <label htmlFor="quantity" className="block text-sm text-zinc-400 mb-1.5">
-                      Quantity
+                      {t('detail.quantity')}
                     </label>
                     <div className="flex items-center gap-3">
                       <button
@@ -1541,7 +1639,7 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
                     )}
                     <div className="bg-zinc-800/50 rounded-lg p-3 mt-2">
                       <p className="text-sm text-zinc-300 text-center">
-                        Rental dates & pricing provided after quote submission
+                        {t('detail.rentalDatesInfo')}
                       </p>
                     </div>
                   </div>
@@ -1580,7 +1678,7 @@ export function ProductDetailClient({ product, lng }: ProductDetailClientProps) 
                     ) : (
                       <>
                         <ShoppingCart className="w-5 h-5" />
-                        Add to Quote Request
+                        {t('detail.addToQuote')}
                       </>
                     )}
                   </button>
@@ -1704,7 +1802,7 @@ function SlotEditModal({ slotName, slotData, onClose, onSave, product }: SlotEdi
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+      className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
       onClick={onClose}
     >
       <motion.div

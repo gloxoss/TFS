@@ -28,6 +28,17 @@ else
     echo "⚠️ tfs-web.tar not found, skipping..."
 fi
 
+# 2.5 Smart Config Selection
+# If SSL certs exist, preserve SSL config. Otherwise, use default (HTTP).
+if [ -d "/etc/letsencrypt/live/tfs.ma" ]; then
+    echo "🔒 SSL Certificates detected. Using SSL configuration..."
+    if [ -f "nginx/ssl.conf" ]; then
+        cp nginx/ssl.conf nginx/default.conf
+    fi
+else
+    echo "🔓 No SSL Certificates found. Using default HTTP configuration..."
+fi
+
 # 3. Start Application
 echo "🚀 Starting Application..."
 docker compose up -d

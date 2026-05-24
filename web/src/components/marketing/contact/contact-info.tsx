@@ -58,7 +58,21 @@ export default function ContactInfo({ lng }: ContactInfoProps) {
                         </div>
                         <div>
                             <p className="text-xs uppercase tracking-widest text-zinc-500 mb-1">Address</p>
-                            <p className="text-white leading-relaxed">{company.address.street}</p>
+                            <a
+                                href="https://maps.app.goo.gl/DYrvH6NSsuGwpLim7?g_st=ic"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-white hover:text-[#D00000] transition-colors leading-relaxed block"
+                            >
+                                {company.address.street}
+                                {(company.address.city || company.address.postalCode || company.address.country) && (
+                                    <>
+                                        <br />
+                                        {[company.address.postalCode, company.address.city].filter(Boolean).join(" - ")}
+                                        {company.address.country && `, ${company.address.country}`}
+                                    </>
+                                )}
+                            </a>
                         </div>
                     </div>
 

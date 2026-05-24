@@ -4,6 +4,8 @@ import { createServerClient } from '@/lib/pocketbase/server'
 import { getServicesService } from '@/services/services/pocketbase-service'
 import ServiceDetailClient from './service-client'
 
+export const revalidate = 0
+
 interface PageProps {
     params: Promise<{ lng: string; slug: string }>
 }
@@ -12,6 +14,13 @@ async function getService(slug: string) {
     const pb = await createServerClient()
     const servicesService = getServicesService(pb)
     return servicesService.getServiceBySlug(slug)
+}
+
+async function getSubServices(slugs: string[]) {
+    const pb = await createServerClient()
+    const servicesService = getServicesService(pb)
+    const allServices = await servicesService.getServices()
+    return allServices.filter(s => slugs.includes(s.slug))
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -49,5 +58,23 @@ export default async function ServicePage({ params }: PageProps) {
         redirect(service.targetUrl)
     }
 
-    return <ServiceDetailClient service={service} lng={lng} />
+    // Fetch sub-services for hub templates (both 'hub' and 'hub_alt')
+    let subServices = undefined
+    if ((service.template === 'hub' || service.template === 'hub_alt') && service.subServices && service.subServices.length > 0) {
+        subServices = await getSubServices(service.subServices)
+    }
+
+    // Custom Template for Digital Production
+    if (service.slug === 'digital-production' || service.slug === 'digital-corporate') {
+        const DigitalProductionPage = (await import('@/components/features/digital-production/DigitalProductionPage')).default
+        return <DigitalProductionPage service={service} lng={lng} />;
+    }
+
+    if (service.slug === 'broadcasting-live') {
+        const { BroadcastPage } = await import('@/components/features/broadcast/BroadcastPage')
+        return <BroadcastPage service={service} locale={lng} />;
+    }
+
+    // Default: generic service detail page
+    return <ServiceDetailClient service={service} lng={lng} subServices={subServices} />;
 }

@@ -94,7 +94,7 @@ export function CartDrawer({ lng }: CartDrawerProps) {
     <>
       <CartSynchronizer />
       <Transition show={isOpen} as={Fragment}>
-        <Dialog onClose={closeDrawer} className="relative z-50">
+        <Dialog onClose={closeDrawer} className="relative z-[110]">
           {/* Backdrop */}
           <TransitionChild
             as={Fragment}

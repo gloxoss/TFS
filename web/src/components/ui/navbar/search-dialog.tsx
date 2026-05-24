@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, X, ArrowRight, TrendingUp, Camera, Film, Lightbulb, Mic2 } from "lucide-react";
+import { Search, X, ArrowRight, TrendingUp, Camera, Film, Lightbulb, Monitor } from "lucide-react";
 import { searchConfig } from "@/data/site-content";
 
 // Map icon components to search categories
@@ -11,7 +11,7 @@ const categoryIcons = {
     camera: Camera,
     lens: Film,
     lighting: Lightbulb,
-    audio: Mic2,
+    audio: Monitor, // Changed from Mic2 since we show Monitors now
 };
 
 interface SearchDialogProps {
@@ -53,6 +53,13 @@ export function SearchDialog({ isOpen, onClose, lng }: SearchDialogProps) {
             setSearchQuery("");
         }
     }, [lng, router, searchQuery, onClose]);
+
+    // Handle category navigation (uses category filter instead of search)
+    const handleCategoryClick = useCallback((categorySlug: string) => {
+        router.push(`/${lng}/equipment?category=${encodeURIComponent(categorySlug)}`);
+        onClose();
+        setSearchQuery("");
+    }, [lng, router, onClose]);
 
     const handleSearchSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -129,7 +136,7 @@ export function SearchDialog({ isOpen, onClose, lng }: SearchDialogProps) {
                                             return (
                                                 <button
                                                     key={cat.query}
-                                                    onClick={() => handleSearch(cat.query)}
+                                                    onClick={() => handleCategoryClick(cat.query)}
                                                     className="group flex flex-col items-center gap-3 p-4 bg-white/5 hover:bg-white/10 rounded-2xl border border-white/5 hover:border-white/10 transition-all"
                                                 >
                                                     <div className="p-3 bg-white/10 rounded-xl group-hover:bg-white/20 transition-colors">

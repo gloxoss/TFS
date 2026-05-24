@@ -86,6 +86,33 @@ export default async function BlogPostPage({ params }: { params: Promise<{ lng: 
             {/* Content Section */}
             <div className="max-w-3xl mx-auto px-6 -mt-20 relative z-10">
                 <div className="bg-zinc-900 rounded-xl shadow-2xl p-8 md:p-12 border border-zinc-800">
+
+                    {/* Video Player (if available) */}
+                    {post.videoUrl && (
+                        <div className="relative w-full aspect-video mb-8 rounded-lg overflow-hidden bg-black border border-zinc-700 shadow-[0_0_30px_rgba(208,0,0,0.1)]">
+                            {/* YouTube */}
+                            {(post.videoUrl.includes('youtube') || post.videoUrl.includes('youtu.be')) && (
+                                <iframe
+                                    src={`https://www.youtube.com/embed/${post.videoUrl.split('v=')[1]?.split('&')[0] || post.videoUrl.split('/').pop()}?autoplay=1&controls=0&rel=0&modestbranding=1&showinfo=0&iv_load_policy=3&vq=hd720`}
+                                    title={`${post.title} - YouTube Video`}
+                                    className="absolute inset-0 w-full h-full"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                />
+                            )}
+                            {/* Vimeo */}
+                            {post.videoUrl.includes('vimeo.com') && (
+                                <iframe
+                                    src={`https://player.vimeo.com/video/${post.videoUrl.split('vimeo.com/')[1]?.split('/')[0]}?autoplay=1&title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479`}
+                                    title={`${post.title} - Vimeo Video`}
+                                    className="absolute inset-0 w-full h-full"
+                                    allow="autoplay; fullscreen; picture-in-picture"
+                                    allowFullScreen
+                                />
+                            )}
+                        </div>
+                    )}
+
                     {/* Excerpt */}
                     {post.excerpt && (
                         <p className="text-lg md:text-xl text-zinc-300 font-light mb-8 pb-8 border-b border-zinc-800">

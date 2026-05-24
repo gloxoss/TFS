@@ -10,12 +10,31 @@ const nextConfig: NextConfig = {
     dangerouslyAllowSVG: true,
     // Modern formats for better compression (AVIF ~50% smaller than JPEG, WebP ~30% smaller)
     formats: ['image/avif', 'image/webp'],
+    // Allowed quality values (default 75, hero sections use 90)
+    qualities: [25, 50, 75, 85, 90, 95],
     // Minimum cache TTL for optimized images (24 hours)
     minimumCacheTTL: 86400,
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'tfs.zouskym.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'tfs.ma',
+      },
+      {
+        protocol: 'http',
+        hostname: 'tfs.ma',
+      },
+      {
+        protocol: 'http',
+        hostname: '76.13.38.218',
+      },
+      {
+        protocol: 'http',
+        hostname: 'pocketbase',
+        port: '8090',
       },
       {
         protocol: 'http',
@@ -52,7 +71,7 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     serverActions: {
-      bodySizeLimit: '10mb',
+      bodySizeLimit: '50mb',
     },
     optimizePackageImports: [
       'lucide-react',

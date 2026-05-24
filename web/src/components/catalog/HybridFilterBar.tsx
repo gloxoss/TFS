@@ -20,114 +20,54 @@ import {
     SlidersHorizontal,
     Search,
     LayoutGrid,
-    List,
-    Camera,
-    Lightbulb,
-    Mic,
-    Video,
-    Package,
-    Sparkles,
-    Aperture,
-    Scan,
-    Maximize,
-    CircleDot
+    List
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Category } from '@/services/products/types'
+import type { Attribute } from '@/services'
+import { DynamicAttributeFilters, ActiveFilterTags } from './DynamicAttributeFilters'
 
-// Category icons mapping
-const CATEGORY_ICONS: Record<string, React.ElementType> = {
-    'cameras': Camera,
-    'camera': Camera,
-    'lighting': Lightbulb,
-    'lights': Lightbulb,
-    'audio': Mic,
-    'sound': Mic,
-    'lenses': Video,
-    'lens': Video,
-    'grip': Package,
-    'support': Package,
-    'accessories': Sparkles,
-    'default': Package
-}
-
-function getCategoryIcon(slug: string): React.ElementType {
-    const normalized = slug.toLowerCase()
-    for (const [key, icon] of Object.entries(CATEGORY_ICONS)) {
-        if (normalized.includes(key)) return icon
-    }
-    return CATEGORY_ICONS.default
+// Uniform category icon
+function getCategoryIcon(_slug: string): React.ElementType {
+    return LayoutGrid
 }
 
 interface HybridFilterBarProps {
     categories: Category[]
-    brands: string[]
-    types: string[]
     selectedCategory: string | null
-    selectedBrands: string[]
-    selectedTypes: string[]
-    mounts?: string[]
-    selectedMounts?: string[]
-    sensorSizes?: string[]
-    selectedSensorSizes?: string[]
-    resolutions?: string[]
-    selectedResolutions?: string[]
     searchQuery: string
     totalCount: number
     onCategoryChange: (category: string | null) => void
-    onBrandToggle: (brand: string) => void
-    onBrandsChange: (brands: string[]) => void
-    onTypeToggle: (type: string) => void
-    onTypesChange: (types: string[]) => void
-    onMountToggle?: (mount: string) => void
-    onMountsChange?: (mounts: string[]) => void
-    onSensorToggle?: (size: string) => void
-    onSensorsChange?: (sizes: string[]) => void
-    onResolutionToggle?: (res: string) => void
-    onResolutionsChange?: (resolutions: string[]) => void
     onSearchChange: (query: string) => void
     viewMode?: 'grid' | 'list'
     onViewModeChange?: (mode: 'grid' | 'list') => void
     t: (key: string) => string
+    // Dynamic attributes from collection
+    attributes?: Attribute[]
+    selectedAttributeFilters?: Record<string, string[]>
+    attributes?: Attribute[]
+    selectedAttributeFilters?: Record<string, string[]>
+    onAttributeFilterChange?: (slug: string, values: string[]) => void
+    /** Available options map from current products */
+    availableOptions?: Record<string, string[]>
 }
 
 export function HybridFilterBar({
     categories,
-    brands,
-    types,
     selectedCategory,
-    selectedBrands,
-    selectedTypes,
     searchQuery,
     totalCount,
     onCategoryChange,
-    onBrandToggle,
-    onBrandsChange,
-    onTypeToggle,
-    onTypesChange,
-    mounts = [],
-    selectedMounts = [],
-    onMountToggle,
-    onMountsChange,
-    sensorSizes = [],
-    selectedSensorSizes = [],
-    onSensorToggle,
-    onSensorsChange,
-    resolutions = [],
-    selectedResolutions = [],
-    onResolutionToggle,
-    onResolutionsChange,
     onSearchChange,
     viewMode = 'grid',
     onViewModeChange,
-    t
+    t,
+    attributes,
+    selectedAttributeFilters,
+    onAttributeFilterChange,
+    availableOptions
 }: HybridFilterBarProps) {
     const [mobileSheetOpen, setMobileSheetOpen] = useState(false)
-    const [brandDropdownOpen, setBrandDropdownOpen] = useState(false)
-    const [typeDropdownOpen, setTypeDropdownOpen] = useState(false)
-    const [mountDropdownOpen, setMountDropdownOpen] = useState(false)
-    const [sensorDropdownOpen, setSensorDropdownOpen] = useState(false)
-    const [resDropdownOpen, setResDropdownOpen] = useState(false)
     const [searchOpen, setSearchOpen] = useState(false)
 
     // Close logic 
@@ -164,14 +104,18 @@ export function HybridFilterBar({
         scrollRef.current.scrollLeft = scrollLeft - walk
     }
 
-    const activeFilterCount = (selectedCategory ? 1 : 0) + selectedBrands.length + selectedTypes.length
+    const activeFilterCount = (selectedCategory ? 1 : 0) +
+        (selectedAttributeFilters ? Object.values(selectedAttributeFilters).reduce((acc, curr) => acc + curr.length, 0) : 0)
 
     const clearAllFilters = useCallback(() => {
         onCategoryChange(null)
-        onBrandsChange([])
-        onTypesChange([])
         onSearchChange('')
-    }, [onCategoryChange, onBrandsChange, onTypesChange, onSearchChange])
+        if (selectedAttributeFilters && onAttributeFilterChange) {
+            Object.keys(selectedAttributeFilters).forEach(slug => {
+                onAttributeFilterChange(slug, [])
+            })
+        }
+    }, [onCategoryChange, onSearchChange, selectedAttributeFilters, onAttributeFilterChange])
 
     // Detect if top filter bar is in view
     const filterBarRef = useRef(null)
@@ -223,7 +167,7 @@ export function HybridFilterBar({
                             {/* All Equipment */}
                             <CategoryPill
                                 label={t('categories.all')}
-                                icon={Package}
+                                icon={LayoutGrid}
                                 active={selectedCategory === null}
                                 onClick={() => !isDragging && onCategoryChange(null)}
                             />
@@ -250,396 +194,29 @@ export function HybridFilterBar({
                                 {totalCount} <span className="hidden sm:inline">items</span>
                             </span>
 
-                            {/* Brand Dropdown */}
-                            {brands.length > 0 && (
-                                <div className="relative">
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            setBrandDropdownOpen(!brandDropdownOpen);
-                                        }}
-                                        className={cn(
-                                            "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all",
-                                            selectedBrands.length > 0
-                                                ? "bg-emerald-700/20 text-emerald-400 border border-emerald-700/30"
-                                                : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border border-transparent"
-                                        )}
-                                    >
-                                        <SlidersHorizontal className="w-4 h-4" />
-                                        <span className="hidden sm:inline">Brand</span>
-                                        {selectedBrands.length > 0 && (
-                                            <span className="w-5 h-5 bg-emerald-700 text-white rounded-full text-xs flex items-center justify-center font-bold">
-                                                {selectedBrands.length}
-                                            </span>
-                                        )}
-                                        <ChevronDown className={cn(
-                                            "w-4 h-4 transition-transform",
-                                            brandDropdownOpen && "rotate-180"
-                                        )} />
-                                    </button>
-
-                                    <AnimatePresence>
-                                        {brandDropdownOpen && (
-                                            <>
-                                                <div
-                                                    className="fixed inset-0 z-40"
-                                                    onClick={() => setBrandDropdownOpen(false)}
-                                                />
-                                                <motion.div
-                                                    initial={{ opacity: 0, y: 8, scale: 0.95 }}
-                                                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                                                    exit={{ opacity: 0, y: 8, scale: 0.95 }}
-                                                    transition={{ duration: 0.15 }}
-                                                    className="absolute top-full left-0 mt-2 w-64 bg-zinc-900 border border-zinc-700 rounded-xl shadow-2xl z-50 overflow-hidden"
-                                                >
-                                                    <div className="p-2 border-b border-zinc-800 flex items-center justify-between">
-                                                        <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider px-2">
-                                                            Filter by Brand
-                                                        </span>
-                                                        {selectedBrands.length > 0 && (
-                                                            <button
-                                                                onClick={() => onBrandsChange([])}
-                                                                className="text-xs text-zinc-500 hover:text-white px-2"
-                                                            >
-                                                                Clear
-                                                            </button>
-                                                        )}
-                                                    </div>
-                                                    <div className="max-h-64 overflow-y-auto p-2">
-                                                        {brands.map(brand => (
-                                                            <button
-                                                                key={brand}
-                                                                onClick={() => onBrandToggle(brand)}
-                                                                className={cn(
-                                                                    "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-colors",
-                                                                    selectedBrands.includes(brand)
-                                                                        ? "bg-emerald-700/20 text-emerald-400"
-                                                                        : "hover:bg-zinc-800 text-zinc-300"
-                                                                )}
-                                                            >
-                                                                <div className={cn(
-                                                                    "w-5 h-5 rounded border-2 flex items-center justify-center transition-colors shrink-0",
-                                                                    selectedBrands.includes(brand)
-                                                                        ? "bg-emerald-700 border-emerald-700"
-                                                                        : "border-zinc-600"
-                                                                )}>
-                                                                    {selectedBrands.includes(brand) && (
-                                                                        <Check className="w-3 h-3 text-zinc-900" />
-                                                                    )}
-                                                                </div>
-                                                                <span className="text-sm font-medium">{brand}</span>
-                                                            </button>
-                                                        ))}
-                                                    </div>
-                                                </motion.div>
-                                            </>
-                                        )}
-                                    </AnimatePresence>
-                                </div>
+                            {/* Dynamic Attribute Attributes */}
+                            {attributes && selectedAttributeFilters && onAttributeFilterChange && (
+                                <DynamicAttributeFilters
+                                    attributes={attributes}
+                                    selectedFilters={selectedAttributeFilters}
+                                    onFilterChange={onAttributeFilterChange}
+                                    onClearAll={activeFilterCount > 0 ? clearAllFilters : undefined}
+                                    availableOptions={availableOptions}
+                                />
                             )}
 
-                            {/* Type Dropdown */}
-                            {types.length > 0 && (
-                                <div className="relative">
-                                    <button
-                                        onClick={() => setTypeDropdownOpen(!typeDropdownOpen)}
-                                        className={cn(
-                                            "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all",
-                                            selectedTypes.length > 0
-                                                ? "bg-blue-700/20 text-blue-400 border border-blue-700/30"
-                                                : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border border-transparent"
-                                        )}
-                                    >
-                                        <Video className="w-4 h-4" />
-                                        <span className="hidden sm:inline">Type</span>
-                                        {selectedTypes.length > 0 && (
-                                            <span className="w-5 h-5 bg-blue-700 text-white rounded-full text-xs flex items-center justify-center font-bold">
-                                                {selectedTypes.length}
-                                            </span>
-                                        )}
-                                        <ChevronDown className={cn(
-                                            "w-4 h-4 transition-transform",
-                                            typeDropdownOpen && "rotate-180"
-                                        )} />
-                                    </button>
 
-                                    <AnimatePresence>
-                                        {typeDropdownOpen && (
-                                            <>
-                                                <div
-                                                    className="fixed inset-0 z-40"
-                                                    onClick={() => setTypeDropdownOpen(false)}
-                                                />
-                                                <motion.div
-                                                    initial={{ opacity: 0, y: 8, scale: 0.95 }}
-                                                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                                                    exit={{ opacity: 0, y: 8, scale: 0.95 }}
-                                                    transition={{ duration: 0.15 }}
-                                                    className="absolute top-full left-0 mt-2 w-64 bg-zinc-900 border border-zinc-700 rounded-xl shadow-2xl z-50 overflow-hidden"
-                                                >
-                                                    <div className="p-2 border-b border-zinc-800 flex items-center justify-between">
-                                                        <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider px-2">
-                                                            Filter by Type
-                                                        </span>
-                                                        {selectedTypes.length > 0 && (
-                                                            <button
-                                                                onClick={() => onTypesChange([])}
-                                                                className="text-xs text-zinc-500 hover:text-white px-2"
-                                                            >
-                                                                Clear
-                                                            </button>
-                                                        )}
-                                                    </div>
-                                                    <div className="max-h-64 overflow-y-auto p-2">
-                                                        {types.map(type => (
-                                                            <button
-                                                                key={type}
-                                                                onClick={() => onTypeToggle(type)}
-                                                                className={cn(
-                                                                    "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-colors",
-                                                                    selectedTypes.includes(type)
-                                                                        ? "bg-blue-700/20 text-blue-400"
-                                                                        : "hover:bg-zinc-800 text-zinc-300"
-                                                                )}
-                                                            >
-                                                                <div className={cn(
-                                                                    "w-5 h-5 rounded border-2 flex items-center justify-center transition-colors shrink-0",
-                                                                    selectedTypes.includes(type)
-                                                                        ? "bg-blue-700 border-blue-700"
-                                                                        : "border-zinc-600"
-                                                                )}>
-                                                                    {selectedTypes.includes(type) && (
-                                                                        <Check className="w-3 h-3 text-zinc-900" />
-                                                                    )}
-                                                                </div>
-                                                                <span className="text-sm font-medium">{type}</span>
-                                                            </button>
-                                                        ))}
-                                                    </div>
-                                                </motion.div>
-                                            </>
-                                        )}
-                                    </AnimatePresence>
-                                </div>
-                            )}
-
-                            {/* Mount Dropdown */}
-                            {mounts.length > 0 && onMountToggle && onMountsChange && (
-                                <div className="relative">
-                                    <button
-                                        onClick={() => setMountDropdownOpen(!mountDropdownOpen)}
-                                        className={cn(
-                                            "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all",
-                                            selectedMounts.length > 0
-                                                ? "bg-purple-700/20 text-purple-400 border border-purple-700/30"
-                                                : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border border-transparent"
-                                        )}
-                                    >
-                                        <CircleDot className="w-4 h-4" />
-                                        <span className="hidden sm:inline">Mount</span>
-                                        {selectedMounts.length > 0 && (
-                                            <span className="w-5 h-5 bg-purple-700 text-white rounded-full text-xs flex items-center justify-center font-bold">
-                                                {selectedMounts.length}
-                                            </span>
-                                        )}
-                                        <ChevronDown className={cn("w-4 h-4 transition-transform", mountDropdownOpen && "rotate-180")} />
-                                    </button>
-
-                                    <AnimatePresence>
-                                        {mountDropdownOpen && (
-                                            <>
-                                                <div className="fixed inset-0 z-40" onClick={() => setMountDropdownOpen(false)} />
-                                                <motion.div
-                                                    initial={{ opacity: 0, y: 8, scale: 0.95 }}
-                                                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                                                    exit={{ opacity: 0, y: 8, scale: 0.95 }}
-                                                    transition={{ duration: 0.15 }}
-                                                    className="absolute top-full left-0 mt-2 w-64 bg-zinc-900 border border-zinc-700 rounded-xl shadow-2xl z-50 overflow-hidden"
-                                                >
-                                                    <div className="p-2 border-b border-zinc-800 flex items-center justify-between">
-                                                        <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider px-2">Filter by Mount</span>
-                                                        {selectedMounts.length > 0 && (
-                                                            <button onClick={() => onMountsChange([])} className="text-xs text-zinc-500 hover:text-white px-2">Clear</button>
-                                                        )}
-                                                    </div>
-                                                    <div className="max-h-64 overflow-y-auto p-2">
-                                                        {mounts.map(mount => (
-                                                            <button
-                                                                key={mount}
-                                                                onClick={() => onMountToggle(mount)}
-                                                                className={cn(
-                                                                    "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-colors",
-                                                                    selectedMounts.includes(mount) ? "bg-purple-700/20 text-purple-400" : "hover:bg-zinc-800 text-zinc-300"
-                                                                )}
-                                                            >
-                                                                <div className={cn("w-5 h-5 rounded border-2 flex items-center justify-center transition-colors shrink-0", selectedMounts.includes(mount) ? "bg-purple-700 border-purple-700" : "border-zinc-600")}>
-                                                                    {selectedMounts.includes(mount) && <Check className="w-3 h-3 text-zinc-900" />}
-                                                                </div>
-                                                                <span className="text-sm font-medium">{mount}</span>
-                                                            </button>
-                                                        ))}
-                                                    </div>
-                                                </motion.div>
-                                            </>
-                                        )}
-                                    </AnimatePresence>
-                                </div>
-                            )}
-
-                            {/* Sensor Dropdown */}
-                            {sensorSizes.length > 0 && onSensorToggle && onSensorsChange && (
-                                <div className="relative">
-                                    <button
-                                        onClick={() => setSensorDropdownOpen(!sensorDropdownOpen)}
-                                        className={cn(
-                                            "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all",
-                                            selectedSensorSizes.length > 0
-                                                ? "bg-amber-700/20 text-amber-400 border border-amber-700/30"
-                                                : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border border-transparent"
-                                        )}
-                                    >
-                                        <Scan className="w-4 h-4" />
-                                        <span className="hidden sm:inline">Sensor</span>
-                                        {selectedSensorSizes.length > 0 && (
-                                            <span className="w-5 h-5 bg-amber-700 text-white rounded-full text-xs flex items-center justify-center font-bold">
-                                                {selectedSensorSizes.length}
-                                            </span>
-                                        )}
-                                        <ChevronDown className={cn("w-4 h-4 transition-transform", sensorDropdownOpen && "rotate-180")} />
-                                    </button>
-                                    <AnimatePresence>
-                                        {sensorDropdownOpen && (
-                                            <>
-                                                <div className="fixed inset-0 z-40" onClick={() => setSensorDropdownOpen(false)} />
-                                                <motion.div
-                                                    initial={{ opacity: 0, y: 8, scale: 0.95 }}
-                                                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                                                    exit={{ opacity: 0, y: 8, scale: 0.95 }}
-                                                    transition={{ duration: 0.15 }}
-                                                    className="absolute top-full left-0 mt-2 w-64 bg-zinc-900 border border-zinc-700 rounded-xl shadow-2xl z-50 overflow-hidden"
-                                                >
-                                                    <div className="p-2 border-b border-zinc-800 flex items-center justify-between">
-                                                        <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider px-2">Filter by Sensor</span>
-                                                        {selectedSensorSizes.length > 0 && (
-                                                            <button onClick={() => onSensorsChange([])} className="text-xs text-zinc-500 hover:text-white px-2">Clear</button>
-                                                        )}
-                                                    </div>
-                                                    <div className="max-h-64 overflow-y-auto p-2">
-                                                        {sensorSizes.map(size => (
-                                                            <button
-                                                                key={size}
-                                                                onClick={() => onSensorToggle(size)}
-                                                                className={cn(
-                                                                    "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-colors",
-                                                                    selectedSensorSizes.includes(size) ? "bg-amber-700/20 text-amber-400" : "hover:bg-zinc-800 text-zinc-300"
-                                                                )}
-                                                            >
-                                                                <div className={cn("w-5 h-5 rounded border-2 flex items-center justify-center transition-colors shrink-0", selectedSensorSizes.includes(size) ? "bg-amber-700 border-amber-700" : "border-zinc-600")}>
-                                                                    {selectedSensorSizes.includes(size) && <Check className="w-3 h-3 text-zinc-900" />}
-                                                                </div>
-                                                                <span className="text-sm font-medium">{size}</span>
-                                                            </button>
-                                                        ))}
-                                                    </div>
-                                                </motion.div>
-                                            </>
-                                        )}
-                                    </AnimatePresence>
-                                </div>
-                            )}
-
-                            {/* Resolution Dropdown */}
-                            {resolutions.length > 0 && onResolutionToggle && onResolutionsChange && (
-                                <div className="relative">
-                                    <button
-                                        onClick={() => setResDropdownOpen(!resDropdownOpen)}
-                                        className={cn(
-                                            "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all",
-                                            selectedResolutions.length > 0
-                                                ? "bg-red-700/20 text-red-400 border border-red-700/30"
-                                                : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border border-transparent"
-                                        )}
-                                    >
-                                        <Maximize className="w-4 h-4" />
-                                        <span className="hidden sm:inline">Resolution</span>
-                                        {selectedResolutions.length > 0 && (
-                                            <span className="w-5 h-5 bg-red-700 text-white rounded-full text-xs flex items-center justify-center font-bold">
-                                                {selectedResolutions.length}
-                                            </span>
-                                        )}
-                                        <ChevronDown className={cn("w-4 h-4 transition-transform", resDropdownOpen && "rotate-180")} />
-                                    </button>
-                                    <AnimatePresence>
-                                        {resDropdownOpen && (
-                                            <>
-                                                <div className="fixed inset-0 z-40" onClick={() => setResDropdownOpen(false)} />
-                                                <motion.div
-                                                    initial={{ opacity: 0, y: 8, scale: 0.95 }}
-                                                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                                                    exit={{ opacity: 0, y: 8, scale: 0.95 }}
-                                                    transition={{ duration: 0.15 }}
-                                                    className="absolute top-full left-0 mt-2 w-64 bg-zinc-900 border border-zinc-700 rounded-xl shadow-2xl z-50 overflow-hidden"
-                                                >
-                                                    <div className="p-2 border-b border-zinc-800 flex items-center justify-between">
-                                                        <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider px-2">Filter by Resolution</span>
-                                                        {selectedResolutions.length > 0 && (
-                                                            <button onClick={() => onResolutionsChange([])} className="text-xs text-zinc-500 hover:text-white px-2">Clear</button>
-                                                        )}
-                                                    </div>
-                                                    <div className="max-h-64 overflow-y-auto p-2">
-                                                        {resolutions.map(res => (
-                                                            <button
-                                                                key={res}
-                                                                onClick={() => onResolutionToggle(res)}
-                                                                className={cn(
-                                                                    "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-colors",
-                                                                    selectedResolutions.includes(res) ? "bg-red-700/20 text-red-400" : "hover:bg-zinc-800 text-zinc-300"
-                                                                )}
-                                                            >
-                                                                <div className={cn("w-5 h-5 rounded border-2 flex items-center justify-center transition-colors shrink-0", selectedResolutions.includes(res) ? "bg-red-700 border-red-700" : "border-zinc-600")}>
-                                                                    {selectedResolutions.includes(res) && <Check className="w-3 h-3 text-zinc-900" />}
-                                                                </div>
-                                                                <span className="text-sm font-medium">{res}</span>
-                                                            </button>
-                                                        ))}
-                                                    </div>
-                                                </motion.div>
-                                            </>
-                                        )}
-                                    </AnimatePresence>
-                                </div>
-                            )}
 
                             {/* Active filter tags */}
                             <div className="flex gap-2 overflow-hidden">
-                                {selectedBrands.slice(0, 2).map(brand => (
-                                    <span
-                                        key={brand}
-                                        className="px-3 py-1 bg-zinc-800 rounded-full text-xs flex items-center gap-1.5 text-zinc-300"
-                                    >
-                                        {brand}
-                                        <X
-                                            className="w-3 h-3 cursor-pointer hover:text-red-400"
-                                            onClick={() => onBrandToggle(brand)}
-                                        />
-                                    </span>
-                                ))}
-                                {selectedTypes.slice(0, 2).map(type => (
-                                    <span
-                                        key={type}
-                                        className="px-3 py-1 bg-blue-900/60 rounded-full text-xs flex items-center gap-1.5 text-blue-300"
-                                    >
-                                        {type}
-                                        <X
-                                            className="w-3 h-3 cursor-pointer hover:text-red-400"
-                                            onClick={() => onTypeToggle(type)}
-                                        />
-                                    </span>
-                                ))}
-                                {(selectedBrands.length + selectedTypes.length) > 4 && (
-                                    <span className="px-3 py-1 bg-zinc-800 rounded-full text-xs text-zinc-500">
-                                        +{(selectedBrands.length + selectedTypes.length) - 4} more
-                                    </span>
+                                {/* Dynamic attribute tags */}
+                                {attributes && selectedAttributeFilters && onAttributeFilterChange && (
+                                    <ActiveFilterTags
+                                        attributes={attributes}
+                                        selectedFilters={selectedAttributeFilters}
+                                        onFilterChange={onAttributeFilterChange}
+                                        maxVisible={2}
+                                    />
                                 )}
                             </div>
                         </div>
@@ -692,7 +269,6 @@ export function HybridFilterBar({
                                                         value={searchQuery}
                                                         onChange={(e) => onSearchChange(e.target.value)}
                                                         placeholder="Search..."
-                                                        autoFocus
                                                         className="w-44 pl-9 pr-3 py-2 bg-zinc-800 border border-zinc-700 rounded-xl text-sm focus:outline-none focus:border-red-500 text-white placeholder-zinc-500"
                                                     />
                                                 </div>
@@ -748,12 +324,12 @@ export function HybridFilterBar({
             <AnimatePresence>
                 {showMobileFab && (
                     <motion.button
-                        initial={{ scale: 0, opacity: 0 }}
+                        initial={{ scale: 0.95, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
-                        exit={{ scale: 0, opacity: 0 }}
+                        exit={{ scale: 0.95, opacity: 0 }}
                         onClick={() => setMobileSheetOpen(true)}
                         className={cn(
-                            "fixed bottom-6 left-6 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-all",
+                            "fixed bottom-12 left-6 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-all",
                             activeFilterCount > 0
                                 ? "bg-red-700 shadow-red-700/30"
                                 : "bg-white shadow-white/20"
@@ -839,7 +415,7 @@ export function HybridFilterBar({
                                     <div className="grid grid-cols-3 gap-2">
                                         <MobileCategoryButton
                                             label="All"
-                                            icon={Package}
+                                            icon={LayoutGrid}
                                             active={selectedCategory === null}
                                             onClick={() => onCategoryChange(null)}
                                         />
@@ -857,151 +433,16 @@ export function HybridFilterBar({
                                 </div>
 
                                 {/* Brands */}
-                                {brands.length > 0 && (
-                                    <div>
-                                        <div className="flex items-center justify-between mb-3">
-                                            <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">
-                                                Brand
-                                            </label>
-                                            {selectedBrands.length > 0 && (
-                                                <button
-                                                    onClick={() => onBrandsChange([])}
-                                                    className="text-xs text-zinc-500 hover:text-white"
-                                                >
-                                                    Clear
-                                                </button>
-                                            )}
-                                        </div>
-                                        <div className="flex flex-wrap gap-2">
-                                            {brands.map(brand => (
-                                                <button
-                                                    key={brand}
-                                                    onClick={() => onBrandToggle(brand)}
-                                                    className={cn(
-                                                        "px-4 py-2.5 rounded-xl text-sm font-medium transition-all",
-                                                        selectedBrands.includes(brand)
-                                                            ? "bg-emerald-700 text-white"
-                                                            : "bg-zinc-800 text-zinc-300 border border-zinc-700"
-                                                    )}
-                                                >
-                                                    {brand}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Types */}
-                                {types.length > 0 && (
-                                    <div>
-                                        <div className="flex items-center justify-between mb-3">
-                                            <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">
-                                                Type
-                                            </label>
-                                            {selectedTypes.length > 0 && (
-                                                <button
-                                                    onClick={() => onTypesChange([])}
-                                                    className="text-xs text-zinc-500 hover:text-white"
-                                                >
-                                                    Clear
-                                                </button>
-                                            )}
-                                        </div>
-                                        <div className="flex flex-wrap gap-2">
-                                            {types.map(type => (
-                                                <button
-                                                    key={type}
-                                                    onClick={() => onTypeToggle(type)}
-                                                    className={cn(
-                                                        "px-4 py-2.5 rounded-xl text-sm font-medium transition-all",
-                                                        selectedTypes.includes(type)
-                                                            ? "bg-blue-700 text-white"
-                                                            : "bg-zinc-800 text-zinc-300 border border-zinc-700"
-                                                    )}
-                                                >
-                                                    {type}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Mobile Mounts */}
-                                {mounts.length > 0 && onMountToggle && (
-                                    <div>
-                                        <div className="flex items-center justify-between mb-3">
-                                            <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Mount</label>
-                                            {selectedMounts.length > 0 && onMountsChange && (
-                                                <button onClick={() => onMountsChange([])} className="text-xs text-zinc-500 hover:text-white">Clear</button>
-                                            )}
-                                        </div>
-                                        <div className="flex flex-wrap gap-2">
-                                            {mounts.map(mount => (
-                                                <button
-                                                    key={mount}
-                                                    onClick={() => onMountToggle(mount)}
-                                                    className={cn(
-                                                        "px-4 py-2.5 rounded-xl text-sm font-medium transition-all",
-                                                        selectedMounts.includes(mount) ? "bg-purple-700 text-white" : "bg-zinc-800 text-zinc-300 border border-zinc-700"
-                                                    )}
-                                                >
-                                                    {mount}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Mobile Sensors */}
-                                {sensorSizes.length > 0 && onSensorToggle && (
-                                    <div>
-                                        <div className="flex items-center justify-between mb-3">
-                                            <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Sensor</label>
-                                            {selectedSensorSizes.length > 0 && onSensorsChange && (
-                                                <button onClick={() => onSensorsChange([])} className="text-xs text-zinc-500 hover:text-white">Clear</button>
-                                            )}
-                                        </div>
-                                        <div className="flex flex-wrap gap-2">
-                                            {sensorSizes.map(size => (
-                                                <button
-                                                    key={size}
-                                                    onClick={() => onSensorToggle(size)}
-                                                    className={cn(
-                                                        "px-4 py-2.5 rounded-xl text-sm font-medium transition-all",
-                                                        selectedSensorSizes.includes(size) ? "bg-amber-700 text-white" : "bg-zinc-800 text-zinc-300 border border-zinc-700"
-                                                    )}
-                                                >
-                                                    {size}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Mobile Resolutions */}
-                                {resolutions.length > 0 && onResolutionToggle && (
-                                    <div>
-                                        <div className="flex items-center justify-between mb-3">
-                                            <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Resolution</label>
-                                            {selectedResolutions.length > 0 && onResolutionsChange && (
-                                                <button onClick={() => onResolutionsChange([])} className="text-xs text-zinc-500 hover:text-white">Clear</button>
-                                            )}
-                                        </div>
-                                        <div className="flex flex-wrap gap-2">
-                                            {resolutions.map(res => (
-                                                <button
-                                                    key={res}
-                                                    onClick={() => onResolutionToggle(res)}
-                                                    className={cn(
-                                                        "px-4 py-2.5 rounded-xl text-sm font-medium transition-all",
-                                                        selectedResolutions.includes(res) ? "bg-red-700 text-white" : "bg-zinc-800 text-zinc-300 border border-zinc-700"
-                                                    )}
-                                                >
-                                                    {res}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
+                                {/* Dynamic Filters (Mobile) */}
+                                {attributes && selectedAttributeFilters && onAttributeFilterChange && (
+                                    <DynamicAttributeFilters
+                                        attributes={attributes}
+                                        selectedFilters={selectedAttributeFilters}
+                                        onFilterChange={onAttributeFilterChange}
+                                        onClearAll={activeFilterCount > 0 ? clearAllFilters : undefined}
+                                        compact={true}
+                                        availableOptions={availableOptions}
+                                    />
                                 )}
                             </div>
 

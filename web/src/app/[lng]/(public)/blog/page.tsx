@@ -8,12 +8,12 @@ import { createServerClient } from '@/lib/pocketbase/server'
 import { getBlogService } from '@/services'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useTranslation } from '@/app/i18n'
+import { useTranslation as getTranslation } from '@/app/i18n'
 import { Calendar, ArrowRight } from 'lucide-react'
 
 export default async function BlogPage({ params }: { params: Promise<{ lng: string }> }) {
     const { lng } = await params
-    const { t } = await useTranslation(lng, 'common')
+    const { t } = await getTranslation(lng, 'common')
 
     const pb = await createServerClient()
     const blogService = getBlogService(pb)

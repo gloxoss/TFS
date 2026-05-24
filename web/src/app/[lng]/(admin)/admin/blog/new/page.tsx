@@ -38,6 +38,7 @@ export default function CreatePostPage({ params }: { params: Promise<{ lng: stri
     const [slug, setSlug] = useState('')
     const [content, setContent] = useState('<p>Start writing your story...</p>')
     const [excerpt, setExcerpt] = useState('')
+    const [videoUrl, setVideoUrl] = useState('')
     const [published, setPublished] = useState(false)
     const [coverImage, setCoverImage] = useState<File | null>(null)
 
@@ -75,6 +76,7 @@ export default function CreatePostPage({ params }: { params: Promise<{ lng: stri
             formData.append('slug', slug)
             formData.append('content', content)
             formData.append('excerpt', excerpt)
+            formData.append('video_url', videoUrl)
             formData.append('published', String(published))
 
             if (coverImage) {
@@ -206,6 +208,15 @@ export default function CreatePostPage({ params }: { params: Promise<{ lng: stri
                                 minRows={3}
                                 value={excerpt}
                                 onValueChange={setExcerpt}
+                            />
+
+                            <Input
+                                label="Video Link (Optional)"
+                                placeholder="https://youtube.com/..."
+                                value={videoUrl}
+                                onValueChange={setVideoUrl}
+                                description="YouTube or Vimeo URL"
+                                startContent={<span className="text-default-400">🔗</span>}
                             />
 
                             <div className="space-y-2">

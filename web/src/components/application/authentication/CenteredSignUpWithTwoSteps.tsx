@@ -145,7 +145,6 @@ export default function CenteredSignUpWithTwoSteps() {
                         >
                             {page === 0 && (
                                 <Input
-                                    autoFocus
                                     isRequired
                                     label="Email Address"
                                     name="email"
@@ -160,7 +159,6 @@ export default function CenteredSignUpWithTwoSteps() {
                             )}
                             {page === 1 && (
                                 <Input
-                                    autoFocus
                                     isRequired
                                     endContent={
                                         <button type="button" onClick={togglePasswordVisibility}>
@@ -184,7 +182,6 @@ export default function CenteredSignUpWithTwoSteps() {
                             )}
                             {page === 2 && (
                                 <Input
-                                    autoFocus
                                     isRequired
                                     endContent={
                                         <button type="button" onClick={toggleConfirmPasswordVisibility}>

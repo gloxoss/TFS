@@ -17,12 +17,14 @@ import type {
   QuoteConfirmationEmailPayload,
   AdminQuoteNotificationPayload,
   QuoteReadyNotificationPayload,
+  ContactMessageEmailPayload,
 } from './interface'
 import { createServiceLogger } from '@/lib/logger'
 import { getEmailConfig } from './templates/config'
 import { generateQuoteConfirmationHtml } from './templates/quote-confirmation'
 import { generateAdminNotificationHtml } from './templates/admin-notification'
 import { generateQuoteReadyHtml } from './templates/quote-ready'
+import { generateContactMessageHtml } from './templates/contact-message'
 
 // ============================================================================
 // Configuration
@@ -37,14 +39,14 @@ const RESEND_API_URL = 'https://api.resend.com/emails'
 export class ResendEmailService implements IEmailService {
   private apiKey: string
   private fromEmail: string
-  private adminEmail: string
+  private adminEmails: string[]
   private log = createServiceLogger('EmailService')
 
   constructor() {
     const config = getEmailConfig()
     this.apiKey = config.apiKey
     this.fromEmail = config.fromEmail
-    this.adminEmail = config.adminEmail
+    this.adminEmails = config.adminEmails
   }
 
   /**
@@ -116,7 +118,7 @@ export class ResendEmailService implements IEmailService {
    * Send new quote notification to admin
    */
   async sendAdminQuoteNotification(payload: AdminQuoteNotificationPayload): Promise<EmailResult> {
-    if (!this.adminEmail) {
+    if (this.adminEmails.length === 0) {
       this.log.warn('ADMIN_EMAIL not configured - admin notification not sent')
       return {
         success: false,
@@ -127,7 +129,7 @@ export class ResendEmailService implements IEmailService {
     const html = generateAdminNotificationHtml(payload)
 
     return this.send({
-      to: payload.to || this.adminEmail,
+      to: payload.to || this.adminEmails,
       subject: payload.subject || `🎬 New Quote Request: ${payload.confirmationNumber}`,
       html,
       replyTo: payload.customerEmail,
@@ -145,6 +147,28 @@ export class ResendEmailService implements IEmailService {
       subject: payload.subject || `Your Quote is Ready - ${payload.confirmationNumber}`,
       html,
       replyTo: payload.replyTo,
+    })
+  }
+
+  /**
+   * Send contact form message notification to admin
+   */
+  async sendContactNotification(payload: ContactMessageEmailPayload): Promise<EmailResult> {
+    if (this.adminEmails.length === 0) {
+      this.log.warn('ADMIN_EMAIL not configured - contact notification not sent')
+      return {
+        success: false,
+        error: 'Admin email not configured',
+      }
+    }
+
+    const html = generateContactMessageHtml(payload)
+
+    return this.send({
+      to: payload.to || this.adminEmails,
+      subject: payload.subject || `✉️ Contact Form: ${payload.messageSubject}`,
+      html,
+      replyTo: payload.senderEmail,
     })
   }
 }
@@ -188,5 +212,13 @@ export class ConsoleEmailService implements IEmailService {
     console.log('  Quote ID:', payload.quoteId)
     console.log('  Price:', payload.estimatedPrice || 'Not set')
     return { success: true, messageId: 'dev-ready-' + Date.now() }
+  }
+
+  async sendContactNotification(payload: ContactMessageEmailPayload): Promise<EmailResult> {
+    console.log('📧 [DEV] Contact Form Notification:')
+    console.log('  From:', payload.senderName, `<${payload.senderEmail}>`)
+    console.log('  Subject:', payload.messageSubject)
+    console.log('  Message:', payload.messageBody.substring(0, 100) + '...')
+    return { success: true, messageId: 'dev-contact-' + Date.now() }
   }
 }

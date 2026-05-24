@@ -31,8 +31,10 @@ export async function createServerClient(writable: boolean = false) {
     }
   }
 
+  // Prioritize internal URL for server-side operations
+  const url = process.env.POCKETBASE_URL || process.env.NEXT_PUBLIC_POCKETBASE_URL;
   const client = new PocketBase(
-    process.env.NEXT_PUBLIC_POCKETBASE_URL,
+    url,
     new AsyncAuthStore({
       save: async (serializedPayload) => {
         if (!writable) return; // Silent return for read-only contexts
@@ -83,13 +85,28 @@ export async function createServerClient(writable: boolean = false) {
 }
 
 export async function createAdminClient() {
-  const client = new PocketBase(process.env.NEXT_PUBLIC_POCKETBASE_URL) as TypedPocketBase;
+  // Prioritize internal URL for server-side operations to avoid loopback issues
+  const url = process.env.POCKETBASE_URL || process.env.NEXT_PUBLIC_POCKETBASE_URL;
+  const client = new PocketBase(url) as TypedPocketBase;
 
   if (process.env.POCKETBASE_ADMIN_EMAIL && process.env.POCKETBASE_ADMIN_PASSWORD) {
-    await client.admins.authWithPassword(
-      process.env.POCKETBASE_ADMIN_EMAIL,
-      process.env.POCKETBASE_ADMIN_PASSWORD
-    );
+    try {
+      // Try older API first (v0.22 and below)
+      await client.admins.authWithPassword(
+        process.env.POCKETBASE_ADMIN_EMAIL,
+        process.env.POCKETBASE_ADMIN_PASSWORD
+      );
+    } catch (e1) {
+      // Fallback to newer API (v0.23+)
+      try {
+        await client.collection('_superusers').authWithPassword(
+          process.env.POCKETBASE_ADMIN_EMAIL,
+          process.env.POCKETBASE_ADMIN_PASSWORD
+        );
+      } catch (e2) {
+        console.error('Failed to authenticate admin client:', e2);
+      }
+    }
   }
 
   return client;

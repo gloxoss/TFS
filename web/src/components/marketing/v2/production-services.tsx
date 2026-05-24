@@ -105,9 +105,8 @@ function TrophyIcon(props: any) {
 
 function ExpandingCardRow({ items, startIndex, lng }: { items: MappedService[], startIndex: number, lng: string }) {
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-    const [centeredIndex, setCenteredIndex] = useState<number | null>(null);
+    const [tappedIndex, setTappedIndex] = useState<number | null>(null);
     const [isMobile, setIsMobile] = useState(false);
-    const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
     // Check if mobile on mount and resize
     useEffect(() => {
@@ -119,43 +118,118 @@ function ExpandingCardRow({ items, startIndex, lng }: { items: MappedService[], 
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
-    // On mobile ONLY, detect which card is centered in viewport
-    useEffect(() => {
-        if (typeof window === 'undefined' || !isMobile) return;
+    // Handle tap on mobile - toggle expansion
+    const handleCardTap = (index: number, e: React.MouseEvent | React.TouchEvent) => {
+        if (!isMobile) return; // Desktop uses hover, not tap
 
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting && entry.intersectionRatio > 0.6) {
-                        const index = cardRefs.current.findIndex(ref => ref === entry.target);
-                        if (index !== -1) {
-                            setCenteredIndex(index);
-                        }
-                    }
-                });
-            },
-            { threshold: [0.6], rootMargin: "-20% 0px -20% 0px" }
-        );
+        e.preventDefault(); // Prevent navigation on first tap
 
-        cardRefs.current.forEach((ref) => {
-            if (ref) observer.observe(ref);
-        });
-
-        return () => observer.disconnect();
-    }, [items, isMobile]);
+        if (tappedIndex === index) {
+            // If already expanded, navigate to the link
+            const item = items[index];
+            const href = item.slug === 'equipment-hire'
+                ? `/${lng}/equipment`
+                : `/${lng}/services/${item.slug}`;
+            window.location.href = href;
+        } else {
+            // Expand this card, collapse others
+            setTappedIndex(index);
+        }
+    };
 
     return (
         <div className="flex flex-col md:flex-row gap-4 w-full h-[800px] md:h-[500px]">
             {items.map((item, index) => {
-                // Desktop: hover ONLY. Mobile: centered (scroll) detection
+                // Desktop: hover ONLY. Mobile: tap to expand
                 const isHovered = hoveredIndex === index;
-                const isCentered = isMobile && centeredIndex === index;
-                const isActive = isHovered || isCentered;
+                const isTapped = isMobile && tappedIndex === index;
+                const isActive = isHovered || isTapped;
 
                 // Equipment Hire links to the equipment page, others to services
                 const href = item.slug === 'equipment-hire'
                     ? `/${lng}/equipment`
                     : `/${lng}/services/${item.slug}`;
+
+                const cardContent = (
+                    <motion.div
+                        onClick={(e) => handleCardTap(index, e)}
+                        onHoverStart={() => !isMobile && setHoveredIndex(index)}
+                        onHoverEnd={() => !isMobile && setHoveredIndex(null)}
+                        className={cn(
+                            "relative overflow-hidden rounded-2xl cursor-pointer border border-white/10 group transition-all duration-700 ease-out",
+                            "flex flex-col justify-end p-6",
+                        )}
+                        initial={{ flex: 1 }}
+                        animate={{
+                            flex: isActive ? 3 : 1,
+                        }}
+                        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                        {/* Background Image */}
+                        <Image
+                            src={item.image}
+                            alt={item.title}
+                            fill
+                            className={cn(
+                                "object-cover absolute inset-0 z-0 transition-transform duration-700",
+                                isActive ? "scale-110 blur-[1px]" : "grayscale scale-100"
+                            )}
+                        />
+                        <div className={cn("absolute inset-0 bg-black/40 z-10 transition-opacity duration-500", isActive ? "opacity-60" : "opacity-30")} />
+
+                        {/* Evervault Effect Overlay (Only on active) */}
+                        <div className={cn(
+                            "absolute inset-0 z-20 opacity-0 transition-opacity duration-300 pointer-events-none mix-blend-screen",
+                            isActive ? "opacity-100" : ""
+                        )}>
+                            <EvervaultCard className="w-full h-full" />
+                        </div>
+
+                        {/* Corner Icons (Decorative) */}
+                        <Icon className="absolute h-6 w-6 top-3 left-3 text-white/50 z-30" />
+                        <Icon className="absolute h-6 w-6 bottom-3 left-3 text-white/50 z-30" />
+                        <Icon className="absolute h-6 w-6 top-3 right-3 text-white/50 z-30" />
+                        <Icon className="absolute h-6 w-6 bottom-3 right-3 text-white/50 z-30" />
+
+                        {/* Content */}
+                        <div className="relative z-30">
+                            <motion.h3
+                                layout
+                                className="text-xl md:text-2xl font-bold font-display uppercase tracking-wider text-white drop-shadow-lg leading-tight mb-2"
+                            >
+                                {item.title}
+                            </motion.h3>
+                            <motion.p
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: isActive ? 1 : 0, height: isActive ? 'auto' : 0 }}
+                                transition={{ duration: 0.3 }}
+                                className="text-sm text-zinc-300 font-medium overflow-hidden"
+                            >
+                                {item.description}
+                            </motion.p>
+                            {/* Tap hint on mobile when expanded */}
+                            {isMobile && isActive && (
+                                <motion.div
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    className="mt-3 flex items-center gap-2 text-white/70 text-xs"
+                                >
+                                    <ArrowRight className="w-3 h-3" />
+                                    <span>Tap again to view</span>
+                                </motion.div>
+                            )}
+                        </div>
+                    </motion.div>
+                );
+
+                // On desktop, wrap in Link. On mobile, handle tap manually
+                if (isMobile) {
+                    return (
+                        <div key={item.id} className="contents">
+                            {cardContent}
+                        </div>
+                    );
+                }
 
                 return (
                     <Link
@@ -163,64 +237,7 @@ function ExpandingCardRow({ items, startIndex, lng }: { items: MappedService[], 
                         href={href}
                         className="contents"
                     >
-                        <motion.div
-                            ref={(el: HTMLDivElement | null) => { cardRefs.current[index] = el; }}
-                            onHoverStart={() => setHoveredIndex(index)}
-                            onHoverEnd={() => setHoveredIndex(null)}
-                            className={cn(
-                                "relative overflow-hidden rounded-2xl cursor-pointer border border-white/10 group transition-all duration-700 ease-out",
-                                "flex flex-col justify-end p-6",
-                            )}
-                            initial={{ flex: 1 }}
-                            animate={{
-                                flex: isActive ? 3 : 1,
-                            }}
-                            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                        >
-                            {/* Background Image */}
-                            <Image
-                                src={item.image}
-                                alt={item.title}
-                                fill
-                                className={cn(
-                                    "object-cover absolute inset-0 z-0 transition-transform duration-700",
-                                    isActive ? "scale-110 blur-[1px]" : "grayscale scale-100"
-                                )}
-                            />
-                            <div className={cn("absolute inset-0 bg-black/40 z-10 transition-opacity duration-500", isActive ? "opacity-60" : "opacity-30")} />
-
-                            {/* Evervault Effect Overlay (Only on active) */}
-                            <div className={cn(
-                                "absolute inset-0 z-20 opacity-0 transition-opacity duration-300 pointer-events-none mix-blend-screen",
-                                isActive ? "opacity-100" : ""
-                            )}>
-                                <EvervaultCard className="w-full h-full" />
-                            </div>
-
-                            {/* Corner Icons (Decorative) */}
-                            <Icon className="absolute h-6 w-6 top-3 left-3 text-white/50 z-30" />
-                            <Icon className="absolute h-6 w-6 bottom-3 left-3 text-white/50 z-30" />
-                            <Icon className="absolute h-6 w-6 top-3 right-3 text-white/50 z-30" />
-                            <Icon className="absolute h-6 w-6 bottom-3 right-3 text-white/50 z-30" />
-
-                            {/* Content */}
-                            <div className="relative z-30">
-                                <motion.h3
-                                    layout
-                                    className="text-xl md:text-2xl font-bold font-display uppercase tracking-wider text-white drop-shadow-lg leading-tight mb-2"
-                                >
-                                    {item.title}
-                                </motion.h3>
-                                <motion.p
-                                    initial={{ opacity: 0, height: 0 }}
-                                    animate={{ opacity: isActive ? 1 : 0, height: isActive ? 'auto' : 0 }}
-                                    transition={{ duration: 0.3 }}
-                                    className="text-sm text-zinc-300 font-medium overflow-hidden"
-                                >
-                                    {item.description}
-                                </motion.p>
-                            </div>
-                        </motion.div>
+                        {cardContent}
                     </Link>
                 )
             })}
@@ -232,12 +249,12 @@ function ExpandingCardRow({ items, startIndex, lng }: { items: MappedService[], 
 const translations = {
     en: {
         title: 'Our Services',
-        subtitle: 'We manage film and media productions end-to-end, from technical details and equipment to large-scale digital and broadcast projects.',
+        subtitle: 'At TFS (TV Film Solutions), we provide end-to-end production solutions across cinema, television, and digital media — from technical planning and equipment rental to full-scale production and broadcast delivery.',
         viewAll: 'View all services'
     },
     fr: {
         title: 'Nos Services',
-        subtitle: 'Nous gérons les productions cinématographiques et médias à la fois, des détails techniques et équipements à des projets numériques et de diffusion à grande échelle.',
+        subtitle: 'Chez TFS (TV Film Solutions), nous proposons des solutions de production complètes pour le cinéma, la télévision et les médias numériques — de la planification technique et la location d’équipements à la production intégrale et à la diffusion broadcast.',
         viewAll: 'Voir tous les services'
     }
 }
@@ -251,7 +268,7 @@ export function ProductionServices({ lng = 'en', services = [] }: ProductionServ
     // Map services to display format with icons and images
     const mappedServices = mapServicesToDisplay(services, lng);
 
-    // Split into rows (up to 5 per row)
+    // Split into rows (5-5-5 pattern for 15 items)
     const row1 = mappedServices.slice(0, 5);
     const row2 = mappedServices.slice(5, 10);
     const row3 = mappedServices.slice(10, 15);

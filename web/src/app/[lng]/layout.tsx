@@ -40,7 +40,7 @@ import { Providers } from "@/app/providers";
 import AuthListener from "@/components/auth/auth-listener";
 import { CartMergeHandler } from "@/components/cart/cart-merge-handler";
 import { CartSyncProvider } from "@/components/cart/cart-sync-provider";
-import { ConsoleCredit } from "@/components/layout/console-credit";
+
 
 import { ENABLE_CLIENT_PORTAL } from "@/lib/config";
 
@@ -66,6 +66,9 @@ const cormorant = Cormorant_Garamond({
 export const metadata: Metadata = {
   title: "TV Film Solutions",
   description: "Professional cinema production company and equipment rental in Morocco.",
+  icons: {
+    icon: '/images/tfs couleur-noir (1).png',
+  },
 };
 
 export async function generateStaticParams() {
@@ -101,7 +104,6 @@ export default async function RootLayout({
     >
       <head>
         <meta name="darkreader-lock" />
-        <link rel="icon" href="/favcon.png" />
       </head>
       <body className="min-h-screen flex flex-col" suppressHydrationWarning>
         <I18nProvider lng={lng} namespaces={['common']}>
@@ -111,7 +113,7 @@ export default async function RootLayout({
           >
             <Providers>
               <AuthListener initialUser={user} />
-              <ConsoleCredit />
+
               {ENABLE_CLIENT_PORTAL && <CartMergeHandler />}
               {ENABLE_CLIENT_PORTAL && <CartSyncProvider />}
 

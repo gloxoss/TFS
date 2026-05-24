@@ -42,6 +42,7 @@ export default function EditPostPage({
     const [slug, setSlug] = useState('')
     const [content, setContent] = useState('')
     const [excerpt, setExcerpt] = useState('')
+    const [videoUrl, setVideoUrl] = useState('')
     const [published, setPublished] = useState(false)
     const [coverImage, setCoverImage] = useState<File | null>(null)
     const [existingCoverUrl, setExistingCoverUrl] = useState<string | null>(null)
@@ -62,6 +63,7 @@ export default function EditPostPage({
                     setSlug(result.post.slug || '')
                     setContent(result.post.content || '<p>Start writing...</p>')
                     setExcerpt(result.post.excerpt || '')
+                    setVideoUrl(result.post.videoUrl || '')
                     setPublished(result.post.published || false)
                     setExistingCoverUrl(result.post.coverImageUrl || null)
                 } else {
@@ -96,6 +98,7 @@ export default function EditPostPage({
             formData.append('slug', slug)
             formData.append('content', content)
             formData.append('excerpt', excerpt)
+            formData.append('video_url', videoUrl)
             formData.append('published', String(published))
 
             if (coverImage) {
@@ -272,6 +275,15 @@ export default function EditPostPage({
                                 minRows={3}
                                 value={excerpt}
                                 onValueChange={setExcerpt}
+                            />
+
+                            <Input
+                                label="Video Link (Optional)"
+                                placeholder="https://youtube.com/..."
+                                value={videoUrl}
+                                onValueChange={setVideoUrl}
+                                description="YouTube or Vimeo URL"
+                                startContent={<span className="text-default-400">🔗</span>}
                             />
 
                             <div className="space-y-2">

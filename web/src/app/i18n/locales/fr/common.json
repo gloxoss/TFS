@@ -55,5 +55,13 @@
     "connect": "Suivez-Nous",
     "emailUs": "Envoyez-Nous un Email",
     "copyright": "© {{year}} TFS - TV Film Solutions. Tous droits réservés."
+  },
+  "ui": {
+    "learnMore": "En savoir plus",
+    "readArticle": "Lire l'article",
+    "watchVideo": "Voir la vidéo",
+    "seeMore": "Voir plus",
+    "seeLess": "Voir moins",
+    "loading": "Chargement..."
   }
 }

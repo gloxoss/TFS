@@ -154,18 +154,42 @@ export default function QuotePage({ params, searchParams }: PageProps) {
   // === CONDITIONAL RETURNS START HERE (after all hooks) ===
 
   // Redirect if empty
+  useEffect(() => {
+    if (items.length === 0 && !submitResult?.success) {
+      // Delay redirect slightly so user sees the message
+      const timer = setTimeout(() => {
+        router.push(`/${lng}/equipment`)
+      }, 2000)
+      return () => clearTimeout(timer)
+    }
+  }, [items.length, submitResult?.success, lng, router])
+
+  // Show empty cart message while redirecting
   if (items.length === 0 && !submitResult?.success) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-white mb-4">Your cart is empty</h1>
-          <p className="text-zinc-400 mb-6">Add some equipment to request a quote.</p>
+      <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center px-6">
+        <div className="text-center max-w-md">
+          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center">
+            <ArrowLeft className="w-8 h-8 text-zinc-500" />
+          </div>
+          <h1 className="text-2xl font-bold text-white mb-3">
+            {lng === 'fr' ? 'Votre panier est vide' : 'Your Cart is Empty'}
+          </h1>
+          <p className="text-zinc-400 mb-6">
+            {lng === 'fr'
+              ? 'Ajoutez des équipements à votre panier pour demander un devis.'
+              : 'Add equipment to your cart to request a quote.'}
+          </p>
           <Link
             href={`/${lng}/equipment`}
-            className="px-6 py-3 bg-white text-zinc-900 font-semibold rounded-lg hover:bg-zinc-200 transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-white text-zinc-900 rounded-full font-semibold hover:bg-zinc-200 transition-colors"
           >
-            Browse Equipment
+            {lng === 'fr' ? 'Parcourir les équipements' : 'Browse Equipment'}
+            <ArrowRight className="w-4 h-4" />
           </Link>
+          <p className="text-zinc-600 text-sm mt-4">
+            {lng === 'fr' ? 'Redirection automatique...' : 'Redirecting automatically...'}
+          </p>
         </div>
       </div>
     )
@@ -286,7 +310,7 @@ export default function QuotePage({ params, searchParams }: PageProps) {
         <div className="max-w-3xl mx-auto px-4 mb-12 text-center">
           <Link
             href={`/${lng}/cart`}
-            className="inline-flex items-center gap-2 text-zinc-500 hover:text-white mb-6 transition-colors"
+            className="inline-flex items-center gap-2 text-zinc-400 hover:text-white mb-8 transition-colors px-5 py-2.5 bg-zinc-900/80 border border-zinc-800 rounded-full hover:bg-zinc-800 hover:border-zinc-700 font-medium text-sm"
           >
             <ArrowLeft className="w-4 h-4" />
             {t(quotePage.navigation.backToCart, lng)}
@@ -325,7 +349,7 @@ export default function QuotePage({ params, searchParams }: PageProps) {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Link
           href={`/${lng}/cart`}
-          className="inline-flex items-center gap-2 text-zinc-400 hover:text-white transition-colors mb-6"
+          className="inline-flex items-center gap-2 text-zinc-400 hover:text-white mb-8 transition-colors px-5 py-2.5 bg-zinc-900/80 border border-zinc-800 rounded-full hover:bg-zinc-800 hover:border-zinc-700 font-medium text-sm"
         >
           <ArrowLeft className="w-4 h-4" />
           {t(quotePage.navigation.backToCart, lng)}

@@ -10,6 +10,7 @@ export type EmailPayloadType =
     | 'quote_confirmation'
     | 'admin_notification'
     | 'quote_ready'
+    | 'contact_message'
 
 export interface EmailQueueRecord {
     id: string

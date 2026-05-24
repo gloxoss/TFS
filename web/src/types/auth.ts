@@ -38,6 +38,10 @@ export const PERMISSIONS = {
   BLOG_VIEW: 'blog:view',
   BLOG_EDIT: 'blog:edit',
 
+  // Broadcast Downloads
+  DOWNLOADS_VIEW: 'downloads:view',
+  DOWNLOADS_EDIT: 'downloads:edit',
+
   // Full access
   ADMIN_FULL: '*',
 } as const;
@@ -54,6 +58,8 @@ export const ROLE_PERMISSIONS: Record<UserRole, string[]> = {
     PERMISSIONS.INVENTORY_VIEW,
     PERMISSIONS.INVENTORY_EDIT,
     PERMISSIONS.INVENTORY_ADD,
+    PERMISSIONS.DOWNLOADS_VIEW,
+    PERMISSIONS.DOWNLOADS_EDIT,
     // Note: Cannot delete or approve - requires admin
   ],
   customer: [], // No admin permissions

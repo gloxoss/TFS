@@ -5,7 +5,7 @@
  */
 
 import PocketBase from 'pocketbase'
-import type { Service, ServiceSection, ServiceStat, ServiceFeature, IServicesService } from './interface'
+import type { Service, ServiceSection, ServiceStat, ServiceFeature, ServiceDownload, IServicesService } from './interface'
 
 export class PocketBaseServicesService implements IServicesService {
     private pb: PocketBase
@@ -27,11 +27,22 @@ export class PocketBaseServicesService implements IServicesService {
     }
 
     private mapRecordToService(record: Record<string, unknown>): Service {
-        let heroImage = record.hero_image as string | undefined
-        if (heroImage && !heroImage.startsWith('http') && !heroImage.startsWith('/')) {
-            // Resolve PocketBase file URL
-            heroImage = this.pb.files.getUrl(record, heroImage)
+        // Helper to construct URL using public PB_URL
+        const getUrl = (filename: string) => {
+            if (!filename) return ''
+            if (filename.startsWith('http') || filename.startsWith('/')) return filename
+            return `${process.env.NEXT_PUBLIC_POCKETBASE_URL}/api/files/${record.collectionId}/${record.id}/${filename}`
         }
+
+        let heroImage = record.hero_image as string | undefined
+        // Fix: Use public URL for hero image
+        if (heroImage && !heroImage.startsWith('http') && !heroImage.startsWith('/')) {
+            heroImage = getUrl(heroImage)
+        }
+
+        // Resolve slider images URLs
+        const rawSliderImages = record.slider_images as string[] | undefined
+        const sliderImages = rawSliderImages?.map(img => getUrl(img)).filter(Boolean)
 
         return {
             id: record.id as string,
@@ -51,6 +62,11 @@ export class PocketBaseServicesService implements IServicesService {
             stats: this.parseJsonField<ServiceStat[]>(record.stats),
             tags: this.parseJsonField<string[]>(record.tags),
             features: this.parseJsonField<ServiceFeature[]>(record.features),
+            template: (record.template as 'default' | 'showcase' | 'hub') || 'default',
+            sliderImages: sliderImages,
+            videoUrl: record.video_url as string | undefined,
+            downloads: this.parseJsonField<ServiceDownload[]>(record.downloads),
+            subServices: this.parseJsonField<string[]>(record.sub_services),
             displayOrder: record.display_order as number || 0,
             isActive: record.is_active as boolean ?? true,
             created: record.created as string,

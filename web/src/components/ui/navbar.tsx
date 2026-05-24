@@ -10,6 +10,7 @@ import { ClientWrapper } from "./client-wrapper";
 import { cn } from "@/lib/utils";
 import { useCartStore, useUIStore } from "@/stores";
 import { useSiteSettings } from "@/components/providers/site-settings-provider";
+import { nav, t as translate } from "@/data/site-content";
 
 // Sub-components
 import { SearchDialog } from "./navbar/search-dialog";
@@ -30,14 +31,15 @@ export function Navbar({ lng }: { lng: string }) {
   const cartItemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   // Navigation links (excluding Services which is a dropdown)
-  const navLinks = [
-    { href: "/about", label: t("nav.about") || "About" },
-    { href: "/contact", label: t("nav.contact") || "Contact" },
-  ];
+  // Navigation links (excluding Services which is a dropdown)
+  const navLinks = nav.links.map(link => ({
+    href: link.href,
+    label: translate(link.label, lng)
+  }));
 
   return (
     <ClientWrapper>
-      <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-[1440px] px-6 md:px-12 flex items-center justify-between">
+      <nav className="fixed top-6 left-0 right-0 mx-auto z-[100] w-full max-w-[1440px] px-6 md:px-12 flex items-center justify-between">
 
         {/* Logo */}
         <Link href={`/${lng}`} className="flex items-center gap-1 group">
@@ -124,7 +126,7 @@ export function Navbar({ lng }: { lng: string }) {
 
           {/* IMDB Button */}
           <a
-            href="https://www.imdb.com/company/co0891334"
+            href="https://www.imdb.com/fr/user/ur212569790/?ref_=hm_nv_profile"
             target="_blank"
             rel="noopener noreferrer"
             className="hidden md:flex items-center gap-1.5 px-4 py-2.5 rounded-full text-sm font-bold bg-[#F5C518] text-black hover:bg-[#E0B015] transition-all"

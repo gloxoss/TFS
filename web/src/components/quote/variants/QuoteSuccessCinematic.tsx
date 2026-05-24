@@ -43,8 +43,8 @@ export function QuoteSuccessCinematic({ result, lng, items, rentalDates }: Varia
                 className="relative z-20 w-full max-w-xl mx-4 bg-zinc-900/40 backdrop-blur-xl border border-white/10 p-12 rounded-2xl text-center shadow-2xl"
             >
                 <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
+                    initial={{ scale: 0.95, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
                     transition={{ type: "spring", delay: 0.2 }}
                     className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-8 shadow-[0_0_30px_rgba(220,38,38,0.4)]"
                 >

@@ -57,8 +57,8 @@ export class CartService {
   }
 
   // 1b. RESOLVE KIT: Convert DB structure to UI-friendly ResolvedKit (Category-Based)
-  async resolveKit(productId: string): Promise<ResolvedKit | null> {
-    log.debug('Resolving kit', { productId });
+  async resolveKit(productId: string, lang: string = 'en'): Promise<ResolvedKit | null> {
+    log.debug('Resolving kit', { productId, lang });
     const bundleCheck = await this.checkBundleRequirement(productId);
     log.debug('Bundle check result', { hasBundle: bundleCheck.hasBundle, slotCount: bundleCheck.slots?.length });
 
@@ -71,9 +71,10 @@ export class CartService {
     let mainProduct: Product;
     try {
       const record = await this.pb.collection('equipment').getOne(productId);
+      const name = lang === 'fr' ? (record.name_fr || record.name) : (record.name_en || record.name);
       mainProduct = {
         id: record.id,
-        name: record.name_en || record.name,
+        name,
         nameEn: record.name_en || record.name,
         nameFr: record.name_fr || record.name,
         slug: record.slug,
@@ -93,14 +94,33 @@ export class CartService {
     const slotPromises = bundleCheck.slots.map(async (slot) => {
       // Get ALL products from this category
       // IMPORTANT: Use unique requestKey to prevent PocketBase auto-cancellation
+      // Build filter for single or multiple categories
+      let categoryFilter = '';
+      if (Array.isArray(slot.category_id) && slot.category_id.length > 0) {
+        // Handle multi-relation (array of IDs)
+        categoryFilter = '(' + slot.category_id.map((id: string) => `category="${id}"`).join(' || ') + ')';
+      } else if (typeof slot.category_id === 'string' && slot.category_id.includes(',')) {
+        // Handle comma-separated string (legacy/manual)
+        const ids = slot.category_id.split(',').map((s: string) => s.trim());
+        categoryFilter = '(' + ids.map((id: string) => `category="${id}"`).join(' || ') + ')';
+      } else if (slot.category_id) {
+        // Handle single ID
+        categoryFilter = `category="${slot.category_id}"`;
+      } else {
+        // Fallback: No category? (Shouldn't happen for valid slot)
+        categoryFilter = 'category!=""';
+      }
+
+      // Get ALL products from these categories
+      // IMPORTANT: Use unique requestKey to prevent PocketBase auto-cancellation
       const categoryProducts = await this.pb.collection('equipment').getFullList({
-        filter: `category="${slot.category_id}"`,
+        filter: categoryFilter,
         expand: 'variants',
         requestKey: `kit-slot-${slot.id}` // Unique key prevents auto-cancellation
       });
 
       // Map to Product objects
-      const availableOptions: Product[] = categoryProducts.map(record => this._mapRecordToProduct(record));
+      const availableOptions: Product[] = categoryProducts.map(record => this._mapRecordToProduct(record, lang));
 
       // Create KitItem objects for recommended products (for defaultItems/selectedItems)
       const recommendedIds = slot.recommended_ids || [];
@@ -141,10 +161,11 @@ export class CartService {
     };
   }
 
-  private _mapRecordToProduct(record: any): Product {
+  private _mapRecordToProduct(record: any, lang: string = 'en'): Product {
+    const name = lang === 'fr' ? (record.name_fr || record.name) : (record.name_en || record.name);
     return {
       id: record.id,
-      name: record.name_en || record.name,
+      name,
       nameEn: record.name_en || record.name,
       nameFr: record.name_fr || record.name,
       slug: record.slug,
@@ -161,18 +182,21 @@ export class CartService {
           : record.variant_options
       ) : undefined,
       variants: (record.expand?.variants && Array.isArray(record.expand.variants))
-        ? record.expand.variants.map((v: any) => ({
-          id: v.id,
-          name: v.name_en || v.name,
-          nameEn: v.name_en || v.name,
-          nameFr: v.name_fr || v.name,
-          slug: v.slug,
-          categoryId: v.category,
-          isAvailable: true,
-          imageUrl: v.images?.[0]
-            ? `${PB_URL}/api/files/equipment/${v.id}/${v.images[0]}`
-            : undefined
-        }))
+        ? record.expand.variants.map((v: any) => {
+          const vName = lang === 'fr' ? (v.name_fr || v.name) : (v.name_en || v.name);
+          return {
+            id: v.id,
+            name: vName,
+            nameEn: v.name_en || v.name,
+            nameFr: v.name_fr || v.name,
+            slug: v.slug,
+            categoryId: v.category,
+            isAvailable: true,
+            imageUrl: v.images?.[0]
+              ? `${PB_URL}/api/files/equipment/${v.id}/${v.images[0]}`
+              : undefined
+          };
+        })
         : undefined
     };
   }

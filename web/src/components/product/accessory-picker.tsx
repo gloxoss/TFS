@@ -8,16 +8,7 @@ import {
     Settings2,
     X,
     ChevronDown,
-    Monitor,
-    Mic,
-    Video,
-    Aperture,
-    Battery,
-    Box,
-    Layers,
-    Component,
-    Zap,
-    Disc
+    LayoutGrid,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -35,18 +26,8 @@ interface PickerProps {
     onAdd: (slotName: string) => void
 }
 
-const getIconForSlot = (name: string) => {
-    const n = name.toLowerCase()
-    if (n.includes('monitor')) return Monitor
-    if (n.includes('audio') || n.includes('mic')) return Mic
-    if (n.includes('video') || n.includes('transmitt')) return Video
-    if (n.includes('matte')) return Box
-    if (n.includes('filter')) return Aperture
-    if (n.includes('focus')) return Layers
-    if (n.includes('power') || n.includes('battery')) return Battery
-    if (n.includes('media')) return Disc
-    if (n.includes('cable')) return Zap
-    return Component // Fallback
+const getIconForSlot = (_name: string) => {
+    return LayoutGrid
 }
 
 // ============================================================================
@@ -132,7 +113,11 @@ export function PickerInline({ hiddenSlots, onAdd }: PickerProps) {
                                 return (
                                     <button
                                         key={slot.slotName}
-                                        onClick={() => { onAdd(slot.slotName); setIsAdding(false) }}
+                                        onClick={() => {
+                                            console.log('[PICKER] Clicked:', slot.slotName);
+                                            onAdd(slot.slotName);
+                                            setIsAdding(false)
+                                        }}
                                         className="flex items-center gap-3 p-3 rounded-lg hover:bg-zinc-800 text-left transition-colors border border-transparent hover:border-zinc-700"
                                     >
                                         <div className="p-2 bg-zinc-800 rounded text-zinc-400">

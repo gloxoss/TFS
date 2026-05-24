@@ -166,16 +166,16 @@ export async function mergeGuestCart(guestItems: CartItem[]): Promise<{ success:
   }
 }
 
-export async function resolveKit(productId: string): Promise<ResolveKitResult> {
+export async function resolveKit(productId: string, lang: string = 'en'): Promise<ResolveKitResult> {
   try {
-    console.log('[SERVER resolveKit] Starting for productId:', productId);
+    console.log('[SERVER resolveKit] Starting for productId:', productId, 'lang:', lang);
     const pb = await createServerClient();
     console.log('[SERVER resolveKit] PocketBase client created');
 
     const cartService = getCartService(pb);
     console.log('[SERVER resolveKit] Cart service obtained');
 
-    const kit = await cartService.resolveKit(productId);
+    const kit = await cartService.resolveKit(productId, lang);
     console.log('[SERVER resolveKit] Kit result:', kit ? 'Found with ' + kit.slots?.length + ' slots' : 'null');
 
     if (!kit) {

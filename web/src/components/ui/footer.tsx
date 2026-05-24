@@ -51,8 +51,15 @@ export function Footer({ lng }: { lng: string }) {
               {/* Contact Info */}
               <div className="space-y-3 text-sm">
                 <div className="flex items-start gap-2">
-                  <MapPin className="h-4 w-4 mt-0.5 text-primary" />
-                  <span>{company.address.street}<br />{company.address.city} {company.address.postalCode}</span>
+                  <MapPin className="h-4 w-4 mt-0.5 text-primary shrink-0" />
+                  <a
+                    href="https://www.google.com/maps/search/?api=1&query=N°55-57,+Rue+Souleimane+El+Farissi,+Ain+Borja+20330+-+Casablanca+,+Morocco"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-white transition-colors"
+                  >
+                    {company.address.street} {company.address.postalCode} - {company.address.city}, {company.address.country}
+                  </a>
                 </div>
                 <div className="flex items-center gap-2">
                   <Phone className="h-4 w-4 text-primary" />

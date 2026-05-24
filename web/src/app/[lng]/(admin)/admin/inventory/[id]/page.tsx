@@ -10,7 +10,7 @@ import { use, useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Save, Package, Image as ImageIcon, X, Trash2, Plus } from 'lucide-react'
-import { getEquipmentById, updateEquipment, deleteEquipment, getEquipmentCategories } from '@/lib/actions/admin-inventory'
+import { getEquipmentById, updateEquipment, deleteEquipment, getEquipmentCategories, getAttributes } from '@/lib/actions/admin-inventory'
 import { slugify } from '@/lib/utils/slugify'
 
 export default function EditEquipmentPage({
@@ -35,8 +35,12 @@ export default function EditEquipmentPage({
     const [featured, setFeatured] = useState(false)
     const [availabilityStatus, setAvailabilityStatus] = useState('available')
 
-    // Specifications State
+    // Specifications State (manual key-value pairs)
     const [specs, setSpecs] = useState<Array<{ key: string; value: string }>>([])
+
+    // Dynamic Attributes (from category)
+    const [dynamicAttributes, setDynamicAttributes] = useState<Array<{ id: string; name: string; slug: string; type: string; options: string[] }>>([])
+    const [dynamicSpecs, setDynamicSpecs] = useState<Record<string, string>>({})
 
     // Image State
     const [mainImage, setMainImage] = useState<{ url: string; filename: string } | null>(null)
@@ -132,6 +136,38 @@ export default function EditEquipmentPage({
         load()
     }, [id])
 
+    // Load dynamic attributes when category changes
+    useEffect(() => {
+        async function loadAttributes() {
+            if (!category || categories.length === 0) {
+                setDynamicAttributes([])
+                return
+            }
+
+            // Find category by name
+            const cat = categories.find(c => c.name === category || c.slug === category)
+            if (cat) {
+                const result = await getAttributes(cat.id)
+                if (result.success) {
+                    setDynamicAttributes(result.attributes)
+                    // Pre-populate dynamicSpecs from existing specs
+                    const prePopulated: Record<string, string> = {}
+                    result.attributes.forEach(attr => {
+                        // Find existing value in specs array (Case-insensitive match)
+                        const existingSpec = specs.find(s => s.key.toLowerCase() === attr.slug.toLowerCase())
+                        if (existingSpec) {
+                            prePopulated[attr.slug] = existingSpec.value
+                        }
+                    })
+                    setDynamicSpecs(prePopulated)
+                }
+            } else {
+                setDynamicAttributes([])
+            }
+        }
+        loadAttributes()
+    }, [category, categories, specs])
+
     // Handle Main Image Upload
     const handleMainImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
@@ -202,13 +238,33 @@ export default function EditEquipmentPage({
             formData.append('featured', String(featured))
             formData.append('availability_status', availabilityStatus)
 
-            // Specs Logic - convert array to object
+            // Specs Logic - merge dynamic specs with manual specs
+            // CRITICAL: Merge manual specs FIRST, then overwrite with dynamic specs
+            // This ensures that if a user changes a value in the dynamic dropdown, it isn't overwritten
+            // by the stale value in the manual 'specs' list (which contains all specs including dynamic ones).
             const specsObject: Record<string, string> = {}
+
+            // 1. Add manual specs
             specs.forEach(spec => {
                 if (spec.key.trim()) {
                     specsObject[spec.key.trim()] = spec.value
                 }
             })
+
+            // 2. Overwrite with dynamic specs (Source of Truth for these keys)
+            Object.entries(dynamicSpecs).forEach(([key, value]) => {
+                if (value) {
+                    specsObject[key] = value
+                } else {
+                    // If cleared in UI, we might want to remove it regardless of manual spec
+                    // OR we want to remove it from the object entirely?
+                    // If we don't set it here, the manual spec value (if any) would remain.
+                    // But we decided dynamicAttributes take precedence.
+                    // If user selects "Select..." (empty), we should probably DELETE the key
+                    delete specsObject[key]
+                }
+            })
+
             formData.append('specs', JSON.stringify(specsObject))
 
             // Main Image Logic
@@ -417,10 +473,65 @@ export default function EditEquipmentPage({
                     </div>
                 </div>
 
-                {/* Specifications */}
+                {/* Dynamic Specifications (from category attributes) */}
+                {dynamicAttributes.length > 0 && (
+                    <div className="bg-zinc-900/30 rounded-xl border border-zinc-800 p-6 space-y-4">
+                        <h2 className="font-semibold text-white flex items-center gap-2">
+                            Specifications
+                            <span className="text-xs font-normal text-zinc-500">({dynamicAttributes.length} fields for this category)</span>
+                        </h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {dynamicAttributes.map(attr => {
+                                const value = dynamicSpecs[attr.slug] || ''
+                                const isCustomValue = value && attr.options && !attr.options.includes(value)
+
+                                return (
+                                    <div key={attr.id}>
+                                        <label className="block text-sm text-zinc-400 mb-2">{attr.name}</label>
+                                        {attr.type === 'select' ? (
+                                            <select
+                                                value={value}
+                                                onChange={(e) => setDynamicSpecs({ ...dynamicSpecs, [attr.slug]: e.target.value })}
+                                                className="w-full px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-white focus:outline-none focus:border-red-900/50"
+                                            >
+                                                <option value="">Select {attr.name}</option>
+                                                {attr.options?.map(opt => (
+                                                    <option key={opt} value={opt}>{opt}</option>
+                                                ))}
+                                                {isCustomValue && (
+                                                    <option value={value}>{value} (Custom/Legacy)</option>
+                                                )}
+                                            </select>
+                                        ) : attr.type === 'boolean' ? (
+                                            <select
+                                                value={dynamicSpecs[attr.slug] || ''}
+                                                onChange={(e) => setDynamicSpecs({ ...dynamicSpecs, [attr.slug]: e.target.value })}
+                                                className="w-full px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-white focus:outline-none focus:border-red-900/50"
+                                            >
+                                                <option value="">Select</option>
+                                                <option value="true">Yes</option>
+                                                <option value="false">No</option>
+                                            </select>
+                                        ) : (
+                                            <input
+                                                type={attr.type === 'number' ? 'number' : 'text'}
+                                                value={dynamicSpecs[attr.slug] || ''}
+                                                onChange={(e) => setDynamicSpecs({ ...dynamicSpecs, [attr.slug]: e.target.value })}
+                                                className="w-full px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-white focus:outline-none focus:border-red-900/50"
+                                                placeholder={`Enter ${attr.name.toLowerCase()}`}
+                                            />
+                                        )}
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    </div>
+                )}
+
+                {/* Additional/Manual Specifications */}
                 <div className="bg-zinc-900/30 rounded-xl border border-zinc-800 p-6 space-y-4">
                     <div className="flex items-center justify-between">
-                        <h2 className="font-semibold text-white">Specifications</h2>
+                        <h2 className="font-semibold text-white">{dynamicAttributes.length > 0 ? 'Additional Specifications' : 'Specifications'}</h2>
                         <button
                             type="button"
                             onClick={() => setSpecs([...specs, { key: '', value: '' }])}
@@ -430,48 +541,54 @@ export default function EditEquipmentPage({
                             Add Spec
                         </button>
                     </div>
-                    <p className="text-xs text-zinc-500">Add technical specifications like sensor_size, codec, max_fps, mount, etc.</p>
+                    <p className="text-xs text-zinc-500">Add custom technical specifications (key-value pairs).</p>
 
                     {specs.length === 0 ? (
                         <div className="text-center py-8 text-zinc-500 border border-dashed border-zinc-700 rounded-lg">
-                            No specifications yet. Click "Add Spec" to add one.
+                            No custom specifications. Click "Add Spec" to add one.
                         </div>
                     ) : (
                         <div className="space-y-3">
-                            {specs.map((spec, index) => (
-                                <div key={index} className="flex items-center gap-3">
-                                    <input
-                                        type="text"
-                                        value={spec.key}
-                                        onChange={(e) => {
-                                            const newSpecs = [...specs]
-                                            newSpecs[index].key = e.target.value.toLowerCase().replace(/\s+/g, '_')
-                                            setSpecs(newSpecs)
-                                        }}
-                                        placeholder="Key (e.g. sensor_size)"
-                                        className="w-1/3 px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-white text-sm focus:outline-none focus:border-red-900/50"
-                                    />
-                                    <span className="text-zinc-600">→</span>
-                                    <input
-                                        type="text"
-                                        value={spec.value}
-                                        onChange={(e) => {
-                                            const newSpecs = [...specs]
-                                            newSpecs[index].value = e.target.value
-                                            setSpecs(newSpecs)
-                                        }}
-                                        placeholder="Value (e.g. 28.0 x 19.2mm)"
-                                        className="flex-1 px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-white text-sm focus:outline-none focus:border-red-900/50"
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => setSpecs(specs.filter((_, i) => i !== index))}
-                                        className="p-2 text-zinc-500 hover:text-red-400 hover:bg-red-900/20 rounded-lg transition-colors"
-                                    >
-                                        <X className="w-4 h-4" />
-                                    </button>
-                                </div>
-                            ))}
+                            {specs.map((spec, index) => {
+                                // Hide if this spec is already handled by dynamic attributes
+                                const isDynamic = dynamicAttributes.some(attr => attr.slug === spec.key)
+                                if (isDynamic) return null
+
+                                return (
+                                    <div key={index} className="flex items-center gap-3">
+                                        <input
+                                            type="text"
+                                            value={spec.key}
+                                            onChange={(e) => {
+                                                const newSpecs = [...specs]
+                                                newSpecs[index].key = e.target.value.toLowerCase().replace(/\s+/g, '_')
+                                                setSpecs(newSpecs)
+                                            }}
+                                            placeholder="Key (e.g. sensor_size)"
+                                            className="w-1/3 px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-white text-sm focus:outline-none focus:border-red-900/50"
+                                        />
+                                        <span className="text-zinc-600">→</span>
+                                        <input
+                                            type="text"
+                                            value={spec.value}
+                                            onChange={(e) => {
+                                                const newSpecs = [...specs]
+                                                newSpecs[index].value = e.target.value
+                                                setSpecs(newSpecs)
+                                            }}
+                                            placeholder="Value (e.g. 28.0 x 19.2mm)"
+                                            className="flex-1 px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-white text-sm focus:outline-none focus:border-red-900/50"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setSpecs(specs.filter((_, i) => i !== index))}
+                                            className="p-2 text-zinc-500 hover:text-red-400 hover:bg-red-900/20 rounded-lg transition-colors"
+                                        >
+                                            <X className="w-4 h-4" />
+                                        </button>
+                                    </div>
+                                )
+                            })}
                         </div>
                     )}
                 </div>

@@ -63,11 +63,6 @@ CONTACT:
 - Email: info@tfs.ma
 - Address: 55-57, Rue Souleimane el Farissi, Casablanca 20330, Morocco
 
-DEEP LINKING (IMPORTANT):
-- When mentioning SPECIFIC products from the catalog above or lookup results, format them as Markdown links using their slug.
-- Format: [Product Name](/equipment/{slug})
-- Example: [Sony FX6](/equipment/sony-fx6) or [ARRI Alexa Mini](/equipment/arri-alexa-mini)
-- This allows users to click directly to product pages.
 
 NAVIGATION GUIDANCE:
 - If the user wants to go somewhere (e.g., "go to cart", "checkout", "browse cameras", "view my quotes"), CALL the navigate_site tool.

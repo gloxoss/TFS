@@ -37,7 +37,7 @@
     "misc": "Accessoires"
   },
   "detail": {
-    "backToCatalog": "Retour à l'équipement",
+    "backToCatalog": "Retour au catalogue",
     "specifications": "Spécifications",
     "description": "Description",
     "rentalPeriod": "Période de location",
@@ -49,8 +49,26 @@
     "selectDates": "Veuillez sélectionner les dates de location",
     "estimatedTotal": "Total estimé",
     "days": "jours",
-    "relatedProducts": "Vous pourriez aussi aimer"
+    "relatedProducts": "Vous pourriez aussi aimer",
+    "accessories": "Accessoires",
+    "configureKit": "Configurez les composants inclus dans votre kit",
+    "readyToRequest": "Prêt à demander un devis ?",
+    "rentalDatesInfo": "Les dates de location et les prix seront fournis après soumission",
+    "addKitToQuote": "Ajouter le kit au devis",
+    "basePackage": "Forfait de base uniquement",
+    "selectOptions": "Sélectionner des options",
+    "selectOne": "Sélectionner un",
+    "selectMultiple": "Sélectionner plusieurs",
+    "selected": "sélectionné(s)",
+    "noItems": "Aucun élément sélectionné",
+    "addItems": "Ajouter des éléments",
+    "gridView": "Vue grille",
+    "listView": "Vue liste",
+    "loadingKit": "Chargement de la configuration du kit...",
+    "addToQuote": "Ajouter au devis"
   },
+  "downloadCatalog": "Notre Liste",
+  "professionalEquipment": "Équipement de film professionnel",
   "meta": {
     "title": "Location d'équipement | TFS Location Cinéma",
     "description": "Parcourez notre catalogue d'équipement cinéma professionnel. Caméras, objectifs, éclairage et plus disponibles à la location."

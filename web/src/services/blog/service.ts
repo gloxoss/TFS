@@ -36,6 +36,7 @@ function mapRecordToPost(record: RecordModel, lang: string = 'en'): BlogPost {
         contentFr: record.content_fr,
         content: isEn ? (record.content_en || record.content_fr) : (record.content_fr || record.content_en),
         coverImage,
+        videoUrl: record.video_url,
         category: record.category,
         published: record.published || false,
         publishedAt: record.published_at,
@@ -80,6 +81,9 @@ export class BlogService {
             if (filters?.category) {
                 options.filter = `category = "${filters.category}"`
             }
+
+            // Ensure newest posts appear first
+            options.sort = '-created'
 
             const result = await this.pb.collection('posts').getList(1, 50, options)
             return result.items.map(record => mapRecordToPost(record, lang))

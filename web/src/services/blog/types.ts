@@ -19,6 +19,7 @@ export interface BlogPost {
     contentFr?: string
     content?: string
     coverImage?: string
+    videoUrl?: string
     category?: 'news' | 'tips' | 'industry' | 'behind-the-scenes'
     published: boolean
     publishedAt?: string

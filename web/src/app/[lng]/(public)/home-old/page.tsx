@@ -2,7 +2,7 @@ import { createServerClient } from "@/lib/pocketbase/server";
 import { Globe, Cpu, Lock, Headphones, BarChart3 } from "lucide-react";
 import HeroImpact from "@/components/marketing/hero-impact";
 import BentoFeatures from "@/components/marketing/bento-features";
-import { useTranslation } from "@/app/i18n";
+import { useTranslation as getTranslation } from "@/app/i18n";
 import SocialProof from "@/components/marketing/social-proof";
 import CTASection from "@/components/marketing/cta-section";
 import NewsSection from "@/components/marketing/news-section";
@@ -14,7 +14,7 @@ const PB_URL = process.env.NEXT_PUBLIC_POCKETBASE_URL || 'http://127.0.0.1:8090'
 export default async function HomeOldPage({ params }: { params: Promise<{ lng: string }> }) {
     const { lng } = await params;
     const client = await createServerClient();
-    const { t } = await useTranslation(lng, 'home');
+    const { t } = await getTranslation(lng, 'home');
 
     // Initialize services with PocketBase client
     const blogService = getBlogService(client);

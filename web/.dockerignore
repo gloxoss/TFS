@@ -1,0 +1,36 @@
+# Ignore node_modules (Docker builds fresh)
+node_modules/
+
+# Ignore Next.js build cache
+.next/
+out/
+
+# Ignore environment files
+.env*
+!.env.production
+
+# Ignore backup zips and data folders
+*.zip
+pb_data/
+pb_migrations/
+
+# Ignore source images (only used for PocketBase upload, not needed in Docker)
+# Ignore source images (only used for PocketBase upload, not needed in Docker)
+public/all
+public/all/
+public/all/*
+public/all_compressed
+public/all_compressed/
+public/all_compressed/*
+
+# Ignore logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ignore misc
+.DS_Store
+*.pem
+.vercel
+*.tsbuildinfo

@@ -28,18 +28,21 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
   const { lng, slug } = await params
 
   // Product service now has built-in retry logic
-  const product = await productService().getProductBySlug(slug)
+  const product = await productService().getProductBySlug(slug, lng)
 
   if (!product) {
     notFound()
   }
 
-  return <ProductDetailClient product={product} lng={lng} />
+  // Fetch all categories for the "Add New Section" picker
+  const categories = await productService().getCategories()
+
+  return <ProductDetailClient product={product} lng={lng} categories={categories} />
 }
 
 export async function generateMetadata({ params }: ProductDetailPageProps) {
   const { lng, slug } = await params
-  const product = await productService().getProductBySlug(slug)
+  const product = await productService().getProductBySlug(slug, lng)
 
   if (!product) {
     return {

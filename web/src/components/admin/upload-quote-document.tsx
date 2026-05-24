@@ -65,7 +65,7 @@ export function UploadQuoteDocument({
             'application/pdf': ['.pdf'],
         },
         maxFiles: 1,
-        maxSize: 10 * 1024 * 1024, // 10MB
+        maxSize: 5 * 1024 * 1024, // 5MB - must match PocketBase quote_pdf field limit
     })
 
     const handleSubmit = () => {
@@ -182,7 +182,7 @@ export function UploadQuoteDocument({
                                     <p className="text-zinc-300 mb-1">
                                         Drag & drop your PDF here, or click to browse
                                     </p>
-                                    <p className="text-sm text-zinc-500">Max size: 10MB</p>
+                                    <p className="text-sm text-zinc-500">Max size: 5MB</p>
                                 </>
                             )}
                         </div>

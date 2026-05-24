@@ -16,6 +16,7 @@ import {
     Film,
     MonitorPlay,
     Box,
+    Download,
 } from "lucide-react";
 import { motion, useScroll, useTransform, useInView, useSpring } from "framer-motion";
 import { useTranslation } from "@/app/i18n/client";
@@ -66,7 +67,7 @@ export default function AboutStorySection({ lng }: AboutStorySectionProps) {
         visible: {
             y: 0,
             opacity: 1,
-            transition: { duration: 0.6, ease: "easeOut" },
+            transition: { duration: 0.6, ease: "easeOut" as const },
         },
     };
 
@@ -111,7 +112,7 @@ export default function AboutStorySection({ lng }: AboutStorySectionProps) {
     ];
 
     const stats = [
-        { icon: <Calendar />, value: 14, label: t("stats.years"), suffix: "+" }, // Started 2010 -> 2024 = 14+
+        { icon: <Calendar />, value: 10, label: t("stats.years"), suffix: "+" }, // Started 2015
         { icon: <Film />, value: 12000, label: t("stats.projects"), suffix: "+" },
         { icon: <Globe2 />, value: 200, label: t("stats.countries"), suffix: "+" }, // Using "Countries" label for Cities/Locations
         { icon: <Users />, value: 98, label: "Client Satisfaction", suffix: "%" }, // Static for now
@@ -239,15 +240,15 @@ export default function AboutStorySection({ lng }: AboutStorySectionProps) {
                                     animate={{ opacity: 1 }}
                                     transition={{ duration: 0.8, delay: 0.9 }}
                                 >
-                                    <Link href={`/${lng}/equipment`}>
+                                    <a href="/Plaquette TFS.pdf" download target="_blank" rel="noopener noreferrer">
                                         <motion.button
                                             className="bg-[#D00000] hover:bg-[#B00000] text-white px-6 py-3 rounded-full flex items-center gap-2 text-sm font-medium shadow-lg shadow-red-900/20 backdrop-blur-sm transition-all"
                                             whileHover={{ scale: 1.05 }}
                                             whileTap={{ scale: 0.95 }}
                                         >
-                                            {t("expertise.portfolio_btn")} <ArrowRight className="w-4 h-4" />
+                                            <Download className="w-4 h-4" /> {t("expertise.portfolio_btn")}
                                         </motion.button>
-                                    </Link>
+                                    </a>
                                 </motion.div>
                             </motion.div>
 

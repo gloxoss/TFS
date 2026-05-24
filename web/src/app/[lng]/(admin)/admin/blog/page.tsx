@@ -12,6 +12,7 @@ import { verifyAdminAccess } from '@/services/auth/access-control'
 import { revalidatePath } from 'next/cache'
 import { PB_URL } from '@/lib/pocketbase/config'
 import { createActionLogger } from '@/lib/logger'
+import { DeleteButton } from '@/components/admin/blog/delete-button'
 
 const log = createActionLogger('AdminBlog');
 
@@ -31,11 +32,16 @@ async function getBlogPosts(): Promise<BlogPost[]> {
     if (!isAdmin) return []
 
     try {
-        const client = await createServerClient(false)
+        const { createAdminClient } = await import('@/lib/pocketbase/server')
+        const client = await createAdminClient()
 
-        const result = await client.collection('posts').getFullList()
+        const result = await client.collection('posts').getList(1, 100)
 
-        return result.map(post => ({
+        const sortedItems = result.items.sort((a: any, b: any) => {
+            return new Date(b.created).getTime() - new Date(a.created).getTime()
+        })
+
+        return sortedItems.map((post: any) => ({
             id: post.id,
             title: post.title || post.title_en || 'Untitled',
             slug: post.slug || '',
@@ -60,7 +66,8 @@ async function togglePostVisibility(id: string) {
     if (!isAdmin) return
 
     try {
-        const client = await createServerClient()
+        const { createAdminClient } = await import('@/lib/pocketbase/server')
+        const client = await createAdminClient()
         const post = await client.collection('posts').getOne(id)
         await client.collection('posts').update(id, {
             published: !post.published
@@ -78,7 +85,8 @@ async function deletePost(id: string) {
     if (!isAdmin) return
 
     try {
-        const client = await createServerClient()
+        const { createAdminClient } = await import('@/lib/pocketbase/server')
+        const client = await createAdminClient()
         await client.collection('posts').delete(id)
         revalidatePath('/[lng]/admin/blog')
     } catch (error) {
@@ -125,7 +133,7 @@ function PostRow({ post, lng }: { post: BlogPost; lng: string }) {
             <td className="py-4 px-4">
                 <span className="text-sm text-zinc-500 flex items-center gap-1">
                     <Calendar className="w-3 h-3" />
-                    {new Date(post.created).toLocaleDateString()}
+                    {post.created ? new Date(post.created).toLocaleDateString() : 'Invalid Date'}
                 </span>
             </td>
             <td className="py-4 px-4">
@@ -149,15 +157,7 @@ function PostRow({ post, lng }: { post: BlogPost; lng: string }) {
                     >
                         <Edit className="w-4 h-4" />
                     </Link>
-                    <form action={deletePost.bind(null, post.id)}>
-                        <button
-                            type="submit"
-                            className="p-2 rounded-lg text-zinc-400 hover:text-red-500 hover:bg-red-900/20 transition-colors"
-                            title="Delete"
-                        >
-                            <Trash2 className="w-4 h-4" />
-                        </button>
-                    </form>
+                    <DeleteButton action={deletePost.bind(null, post.id)} />
                 </div>
             </td>
         </tr>

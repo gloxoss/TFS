@@ -12,6 +12,21 @@ import { createServerClient, createAdminClient } from '@/lib/pocketbase/server'
 import { revalidatePath } from 'next/cache'
 import { PB_URL } from '@/lib/pocketbase/config'
 
+/**
+ * Helper to check if a FormData value is an uploaded file.
+ * Works in Node.js (where File may not exist globally) by checking for Blob-like properties.
+ */
+function isFileUpload(value: unknown): value is Blob {
+    return (
+        typeof value === 'object' &&
+        value !== null &&
+        'size' in value &&
+        typeof (value as any).size === 'number' &&
+        (value as any).size > 0 &&
+        'arrayBuffer' in value // Blob/File have arrayBuffer method
+    )
+}
+
 export interface EquipmentItem {
     id: string
     name: string
@@ -115,6 +130,7 @@ export async function getEquipmentList(
         category?: string
         visibility?: boolean
         search?: string
+        specs?: Record<string, string>
     }
 ): Promise<EquipmentListResponse> {
     try {
@@ -134,6 +150,15 @@ export async function getEquipmentList(
         }
         if (filters?.search) {
             filterParts.push(`(name_en ~ "${filters.search}" || name_fr ~ "${filters.search}" || brand ~ "${filters.search}")`)
+        }
+        // Dynamic specs filtering
+        if (filters?.specs) {
+            for (const [key, value] of Object.entries(filters.specs)) {
+                if (value) {
+                    // PocketBase JSON field filter syntax
+                    filterParts.push(`specs.${key} = "${value}"`)
+                }
+            }
         }
 
         const filter = filterParts.length > 0 ? filterParts.join(' && ') : undefined
@@ -243,14 +268,14 @@ export async function createEquipment(formData: FormData): Promise<{
 
         // Main Image
         const mainImage = formData.get('main_image')
-        if (mainImage instanceof File && mainImage.size > 0) {
+        if (isFileUpload(mainImage)) {
             data.append('image', mainImage)
         }
 
         // Gallery Images
         const galleryImages = formData.getAll('gallery_images')
         galleryImages.forEach(img => {
-            if (img instanceof File && img.size > 0) {
+            if (isFileUpload(img)) {
                 data.append('images', img)
             }
         })
@@ -323,7 +348,7 @@ export async function updateEquipment(id: string, formData: FormData): Promise<{
         const mainImage = formData.get('main_image')
         if (mainImage === 'DELETE') {
             data.append('image', '') // PocketBase: empty string deletes file
-        } else if (mainImage instanceof File && mainImage.size > 0) {
+        } else if (isFileUpload(mainImage)) {
             data.append('image', mainImage)
         }
 
@@ -349,7 +374,7 @@ export async function updateEquipment(id: string, formData: FormData): Promise<{
 
         // 5. Add NEW images to FormData (to be appended)
         galleryImages.forEach(img => {
-            if (img instanceof File && img.size > 0) {
+            if (isFileUpload(img)) {
                 data.append('images', img)
             }
         })
@@ -486,3 +511,226 @@ export async function getEquipmentCategories(): Promise<{
         }
     }
 }
+
+/**
+ * Create Category
+ */
+export async function createCategory(formData: FormData): Promise<{ success: boolean; error?: string }> {
+    try {
+        const hasAccess = await verifyInventoryAccess()
+        if (!hasAccess) return { success: false, error: 'Unauthorized' }
+
+        const client = await createAdminClient()
+        const name = formData.get('name') as string
+        const slug = formData.get('slug') as string
+
+        if (!name) return { success: false, error: 'Name is required' }
+
+        await client.collection('categories').create({
+            name,
+            slug: slug || name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')
+        })
+
+        revalidatePath('/[lng]/admin/inventory/categories')
+        revalidatePath('/[lng]/admin/inventory')
+        return { success: true }
+    } catch (error) {
+        console.error('Error creating category:', error)
+        return { success: false, error: 'Failed to create category' }
+    }
+}
+
+/**
+ * Delete Category
+ */
+export async function deleteCategory(id: string): Promise<{ success: boolean; error?: string }> {
+    try {
+        const canDelete = await canDeleteProducts()
+        if (!canDelete) return { success: false, error: 'Unauthorized' }
+
+        const client = await createAdminClient()
+        await client.collection('categories').delete(id)
+
+        revalidatePath('/[lng]/admin/inventory/categories')
+        revalidatePath('/[lng]/admin/inventory')
+        return { success: true }
+    } catch (error) {
+        console.error('Error deleting category:', error)
+        return { success: false, error: 'Failed to delete category' }
+    }
+}
+
+/**
+ * Update Category
+ */
+export async function updateCategory(id: string, formData: FormData): Promise<{ success: boolean; error?: string }> {
+    try {
+        const hasAccess = await verifyInventoryAccess()
+        if (!hasAccess) return { success: false, error: 'Unauthorized' }
+
+        const client = await createAdminClient()
+        const name = formData.get('name') as string
+        const slug = formData.get('slug') as string
+
+        await client.collection('categories').update(id, {
+            name,
+            slug: slug || undefined
+        })
+
+        revalidatePath('/[lng]/admin/inventory/categories')
+        revalidatePath('/[lng]/admin/inventory')
+        return { success: true }
+    } catch (error) {
+        console.error('Error updating category:', error)
+        return { success: false, error: 'Failed to update category' }
+    }
+}
+
+
+/**
+ * Get Attributes (optionally filtered by category)
+ */
+export async function getAttributes(categoryId?: string): Promise<{ success: boolean; attributes: any[]; error?: string }> {
+    try {
+        const hasAccess = await verifyInventoryAccess()
+        if (!hasAccess) return { success: false, attributes: [], error: 'Unauthorized' }
+
+        const client = await createAdminClient()
+
+        // Build query options - filter by category if provided
+        const options: { filter?: string; sort?: string } = { sort: 'name' }
+        if (categoryId) {
+            options.filter = `categories ~ "${categoryId}"`
+        }
+
+        const result = await client.collection('attributes').getFullList(options)
+
+        const attributes = result.map(record => ({
+            id: record.id,
+            name: record.name || '',
+            slug: record.slug || '',
+            type: record.type || 'text',
+            options: Array.isArray(record.options) ? record.options : [],
+            categories: Array.isArray(record.categories) ? record.categories : [],
+        }))
+
+        return { success: true, attributes }
+    } catch (error: any) {
+        // Log detailed error info
+        console.error('Error fetching attributes:', {
+            message: error?.message,
+            status: error?.status,
+            response: error?.response,
+            data: error?.data
+        })
+        return { success: false, attributes: [], error: error?.message || 'Failed to fetch attributes' }
+    }
+}
+
+/**
+ * Create Attribute
+ */
+export async function createAttribute(formData: FormData): Promise<{ success: boolean; error?: string }> {
+    try {
+        const hasAccess = await verifyInventoryAccess()
+        if (!hasAccess) return { success: false, error: 'Unauthorized' }
+
+        const client = await createAdminClient()
+
+        const name = formData.get('name') as string
+        const slug = formData.get('slug') as string
+        const type = formData.get('type') as string
+
+        // Options (split by newline or comma)
+        const optionsRaw = formData.get('options') as string
+        let options: string[] = []
+        if (optionsRaw) {
+            options = optionsRaw.split('\n').map(s => s.trim()).filter(Boolean)
+        }
+
+        // Categories (multiple Select)
+        const categories = formData.getAll('categories') as string[]
+
+        await client.collection('attributes').create({
+            name,
+            slug: slug || name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+            type,
+            options,
+            categories
+        })
+
+        revalidatePath('/[lng]/admin/inventory/attributes')
+        return { success: true }
+    } catch (error: any) {
+        console.error('Error creating attribute:', {
+            message: error?.message,
+            status: error?.status,
+            response: error?.response,
+            data: error?.data
+        })
+        return { success: false, error: error?.response?.message || error?.message || 'Failed to create attribute' }
+    }
+}
+
+/**
+ * Update Attribute
+ */
+export async function updateAttribute(id: string, formData: FormData): Promise<{ success: boolean; error?: string }> {
+    try {
+        const hasAccess = await verifyInventoryAccess()
+        if (!hasAccess) return { success: false, error: 'Unauthorized' }
+
+        const client = await createAdminClient()
+
+        const name = formData.get('name') as string
+        const slug = formData.get('slug') as string
+        const type = formData.get('type') as string
+
+        const optionsRaw = formData.get('options') as string
+        let options: string[] = []
+        if (optionsRaw) {
+            options = optionsRaw.split('\n').map(s => s.trim()).filter(Boolean)
+        }
+
+        const categories = formData.getAll('categories') as string[]
+
+        // Build data object, only include fields that have values
+        const data: Record<string, any> = { name, type }
+        if (slug) data.slug = slug
+        if (options.length > 0) data.options = options
+        data.categories = categories // Can be empty array
+
+        await client.collection('attributes').update(id, data)
+
+        revalidatePath('/[lng]/admin/inventory/attributes')
+        return { success: true }
+    } catch (error: any) {
+        console.error('Error updating attribute:', {
+            message: error?.message,
+            status: error?.status,
+            response: error?.response,
+            data: error?.data
+        })
+        return { success: false, error: error?.response?.message || error?.message || 'Failed to update attribute' }
+    }
+}
+
+/**
+ * Delete Attribute
+ */
+export async function deleteAttribute(id: string): Promise<{ success: boolean; error?: string }> {
+    try {
+        const hasAccess = await verifyInventoryAccess()
+        if (!hasAccess) return { success: false, error: 'Unauthorized' }
+
+        const client = await createAdminClient()
+        await client.collection('attributes').delete(id)
+
+        revalidatePath('/[lng]/admin/inventory/attributes')
+        return { success: true }
+    } catch (error) {
+        console.error('Error deleting attribute:', error)
+        return { success: false, error: 'Failed to delete attribute' }
+    }
+}
+

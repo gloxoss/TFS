@@ -12,33 +12,33 @@ const variants = {
     hidden: { opacity: 0 },
 };
 
+const AnimatedWrapper = ({
+    children,
+    className,
+    ...props
+}: React.PropsWithChildren<{ className?: string }>) => (
+    <m.div
+        animate="visible"
+        className={cn(
+            "pointer-events-auto ml-auto max-w-sm rounded-large border border-divider bg-background/15 p-6 shadow-small backdrop-blur",
+            className,
+        )}
+        exit="hidden"
+        initial="hidden"
+        transition={{
+            opacity: {
+                duration: 0.5,
+            },
+        }}
+        variants={variants}
+        {...props}
+    >
+        {children}
+    </m.div>
+);
+
 export default function CookieConsentBottomRightAnimated() {
     const [isSettingsOpen, setIsSettingsOpen] = React.useState(true);
-
-    const AnimatedWrapper = ({
-        children,
-        className,
-        ...props
-    }: React.PropsWithChildren<{ className?: string }>) => (
-        <m.div
-            animate="visible"
-            className={cn(
-                "pointer-events-auto ml-auto max-w-sm rounded-large border border-divider bg-background/15 p-6 shadow-small backdrop-blur",
-                className,
-            )}
-            exit="hidden"
-            initial="hidden"
-            transition={{
-                opacity: {
-                    duration: 0.5,
-                },
-            }}
-            variants={variants}
-            {...props}
-        >
-            {children}
-        </m.div>
-    );
 
     const cookieSettingsContent = (
         <AnimatedWrapper>

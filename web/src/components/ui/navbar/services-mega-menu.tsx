@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown, Package, Truck, FileCheck, Users, MapPin, Utensils, Hotel, Car, UserCheck, ArrowRight, Palette, Shirt, Box, Paintbrush, ShieldAlert, Radio, TrendingUp } from "lucide-react";
+import { ChevronDown, Package, Truck, FileCheck, Users, MapPin, Utensils, Hotel, Car, UserCheck, ArrowRight, Palette, Shirt, Box, Paintbrush, ShieldAlert, Radio, TrendingUp, Trophy, Monitor } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { getServicesForNav, type ServiceItem } from "@/lib/actions/services";
@@ -23,15 +23,16 @@ const CORE_SERVICE_SLUGS = [
     'catering',
     'accommodation',
     'transportation',
-    'casting'
+    'casting',
+    'sports-broadcast',
+    'digital-production-marketing',
+    'digital-services'
 ];
 
-// Categories for mega menu
-// Categories for mega menu
 const SERVICE_CATEGORIES: Record<string, { label: { en: string; fr: string }; slugs: string[] }> = {
     production: {
         label: { en: 'Production Services', fr: 'Services de Production' },
-        slugs: ['crewing', 'casting', 'security-management', 'digital-production-marketing', 'broadcasting-live']
+        slugs: ['crewing', 'casting', 'security-management', 'digital-production-marketing', 'broadcasting-live', 'sports-broadcast', 'digital-services', 'sport']
     },
     equipment: {
         label: { en: 'Equipment & Logistics', fr: 'Équipement & Logistique' },
@@ -39,7 +40,7 @@ const SERVICE_CATEGORIES: Record<string, { label: { en: string; fr: string }; sl
     },
     art: {
         label: { en: 'Art & Design', fr: 'Art & Design' },
-        slugs: ['production-design', 'props-set-dressing', 'costume-wardrobe', 'makeup-hair']
+        slugs: ['production-design', 'props-set-dressing', 'costume-makeup']
     },
     locations: {
         label: { en: 'Locations & Support', fr: 'Lieux & Support' },
@@ -58,13 +59,15 @@ const SERVICE_ICONS: Record<string, React.ElementType> = {
     'accommodation': Hotel,
     'transportation': Car,
     'casting': UserCheck,
-    'makeup-hair': Palette,
-    'costume-wardrobe': Shirt,
+    'costume-makeup': Shirt,
     'props-set-dressing': Box,
     'production-design': Paintbrush,
     'security-management': ShieldAlert,
     'broadcasting-live': Radio,
     'digital-production-marketing': TrendingUp,
+    'sports-broadcast': Trophy,
+    'sport': Trophy,
+    'digital-services': Monitor,
 };
 
 export function ServicesMegaMenu({ lng, label }: ServicesDropdownProps) {
@@ -79,8 +82,25 @@ export function ServicesMegaMenu({ lng, label }: ServicesDropdownProps) {
         async function fetchServices() {
             try {
                 const allServices = await getServicesForNav();
-                // Show ALL active services, do not filter by hardcoded list
-                setServices(allServices);
+
+                // Collect all sub-service slugs from hub services (both 'hub' and 'hub_alt' templates)
+                const subServiceSlugs = new Set<string>();
+                allServices.forEach(service => {
+                    if ((service.template === 'hub' || service.template === 'hub_alt') && service.sub_services) {
+                        try {
+                            const subs = typeof service.sub_services === 'string'
+                                ? JSON.parse(service.sub_services)
+                                : service.sub_services;
+                            if (Array.isArray(subs)) {
+                                subs.forEach((slug: string) => subServiceSlugs.add(slug));
+                            }
+                        } catch (e) { }
+                    }
+                });
+
+                // Filter out sub-services from menu (they're accessed via hub page)
+                const filteredServices = allServices.filter(s => !subServiceSlugs.has(s.slug));
+                setServices(filteredServices);
             } catch (error) {
                 console.error('Failed to fetch services:', error);
             } finally {
@@ -192,10 +212,17 @@ export function ServicesMegaMenu({ lng, label }: ServicesDropdownProps) {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 8 }}
                         transition={{ duration: 0.15, ease: "easeOut" }}
-                        className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-[850px] bg-zinc-900/98 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl"
+                        className={cn(
+                            "z-50 bg-zinc-900/98 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl overflow-y-auto scrollbar-hide",
+                            // Responsive Positioning:
+                            // Fixed: Top positioned below nav, centered relative to viewport width
+                            "fixed top-[5rem] left-1/2 -translate-x-1/2 w-[95vw] max-w-[850px] max-h-[calc(100vh-6rem)]",
+                            // Desktop (LG+): Absolute relative to button. Reset margins/constraints.
+                            "lg:absolute lg:top-full lg:left-1/2 lg:-translate-x-[20%] lg:w-[850px] lg:max-h-none lg:fixed-none"
+                        )}
                     >
-                        {/* Arrow */}
-                        <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-zinc-900 border-l border-t border-white/10 rotate-45" />
+                        {/* Arrow - Show only on LG screens where alignment is guaranteed */}
+                        <div className="hidden lg:block absolute -top-2 left-[20%] -translate-x-1/2 w-4 h-4 bg-zinc-900 border-l border-t border-white/10 rotate-45" />
 
                         {/* Content */}
                         <div className="relative z-10">
@@ -206,7 +233,7 @@ export function ServicesMegaMenu({ lng, label }: ServicesDropdownProps) {
                             ) : (
                                 <>
                                     {/* Categories Grid - Adaptive Columns */}
-                                    <div className="grid grid-cols-4 gap-8">
+                                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-8 lg:gap-8">
                                         {/* Standard Categories */}
                                         {Object.entries(SERVICE_CATEGORIES).map(([key, category]) => {
                                             const items = categorizedServices[key];

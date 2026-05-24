@@ -97,7 +97,7 @@ export function ExpertSection() {
                             <div className="pt-6 border-t border-zinc-800">
                                 <div className="flex justify-between items-center text-center">
                                     <div>
-                                        <p className="text-3xl font-bold text-white">21+</p>
+                                        <p className="text-3xl font-bold text-white">10+</p>
                                         <p className="text-xs text-zinc-500 uppercase tracking-widest">Years</p>
                                     </div>
                                     <div>

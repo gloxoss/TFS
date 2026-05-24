@@ -1,0 +1,718 @@
+{
+  "equipment-hire": {
+    "slug": "equipment-hire",
+    "title": "Equipment Hire",
+    "title_fr": "Location d'Équipement",
+    "brief_description": "Professional cinema equipment rental for world-class productions.",
+    "hero_image": "hero_m4cttefj5m.webp",
+    "sections": [
+      {
+        "background": "/images/services/equipment/hero.webp",
+        "description": "Access Morocco's largest inventory of professional cinema cameras, lenses, lighting, and grip equipment.",
+        "description_fr": "Accédez au plus grand inventaire marocain de caméras, objectifs, éclairage et équipement de grip.",
+        "title": "World-Class Cinema Equipment",
+        "title_fr": "Équipement Cinéma de Classe Mondiale",
+        "type": "hero"
+      },
+      {
+        "content": "TFS Cinema Solutions provides top-tier camera, lighting, and grip rental services for international film productions filming in Morocco. Our extensive inventory features industry-standard gear including the ARRI ALEXA 35, ARRI ALEXA Mini LF, Sony VENICE 2, and RED DSMC2 Monstro 8K VV, alongside premium optics from Cooke S4/i, Zeiss Supreme Primes, and ARRI Signature Primes.",
+        "contentFr": "TFS Cinema Solutions fournit des services de location de caméras, d'éclairage et de machinerie de haut niveau pour les productions cinématographiques internationales tournant au Maroc.",
+        "image": "/images/services/equipment/hero.webp",
+        "layout": "right",
+        "title": "Premier Cinema Equipment Rental in Morocco",
+        "titleFr": "Location d'Équipement Cinéma de Premier Plan au Maroc",
+        "type": "text_image"
+      },
+      {
+        "content": "Our dedicated technical team at TFS Cinema Solutions offers round-the-clock support for all equipment rental packages during your Morocco film production. From on-set troubleshooting and emergency repairs to rapid equipment replacement anywhere in Morocco, we guarantee seamless operation during your shoot.",
+        "contentFr": "Notre équipe technique dédiée chez TFS Cinema Solutions offre un support 24/7 pour tous les forfaits de location d'équipement pendant votre production au Maroc.",
+        "image": "/images/services/equipment/tech-support.jpg",
+        "layout": "left",
+        "title": "24/7 Technical Support & On-Set Maintenance",
+        "titleFr": "Support Technique 24/7 et Maintenance sur Plateau",
+        "type": "text_image"
+      }
+    ],
+    "stats": null,
+    "features": [
+      {
+        "icon": "CheckCircle",
+        "text": "Latest cinema cameras",
+        "text_fr": "Dernières caméras cinéma"
+      },
+      {
+        "icon": "CheckCircle",
+        "text": "Premium lens collections",
+        "text_fr": "Collections d'objectifs premium"
+      },
+      {
+        "icon": "CheckCircle",
+        "text": "On-set technical support",
+        "text_fr": "Support technique sur plateau"
+      }
+    ],
+    "images": []
+  },
+  "film-shipping": {
+    "slug": "film-shipping",
+    "title": "Film Shipping & Customs",
+    "title_fr": "Expédition & Douanes",
+    "brief_description": "Expert customs clearance and international shipping for film equipment.",
+    "hero_image": "hero_042afe4i9c.jpg",
+    "sections": [
+      {
+        "background": "/images/services/shipping/hero.jpg",
+        "content": "From any corner of the world to Morocco, we handle your equipment with care and precision.",
+        "contentFr": "De n'importe quel coin du monde vers le Maroc, nous gérons votre équipement avec soin et précision.",
+        "title": "Seamless Global Film Logistics",
+        "title_fr": "Logistique Cinématographique Mondiale Sans Faille",
+        "type": "hero"
+      },
+      {
+        "content": "TFS Film Solutions specializes in the complex logistics of importing and exporting filming equipment to and from Morocco. Our experienced logistics coordinators manage the entire customs clearance process at all Moroccan ports and airports.",
+        "contentFr": "TFS Film Solutions se spécialise dans la logistique complexe de l'importation et l'exportation d'équipement de tournage vers et depuis le Maroc.",
+        "image": "/images/services/shipping/customs-clearance.jpg",
+        "layout": "right",
+        "title": "Expert Film Equipment Logistics & Customs Clearance",
+        "titleFr": "Logistique Experte et Dédouanement d'Équipement Cinéma",
+        "type": "text_image"
+      },
+      {
+        "content": "TFS Cinema Solutions provides comprehensive door-to-door shipping coordination for international film productions, working closely with Moroccan governmental authorities and trusted global freight partners.",
+        "contentFr": "TFS Cinema Solutions assure une coordination complète de l'expédition porte-à-porte pour les productions cinématographiques internationales.",
+        "image": "/images/services/shipping/logistics.jpg",
+        "layout": "left",
+        "title": "Secure Door-to-Door Production Delivery",
+        "titleFr": "Livraison Porte-à-Porte Sécurisée pour Productions",
+        "type": "text_image"
+      }
+    ],
+    "stats": null,
+    "features": [
+      {
+        "icon": "Shield",
+        "text": "Full insurance coverage",
+        "text_fr": "Couverture d'assurance complète"
+      },
+      {
+        "icon": "Clock",
+        "text": "24/7 tracking",
+        "text_fr": "Suivi 24h/24"
+      },
+      {
+        "icon": "FileCheck",
+        "text": "Complete documentation",
+        "text_fr": "Documentation complète"
+      }
+    ],
+    "images": []
+  },
+  "film-permits": {
+    "slug": "film-permits",
+    "title": "Film Permits",
+    "title_fr": "Autorisations de Tournage",
+    "brief_description": "Official filming authorizations through CCM and Moroccan authorities.",
+    "hero_image": "hero_6br2dgmlbv.jpg",
+    "sections": [
+      {
+        "background": "/images/services/permits/hero.jpg",
+        "description": "Direct partnership with CCM for seamless permit acquisition, regardless of project complexity.",
+        "description_fr": "Partenariat direct avec le CCM pour l'acquisition de permis sans accroc.",
+        "title": "Your Gateway to Filming in Morocco",
+        "title_fr": "Votre Passerelle pour Tourner au Maroc",
+        "type": "hero"
+      },
+      {
+        "content": "As a trusted partner in the Moroccan film industry, TFS Cinema Solutions maintains strong, direct relationships with the Centre Cinématographique Marocain (CCM) and all relevant governmental authorities.",
+        "contentFr": "En tant que partenaire de confiance dans l'industrie cinématographique marocaine, TFS Cinema Solutions maintient des relations directes et solides avec le Centre Cinématographique Marocain (CCM).",
+        "image": "/images/services/permits/ccm-authorization.jpg",
+        "layout": "right",
+        "title": "Official CCM Permit Coordination & Licensing",
+        "titleFr": "Coordination Officielle des Permis CCM et Licences",
+        "type": "text_image"
+      },
+      {
+        "content": "Our proactive communication with Moroccan governmental departments ensures permit applications are processed efficiently for your film production timeline.",
+        "contentFr": "Notre communication proactive avec les départements gouvernementaux marocains assure un traitement efficace des demandes de permis selon votre planning de production.",
+        "image": "/images/services/permits/location-access.jpg",
+        "layout": "left",
+        "title": "Fast-Track Government Authorizations",
+        "titleFr": "Autorisations Gouvernementales Accélérées",
+        "type": "text_image"
+      }
+    ],
+    "stats": null,
+    "features": [
+      {
+        "icon": "BadgeCheck",
+        "text": "Official CCM partner",
+        "text_fr": "Partenaire officiel CCM"
+      },
+      {
+        "icon": "Zap",
+        "text": "Fast-track processing",
+        "text_fr": "Traitement accéléré"
+      },
+      {
+        "icon": "Globe",
+        "text": "Any location in Morocco",
+        "text_fr": "N'importe quel lieu au Maroc"
+      }
+    ],
+    "images": []
+  },
+  "crewing": {
+    "slug": "crewing",
+    "title": "Film Crewing",
+    "title_fr": "Équipes de Tournage",
+    "brief_description": "Access Morocco's finest film professionals with international experience.",
+    "hero_image": "hero_g3burm3q0v.jpg",
+    "sections": [
+      {
+        "background": "/images/services/crewing/hero.jpg",
+        "description": "Multilingual crews for seamless collaboration on international productions.",
+        "description_fr": "Équipes multilingues pour une collaboration fluide sur les productions internationales.",
+        "title": "World-Class Moroccan Film Talent",
+        "title_fr": "Talents Cinématographiques Marocains de Classe Mondiale",
+        "type": "hero"
+      },
+      {
+        "content": "TFS Cinema Solutions provides access to an extensive database of highly skilled film technicians and production professionals with proven international project experience. Our crews include cinematographers, camera operators, gaffers, key grips, sound mixers, and department heads.",
+        "contentFr": "TFS Cinema Solutions donne accès à une base de données étendue de techniciens de cinéma hautement qualifiés et professionnels de production avec une expérience internationale prouvée.",
+        "image": "/images/services/crewing/professional-crew.jpg",
+        "layout": "right",
+        "title": "World-Class Multilingual Film Crews",
+        "titleFr": "Équipes de Tournage Multilingues de Classe Mondiale",
+        "type": "text_image"
+      },
+      {
+        "content": "We carefully select and vet local Moroccan talent to match your film production's specific creative and technical requirements.",
+        "contentFr": "Nous sélectionnons et vérifions soigneusement les talents locaux marocains pour correspondre aux exigences créatives et techniques spécifiques de votre production.",
+        "image": "/images/services/crewing/multilingual-team.webp",
+        "layout": "left",
+        "title": "Tailored Technical Talent Matching",
+        "titleFr": "Matching de Talents Techniques sur Mesure",
+        "type": "text_image"
+      }
+    ],
+    "stats": null,
+    "features": [
+      {
+        "icon": "Languages",
+        "text": "Arabic, French, English, Spanish",
+        "text_fr": "Arabe, Français, Anglais, Espagnol"
+      },
+      {
+        "icon": "Award",
+        "text": "Award-winning professionals",
+        "text_fr": "Professionnels primés"
+      },
+      {
+        "icon": "Users",
+        "text": "All departments covered",
+        "text_fr": "Tous les départements couverts"
+      }
+    ],
+    "images": []
+  },
+  "scouting": {
+    "slug": "scouting",
+    "title": "Location Scouting",
+    "title_fr": "Repérage des Lieux",
+    "brief_description": "Discover Morocco's cinematic landscapes for your next production.",
+    "hero_image": "hero_euegnryu2x.jpg",
+    "sections": [
+      {
+        "background": "/images/services/scouting/hero.jpg",
+        "description": "From ancient medinas to Sahara dunes, find the perfect backdrop for your vision.",
+        "description_fr": "Des médinas anciennes aux dunes du Sahara, trouvez le décor parfait.",
+        "title": "Morocco: A World of Locations",
+        "title_fr": "Maroc: Un Monde de Lieux",
+        "type": "hero"
+      },
+      {
+        "content": "TFS Cinema Solutions transforms your screenplay into visual reality by identifying precise location matches across Morocco's incredibly diverse landscapes. From the sweeping Sahara Desert dunes to ancient Medinas, Roman ruins, snow-capped Atlas Mountains, and Atlantic coastal cliffs.",
+        "contentFr": "TFS Cinema Solutions transforme votre scénario en réalité visuelle en identifiant des correspondances précises de lieux à travers les paysages incroyablement diversifiés du Maroc.",
+        "image": "/images/services/scouting/morocco-locations.webp",
+        "layout": "right",
+        "title": "Strategic Location Scouting Across Morocco",
+        "titleFr": "Repérage de Lieux Stratégique à Travers le Maroc",
+        "type": "text_image"
+      },
+      {
+        "content": "Film production clients gain exclusive access to our extensive photo and video library showcasing Morocco's most iconic and hidden filming locations.",
+        "contentFr": "Les clients de production cinématographique obtiennent un accès exclusif à notre vaste bibliothèque de photos et vidéos présentant les lieux de tournage les plus emblématiques et cachés du Maroc.",
+        "image": "/images/services/scouting/desert-landscape.avif",
+        "layout": "left",
+        "title": "Comprehensive Location Library & Documentation",
+        "titleFr": "Bibliothèque de Lieux Complète et Documentation",
+        "type": "text_image"
+      }
+    ],
+    "stats": null,
+    "features": [
+      {
+        "icon": "Image",
+        "text": "Extensive photo library",
+        "text_fr": "Bibliothèque photo extensive"
+      },
+      {
+        "icon": "Map",
+        "text": "GPS-tagged locations",
+        "text_fr": "Lieux géolocalisés GPS"
+      },
+      {
+        "icon": "FileImage",
+        "text": "HD scout reports",
+        "text_fr": "Rapports de repérage HD"
+      }
+    ],
+    "images": []
+  },
+  "catering": {
+    "slug": "catering",
+    "title": "Film Catering",
+    "title_fr": "Restauration de Plateau",
+    "brief_description": "Professional on-set catering with fresh, locally-sourced ingredients.",
+    "hero_image": "hero_5895600zct.jpg",
+    "sections": [
+      {
+        "background": "/images/services/catering/hero.jpg",
+        "description": "Quality meals that keep your crew energized and focused throughout the shoot.",
+        "description_fr": "Repas de qualité qui gardent votre équipe énergisée et concentrée.",
+        "title": "Fuel Your Production",
+        "title_fr": "Alimentez Votre Production",
+        "type": "hero"
+      },
+      {
+        "content": "TFS Cinema Solutions offers reliable, high-quality catering services led by professionally trained chefs who prioritize food safety, hygiene, and exceptional taste for demanding film productions.",
+        "contentFr": "TFS Cinema Solutions offre des services de traiteur fiables et de haute qualité dirigés par des chefs professionnellement formés.",
+        "image": "/images/services/catering/gourmet-dining.jpg",
+        "layout": "right",
+        "title": "Professional Film Set Catering Services",
+        "titleFr": "Services Traiteur Professionnels pour Plateaux de Tournage",
+        "type": "text_image"
+      },
+      {
+        "content": "Whether your film production needs all-day craft services for continuous grazing, structured set menus for scheduled meal breaks, or customized meal plans for special requests and VIP talent, our catering solutions adapt seamlessly.",
+        "contentFr": "Que votre production ait besoin de services de régie toute la journée ou de menus structurés pour les pauses repas, nos solutions s'adaptent parfaitement.",
+        "image": "/images/services/catering/flexible-service.jpg",
+        "layout": "left",
+        "title": "Flexible Production Dining Solutions",
+        "titleFr": "Solutions de Repas de Production Flexibles",
+        "type": "text_image"
+      }
+    ],
+    "stats": null,
+    "features": [
+      {
+        "icon": "Leaf",
+        "text": "Fresh daily ingredients",
+        "text_fr": "Ingrédients frais quotidiens"
+      },
+      {
+        "icon": "Heart",
+        "text": "All dietary needs covered",
+        "text_fr": "Besoins alimentaires couverts"
+      },
+      {
+        "icon": "Truck",
+        "text": "Mobile kitchen available",
+        "text_fr": "Cuisine mobile disponible"
+      }
+    ],
+    "images": []
+  },
+  "accommodation": {
+    "slug": "accommodation",
+    "title": "Accommodation",
+    "title_fr": "Hébergement",
+    "brief_description": "Premium crew accommodations at preferential production rates.",
+    "hero_image": "luxury_hotel_6orrsw75f5.jpg",
+    "sections": [
+      {
+        "background": "/images/services/accommodation/luxury-hotel.jpg",
+        "description": "Premium accommodations nationwide with significant production discounts.",
+        "description_fr": "Hébergements premium nationaux avec remises production significatives.",
+        "title": "Rest in Comfort",
+        "title_fr": "Reposez-vous Confortablement",
+        "type": "hero"
+      },
+      {
+        "content": "Our production coordinators at TFS Cinema Solutions specialize in comprehensive travel logistics for international film productions, including hotel bookings, air transportation, and ground transfers throughout Morocco.",
+        "contentFr": "Nos coordinateurs de production chez TFS Cinema Solutions se spécialisent dans la logistique de voyage complète pour les productions cinématographiques internationales.",
+        "image": "/images/services/accommodation/luxury-hotel.jpg",
+        "layout": "right",
+        "title": "Optimized Production Travel Logistics",
+        "titleFr": "Logistique de Voyage de Production Optimisée",
+        "type": "text_image"
+      },
+      {
+        "content": "TFS Film Solutions arranges accommodation tailored to any production budget while maintaining high comfort standards essential for keeping your cast and crew rested and productive.",
+        "contentFr": "TFS Film Solutions organise des hébergements adaptés à tout budget de production tout en maintenant des standards de confort élevés.",
+        "image": "/images/services/accommodation/moroccan-riad.jpg",
+        "layout": "left",
+        "title": "Comfortable Cast & Crew Lodging",
+        "titleFr": "Hébergement Confortable pour Distribution et Équipe",
+        "type": "text_image"
+      }
+    ],
+    "stats": null,
+    "features": [
+      {
+        "icon": "Percent",
+        "text": "Preferential production rates",
+        "text_fr": "Tarifs préférentiels production"
+      },
+      {
+        "icon": "Star",
+        "text": "Luxury to budget options",
+        "text_fr": "Options luxe à économique"
+      },
+      {
+        "icon": "MapPin",
+        "text": "Nationwide coverage",
+        "text_fr": "Couverture nationale"
+      }
+    ],
+    "images": []
+  },
+  "transportation": {
+    "slug": "transportation",
+    "title": "Transportation",
+    "title_fr": "Transport",
+    "brief_description": "Complete ground and air transport solutions for productions.",
+    "hero_image": "hero_cuhbt15x75.jpg",
+    "sections": [
+      {
+        "background": "/images/services/transportation/hero.jpg",
+        "description": "Reliable fleet and logistics for seamless crew and equipment movement.",
+        "description_fr": "Flotte fiable et logistique pour déplacement fluide équipe et équipement.",
+        "title": "Move Your Production",
+        "title_fr": "Déplacez Votre Production",
+        "type": "hero"
+      },
+      {
+        "content": "TFS Cinema Solutions provides dependable, budget-efficient transportation solutions with a diverse fleet specifically adapted to the demanding needs of film productions in Morocco.",
+        "contentFr": "TFS Cinema Solutions fournit des solutions de transport fiables et économiques avec une flotte diversifiée spécifiquement adaptée aux besoins exigeants des productions.",
+        "image": "/images/services/transportation/production-fleet.jpg",
+        "layout": "right",
+        "title": "Diverse Film Production Vehicle Fleet",
+        "titleFr": "Flotte Diversifiée de Véhicules de Production",
+        "type": "text_image"
+      },
+      {
+        "content": "For complex film shoots in challenging terrain, TFS Film Solutions coordinates specialized 4x4 vehicles, modified desert transport, and off-road solutions for safe access to Morocco's most remote and spectacular filming locations.",
+        "contentFr": "Pour les tournages complexes en terrain difficile, TFS Film Solutions coordonne des véhicules 4x4 spécialisés, transport désertique modifié et solutions hors-piste.",
+        "image": "/images/services/transportation/desert-4x4.jpg",
+        "layout": "left",
+        "title": "Specialized Off-Road & Remote Access",
+        "titleFr": "Accès Spécialisé Hors-Piste et Zones Isolées",
+        "type": "text_image"
+      }
+    ],
+    "stats": null,
+    "features": [
+      {
+        "icon": "Truck",
+        "text": "Diverse vehicle fleet",
+        "text_fr": "Flotte de véhicules diverse"
+      },
+      {
+        "icon": "Navigation",
+        "text": "GPS fleet tracking",
+        "text_fr": "Suivi GPS de flotte"
+      },
+      {
+        "icon": "Plane",
+        "text": "Air transport coordination",
+        "text_fr": "Coordination transport aérien"
+      }
+    ],
+    "images": []
+  },
+  "casting": {
+    "slug": "casting",
+    "title": "Casting",
+    "title_fr": "Casting",
+    "brief_description": "Diverse Moroccan talent for international productions.",
+    "hero_image": "hero_pvfqnfds85.jpg",
+    "sections": [
+      {
+        "background": "/images/services/casting/hero.jpg",
+        "description": "A rich diversity of looks and profiles for any character or role.",
+        "description_fr": "Une riche diversité de looks et profils pour tout personnage ou rôle.",
+        "title": "Discover Moroccan Talent",
+        "title_fr": "Découvrez les Talents Marocains",
+        "type": "hero"
+      },
+      {
+        "content": "Morocco's rich multicultural history makes it an exceptional destination for diverse casting requirements. TFS Cinema Solutions accesses a wide range of professional profiles reflecting the region's unique blend of European, Middle Eastern, Berber, and African influences.",
+        "contentFr": "L'histoire multiculturelle riche du Maroc en fait une destination exceptionnelle pour des exigences de casting diverses. TFS Cinema Solutions accède à une large gamme de profils professionnels.",
+        "image": "/images/services/casting/talent-pool.jpeg",
+        "layout": "right",
+        "title": "Diverse International Talent Pool",
+        "titleFr": "Vivier de Talents Internationaux Diversifiés",
+        "type": "text_image"
+      },
+      {
+        "content": "TFS Film Solutions manages the entire casting process for productions filming in Morocco, from initial talent sourcing for background extras to principal role auditions.",
+        "contentFr": "TFS Film Solutions gère l'ensemble du processus de casting pour les productions tournant au Maroc, de la recherche initiale de talents pour figurants aux auditions de rôles principaux.",
+        "image": "/images/services/casting/auditions.jpg",
+        "layout": "left",
+        "title": "Professional Audition Management",
+        "titleFr": "Gestion d'Auditions Professionnelle",
+        "type": "text_image"
+      }
+    ],
+    "stats": null,
+    "features": [
+      {
+        "icon": "Database",
+        "text": "Extensive talent database",
+        "text_fr": "Base de talents extensive"
+      },
+      {
+        "icon": "Video",
+        "text": "4K self-tape facility",
+        "text_fr": "Studio self-tape 4K"
+      },
+      {
+        "icon": "Globe",
+        "text": "Diverse ethnic looks",
+        "text_fr": "Looks ethniques divers"
+      }
+    ],
+    "images": []
+  },
+  "makeup-hair": {
+    "slug": "makeup-hair",
+    "title": "Make-up & Hair",
+    "title_fr": "Maquillage & Coiffure",
+    "brief_description": "TFS provides professional make-up and hair services tailored to the specific demands of film, television, and commercial productions.",
+    "hero_image": "hero_jazzjgook6.jpg",
+    "sections": [
+      {
+        "content": "Our team consists of experienced make-up artists and hair stylists skilled in character design, continuity, and on-set efficiency.",
+        "contentFr": "Notre équipe se compose de maquilleurs et coiffeurs expérimentés qualifiés en conception de personnages et continuité.",
+        "image": "/images/services/crewing/hero.jpg",
+        "layout": "left",
+        "title": "Experienced Team",
+        "title_fr": "Équipe Expérimentée",
+        "type": "text_image"
+      },
+      {
+        "content": "We use high-quality, industry-standard products to ensure durability under demanding shooting conditions, lighting setups, and long production hours.",
+        "contentFr": "Nous utilisons des produits de haute qualité aux standards de l'industrie pour assurer la durabilité.",
+        "image": "/images/services/crewing/hero.jpg",
+        "layout": "right",
+        "title": "Industry Standards",
+        "title_fr": "Standards de l'Industrie",
+        "type": "text_image"
+      }
+    ],
+    "stats": null,
+    "features": [
+      {
+        "icon": "CheckCircle",
+        "text": "Character design experts",
+        "text_fr": "Experts en design de personnage"
+      },
+      {
+        "icon": "Clock",
+        "text": "Long-lasting products",
+        "text_fr": "Produits longue durée"
+      },
+      {
+        "icon": "User",
+        "text": "On-set efficiency",
+        "text_fr": "Efficacité sur plateau"
+      }
+    ],
+    "images": []
+  },
+  "costume-wardrobe": {
+    "slug": "costume-wardrobe",
+    "title": "Costume & Wardrobe",
+    "title_fr": "Costume & Garde-robe",
+    "brief_description": "TFS offers comprehensive costume and wardrobe services designed to support the visual identity and storytelling of each production.",
+    "hero_image": "professional_crew_i5r0r0ohfp.jpg",
+    "sections": [
+      {
+        "content": "Our costume department assists with costume design, sourcing, fittings, alterations, and on-set wardrobe management.",
+        "contentFr": "Notre département costumes assiste avec la conception, le sourcing, lesessayages et les retouches.",
+        "image": "/images/services/crewing/professional-crew.jpg",
+        "layout": "left",
+        "title": "Design & Sourcing",
+        "title_fr": "Design & Sourcing",
+        "type": "text_image"
+      },
+      {
+        "content": "Through partnerships with local designers, tailors, and rental houses, TFS provides flexible solutions adapted to creative vision, schedule, and budget.",
+        "contentFr": "Grâce à des partenariats avec des designers locaux et tailleurs, TFS fournit des solutions flexibles.",
+        "image": "/images/services/crewing/professional-crew.jpg",
+        "layout": "right",
+        "title": "Local Partnerships",
+        "title_fr": "Partenariats Locaux",
+        "type": "text_image"
+      }
+    ],
+    "stats": null,
+    "features": [
+      {
+        "icon": "Scissors",
+        "text": "Custom alterations",
+        "text_fr": "Retouches sur mesure"
+      },
+      {
+        "icon": "Search",
+        "text": "Local sourcing",
+        "text_fr": "Sourcing local"
+      },
+      {
+        "icon": "Shirt",
+        "text": "Period & contemporary",
+        "text_fr": "Époque & contemporain"
+      }
+    ],
+    "images": []
+  },
+  "props-set-dressing": {
+    "slug": "props-set-dressing",
+    "title": "Props & Set Dressing",
+    "title_fr": "Accessoires & Habillage",
+    "brief_description": "TFS supports productions with prop sourcing and set dressing services to enhance authenticity and visual impact.",
+    "hero_image": "hero_mxlcerzaku.jpg",
+    "sections": [
+      {
+        "content": "From period-accurate objects to custom-made props, our team handles research, acquisition, fabrication, transportation, and on-set coordination.",
+        "contentFr": "Des objets d'époque aux accessoires sur mesure, notre équipe gère la recherche et la fabrication.",
+        "image": "/images/services/scouting/hero.jpg",
+        "layout": "left",
+        "title": "Sourcing & Fabrication",
+        "title_fr": "Sourcing & Fabrication",
+        "type": "text_image"
+      },
+      {
+        "content": "Every detail is carefully selected to align with the director’s vision and production design requirements.",
+        "contentFr": "Chaque détail est soigneusement sélectionné pour s'aligner avec la vision du réalisateur.",
+        "image": "/images/services/scouting/hero.jpg",
+        "layout": "right",
+        "title": "Director's Vision",
+        "title_fr": "Vision du Réalisateur",
+        "type": "text_image"
+      }
+    ],
+    "stats": null,
+    "features": [
+      {
+        "icon": "Search",
+        "text": "Authentic sourcing",
+        "text_fr": "Sourcing authentique"
+      },
+      {
+        "icon": "Hammer",
+        "text": "Custom fabrication",
+        "text_fr": "Fabrication sur mesure"
+      },
+      {
+        "icon": "Eye",
+        "text": "Detail oriented",
+        "text_fr": "Souci du détail"
+      }
+    ],
+    "images": []
+  },
+  "production-design": {
+    "slug": "production-design",
+    "title": "Production Design",
+    "title_fr": "Design de Production",
+    "brief_description": "TFS provides experienced art department professionals to oversee production design and visual coherence across all shooting locations.",
+    "hero_image": "morocco_locations_cs2wunnpz5.webp",
+    "sections": [
+      {
+        "content": "Our services include concept development, set construction, scenic painting, and location adaptation.",
+        "contentFr": "Nos services incluent le développement de concept, la construction de décors et l'adaptation de lieux.",
+        "image": "/images/services/scouting/morocco-locations.webp",
+        "layout": "left",
+        "title": "Concept to Reality",
+        "title_fr": "Du Concept à la Réalité",
+        "type": "text_image"
+      },
+      {
+        "content": "We work closely with directors and production designers to ensure each environment supports the narrative while remaining efficient and cost-effective.",
+        "contentFr": "Nous travaillons étroitement avec les réalisateurs pour assurer que chaque environnement soutient la narration.",
+        "image": "/images/services/scouting/morocco-locations.webp",
+        "layout": "right",
+        "title": "Efficiency",
+        "title_fr": "Efficacité",
+        "type": "text_image"
+      }
+    ],
+    "stats": null,
+    "features": [
+      {
+        "icon": "PenTool",
+        "text": "Concept development",
+        "text_fr": "Développement de concept"
+      },
+      {
+        "icon": "Hammer",
+        "text": "Set construction",
+        "text_fr": "Construction de décors"
+      },
+      {
+        "icon": "Palette",
+        "text": "Scenic painting",
+        "text_fr": "Peinture scénique"
+      }
+    ],
+    "images": []
+  },
+  "security-management": {
+    "slug": "security-management",
+    "title": "Security & Set Management",
+    "title_fr": "Sécurité & Gestion de Plateau",
+    "brief_description": "To ensure smooth and uninterrupted filming, TFS offers professional security and set management services.",
+    "hero_image": "hero_k9cnjmea3i.jpg",
+    "sections": [
+      {
+        "content": "Our teams coordinate crowd control, equipment protection, access management, and on-location safety—particularly for sensitive or high-profile productions.",
+        "contentFr": "Nos équipes coordonnent le contrôle des foules, la protection de l'équipement et la sécurité sur site.",
+        "image": "/images/services/transportation/hero.jpg",
+        "layout": "left",
+        "title": "Set Management",
+        "title_fr": "Gestion de Plateau",
+        "type": "text_image"
+      },
+      {
+        "content": "All operations are conducted in compliance with local regulations and production safety standards.",
+        "contentFr": "Toutes les opérations sont menées en conformité avec les réglementations locales.",
+        "image": "/images/services/transportation/hero.jpg",
+        "layout": "right",
+        "title": "Safety Compliance",
+        "title_fr": "Conformité Sécurité",
+        "type": "text_image"
+      }
+    ],
+    "stats": null,
+    "features": [
+      {
+        "icon": "Shield",
+        "text": "Crowd control",
+        "text_fr": "Contrôle des foules"
+      },
+      {
+        "icon": "Lock",
+        "text": "Access management",
+        "text_fr": "Gestion d'accès"
+      },
+      {
+        "icon": "FileCheck",
+        "text": "Regulatory compliance",
+        "text_fr": "Conformité réglementaire"
+      }
+    ],
+    "images": []
+  }
+}

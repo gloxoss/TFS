@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache"
 import { slugify } from "@/lib/utils/slugify"
 import { PB_URL } from "@/lib/pocketbase/config"
 import { createActionLogger } from "@/lib/logger"
+import { verifyAdminAccess } from '@/services/auth/access-control'
 
 const log = createActionLogger('Blog');
 
@@ -20,6 +21,12 @@ export type BlogActionResult = {
  */
 export async function createPost(formData: FormData): Promise<BlogActionResult> {
     try {
+        // Verify admin access first
+        const isAdmin = await verifyAdminAccess()
+        if (!isAdmin) {
+            return { success: false, error: "Unauthorized: Admin access required" }
+        }
+
         const pb = await createAdminClient()
 
         // Basic validation
@@ -46,6 +53,7 @@ export async function createPost(formData: FormData): Promise<BlogActionResult> 
             content_en: formData.get('content_en') || formData.get('content') || '',
             content_fr: formData.get('content_fr') || formData.get('content_en') || '',
             category: formData.get('category') || 'news',
+            video_url: formData.get('video_url') || '',
             published: formData.get('published') === 'true',
             published_at: formData.get('published') === 'true' ? new Date().toISOString() : null,
         }
@@ -62,8 +70,7 @@ export async function createPost(formData: FormData): Promise<BlogActionResult> 
         const record = await pb.collection('posts').create(data)
 
         // Revalidate admin dashboard and blog pages
-        revalidatePath('/[lng]/admin/admin/blog', 'page')
-        revalidatePath('/[lng]/blog', 'layout')
+        revalidatePath('/', 'layout')
 
         return { success: true, data: record }
 
@@ -90,6 +97,12 @@ export async function createPost(formData: FormData): Promise<BlogActionResult> 
  */
 export async function updatePost(formData: FormData): Promise<BlogActionResult> {
     try {
+        // Verify admin access first
+        const isAdmin = await verifyAdminAccess()
+        if (!isAdmin) {
+            return { success: false, error: "Unauthorized: Admin access required" }
+        }
+
         const pb = await createAdminClient()
         const id = formData.get('id')?.toString()
 
@@ -117,6 +130,9 @@ export async function updatePost(formData: FormData): Promise<BlogActionResult> 
         if (formData.has('content_fr')) data.content_fr = formData.get('content_fr')
 
         if (formData.has('category')) data.category = formData.get('category')
+        const videoUrl = formData.get('video_url')
+        if (videoUrl !== null) data.video_url = videoUrl
+
         if (formData.has('published')) {
             data.published = formData.get('published') === 'true'
             if (data.published) data.published_at = new Date().toISOString()
@@ -130,8 +146,7 @@ export async function updatePost(formData: FormData): Promise<BlogActionResult> 
 
         const record = await pb.collection('posts').update(id, data)
 
-        revalidatePath('/[lng]/admin/blog', 'page')
-        revalidatePath('/[lng]/blog', 'layout')
+        revalidatePath('/', 'layout')
 
         return { success: true, data: record }
 
@@ -154,6 +169,7 @@ export async function getPost(id: string): Promise<{
         excerpt: string
         published: boolean
         coverImageUrl: string | null
+        videoUrl: string
         created: string
     }
     error?: string
@@ -175,6 +191,7 @@ export async function getPost(id: string): Promise<{
                 coverImageUrl: record.cover_image
                     ? `${PB_URL}/api/files/${record.collectionId}/${record.id}/${record.cover_image}`
                     : null,
+                videoUrl: record.video_url || '',
                 created: record.created
             }
         }
@@ -191,11 +208,16 @@ export async function getPost(id: string): Promise<{
  */
 export async function deletePost(id: string): Promise<BlogActionResult> {
     try {
+        // Verify admin access first
+        const isAdmin = await verifyAdminAccess()
+        if (!isAdmin) {
+            return { success: false, error: "Unauthorized: Admin access required" }
+        }
+
         const pb = await createAdminClient()
         await pb.collection('posts').delete(id)
 
-        revalidatePath('/[lng]/admin/admin/blog', 'page')
-        revalidatePath('/[lng]/blog', 'layout')
+        revalidatePath('/', 'layout')
 
         return { success: true }
 

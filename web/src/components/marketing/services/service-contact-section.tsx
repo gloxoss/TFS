@@ -40,13 +40,7 @@ export default function ServiceContactSection({ lng, showCatalog = false }: Serv
                         className="space-y-4"
                     >
                         {/* Request Quote - Links to Equipment */}
-                        <Link
-                            href={`/${lng}/equipment`}
-                            className="flex items-center justify-center gap-3 w-full px-8 py-4 bg-[#D00000] hover:bg-[#B00000] text-white font-medium rounded-full transition-all duration-300 group"
-                        >
-                            {lng === 'fr' ? 'Demander un Devis' : 'Request a Quote'}
-                            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                        </Link>
+
 
 
 

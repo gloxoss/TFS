@@ -47,7 +47,6 @@ export default function CenteredLoginWithAnimatedForm() {
                                 >
                                     <Form validationBehavior="native" onSubmit={handleSubmit} className="flex flex-col gap-3">
                                         <Input
-                                            autoFocus
                                             isRequired
                                             label="Email Address"
                                             name="email"

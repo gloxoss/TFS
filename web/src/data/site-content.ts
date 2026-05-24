@@ -32,7 +32,7 @@ export const company = {
     // Tagline shown in various places
     tagline: {
         en: "We provide professional production solutions, handling every aspect of film and TV projects—from equipment and crew to locations, permits, props, and post-production.",
-        fr: "Nous fournissons des solutions de production professionnelles, gérant chaque aspect des projets cinématographiques et télévisés—from équipement et personnel à emplacements, permis, accessoires et post-production.",
+        fr: "Nous fournissons des solutions de production professionnelles, gérant chaque aspect des projets cinématographiques et télévisés-de l'équipement et personnel à emplacements, permis, accessoires et post-production.",
     },
 
     // Contact details
@@ -59,10 +59,10 @@ export const company = {
 
     // Social media links (leave empty string if not used)
     social: {
-        facebook: "",
-        instagram: "",
+        facebook: "https://facebook.com/tfs",
+        instagram: "https://instagram.com/tfs",
         linkedin: "",
-        youtube: ""
+        youtube: "https://youtube.com/@tfs"
     },
 
     // Copyright year - dynamically generated
@@ -78,8 +78,8 @@ export const company = {
 export const nav = {
     // Main navigation items (Services is a dynamic dropdown, not listed here)
     links: [
-        { href: "/about", label: { en: "About", fr: "À Propos" } },
-        { href: "/contact", label: { en: "Contact", fr: "Contact" } }
+        { href: "/about", label: { en: "About Us", fr: "À Propos" } },
+        { href: "/contact", label: { en: "Contact Us", fr: "Contactez-nous" } }
     ],
 
     // CTA button
@@ -123,7 +123,7 @@ export const footer = {
     ],
 
     companyLinks: [
-        { href: "/about", label: { en: "Our Story", fr: "Notre Histoire" } },
+        { href: "/about", label: { en: "About Us", fr: "Notre Histoire" } },
         { href: "/equipment", label: { en: "Our Equipment", fr: "Notre Équipement" } }
     ],
 
@@ -157,10 +157,10 @@ export const homePage = {
     },
 
     hero: {
-        title: { en: "Equip Your Vision", fr: "Équipez Votre Vision" },
+        title: { en: "Every Frame Tells a Story", fr: "Chaque Image Raconte une Histoire" },
         subtitle: {
-            en: "Professional cinema equipment for filmmakers who demand excellence.",
-            fr: "Équipement cinéma professionnel pour les cinéastes exigeants."
+            en: "Stories That Move the World.",
+            fr: "Des Histoires Qui Font Bouger le Monde."
         }
     },
 
@@ -173,13 +173,13 @@ export const homePage = {
         },
         // Top-right headline
         headline: {
-            line1: { en: "Equip", fr: "Équipez" },
-            line2: { en: "Your Vision", fr: "Votre Vision" }
+            line1: { en: "Every Frame", fr: "Chaque Image" },
+            line2: { en: "Tells a Story", fr: "Raconte une Histoire" }
         },
         // Description text
         description: {
-            en: "Professional production solutions for filmmakers—equipment, crew, locations, permits, props, and post-production—all to bring your vision to life.",
-            fr: "Solutions de production professionnelles pour les cinéastes : équipement, équipe, lieux, permis, accessoires et post-production — tout pour donner vie à votre vision."
+            en: "Stories That Move the World.",
+            fr: "Des Histoires Qui Font Bouger le Monde."
         },
         // CTA button
         cta: {
@@ -194,20 +194,20 @@ export const homePage = {
         mainTitle: { en: "RECOGNIZED EXPERTISE", fr: "EXPERTISE RECONNUE" },
         mainDescription: {
             en: [
-                "The expertise of our teams, combined with a high-tech equipment fleet, ensures our mastery of the entire audiovisual production chain.",
-                "Our know-how is now recognized in Morocco, Africa, and the Middle East for major audiovisual events: sports, entertainment, live performances, and TV production.",
-                "TFS has equipped a TV studio within its facilities that meets the highest requirements in terms of audiovisual equipment and soundproofing."
+                "The expertise of our teams, combined with a state-of-the-art equipment fleet, ensures complete mastery of the entire film and television production workflow — from technical preparation to final delivery.",
+                "Our know-how is recognized across Morocco, Africa, and the Middle East, supporting major productions and large-scale events including sports broadcasts, entertainment programs, live performances, and television productions.",
+                "To meet the highest professional standards, TFS (TV Film Solutions) operates a fully equipped in-house TV studio within its facilities, designed with advanced technical infrastructure and professional soundproofing — providing an optimal environment for high-end cinematic and broadcast production."
             ],
             fr: [
-                "L'expertise de nos équipes, combinée à une flotte d'équipements de haute technologie, garantit notre maîtrise de toute la chaîne de production audiovisuelle.",
-                "Notre savoir-faire est désormais reconnu au Maroc, en Afrique et au Moyen-Orient pour les grands événements audiovisuels : sport, divertissement, spectacles vivants et production TV.",
-                "TFS a équipé un studio TV dans ses locaux répondant aux plus hautes exigences en matière d'équipement audiovisuel et d'insonorisation."
+                "L’expertise de nos équipes, combinée à un parc d’équipements de pointe, garantit une maîtrise complète de l’ensemble du processus de production cinématographique et télévisuelle — de la préparation technique à la livraison finale.",
+                "Notre savoir-faire est reconnu au Maroc, en Afrique et au Moyen-Orient, accompagnant des productions majeures et des événements d’envergure tels que les retransmissions sportives, les programmes de divertissement, les spectacles en direct et les productions télévisuelles.",
+                "Afin de répondre aux plus hauts standards professionnels, TFS (TV Film Solutions) exploite un studio TV entièrement équipé au sein de ses installations, conçu avec une infrastructure technique avancée et une insonorisation professionnelle — offrant un environnement optimal pour les productions cinématographiques et les diffusions haut de gamme."
             ]
         },
         stats: {
             stat1: {
-                title: { en: "21+ YEARS", fr: "21+ ANS" },
-                desc: { en: "Leading the industry since 2003 with consistent excellence.", fr: "Leader du secteur depuis 2003 avec une excellence constante." }
+                title: { en: "10+ YEARS", fr: "10+ ANS" },
+                desc: { en: "Leading the industry since 2015 with consistent excellence.", fr: "Leader du secteur depuis 2015 avec une excellence constante." }
             },
             stat2: {
                 title: { en: "500+ PROJECTS", fr: "500+ PROJETS" },
@@ -219,12 +219,18 @@ export const homePage = {
             },
             fact2: {
                 title: { en: "HIGH-TECH FLEET", fr: "FLOTTE HIGH-TECH" },
-                desc: { en: "State-of-the-art OB Vans and cameras.", fr: "Cars OB et caméras à la pointe de la technologie." }
+                desc: { en: "State-of-the-art OB Vans and cameras.", fr: "Cars   régie et caméras à la pointe de la technologie." }
             },
             fact3: {
                 title: { en: "EXPERT TEAMS", fr: "ÉQUIPES EXPERTES" },
                 desc: { en: "Highly trained technical staff.", fr: "Personnel technique hautement qualifié." }
             }
+        },
+
+        // Bottom CTA Section
+        bottomCta: {
+            href: "/equipment",
+            label: { en: "Browse Equipment", fr: "Parcourir l'Équipement" }
         }
     }
 }
@@ -291,14 +297,14 @@ export const aboutPage = {
             fr: "À Propos de TFS | Location Matériel Cinéma Maroc"
         },
         description: {
-            en: "TFS has been equipping Morocco's film industry since 2010.",
-            fr: "TFS équipe l'industrie cinématographique marocaine depuis 2010."
+            en: "TFS has been equipping Morocco's film industry since 2015.",
+            fr: "TFS équipe l'industrie cinématographique marocaine depuis 2015."
         }
     },
 
     hero: {
         title: { en: "Morocco's Premier Cinema Equipment House", fr: "Premier Loueur de Matériel Cinéma au Maroc" },
-        subtitle: { en: "Empowering visionary filmmakers with world-class cameras, lenses, and lighting since 2010.", fr: "Au service des cinéastes visionnaires avec des caméras, objectifs et éclairages de classe mondiale depuis 2010." }
+        subtitle: { en: "Empowering visionary filmmakers with world-class cameras, lenses, and lighting since 2015.", fr: "Au service des cinéastes visionnaires avec des caméras, objectifs et éclairages de classe mondiale depuis 2015." }
     },
 
     story: [
@@ -318,7 +324,121 @@ export const aboutPage = {
             en: "To empower visual storytellers with professional-grade equipment and expert support.",
             fr: "Donner aux conteurs visuels les moyens de créer avec un équipement professionnel et un support expert."
         }
-    }
+    },
+
+    // Numerical stat values used in about-story-section.tsx
+    statsData: [
+        { value: 10, suffix: "+", labelKey: "stats.years" },
+        { value: 12000, suffix: "+", labelKey: "stats.projects" },
+        { value: 200, suffix: "+", labelKey: "stats.countries" },
+        { value: 98, suffix: "%", labelKey: "stats.satisfaction" },
+    ],
+
+    // Team member data used in team-section.tsx
+    teamMembers: [
+        {
+            name: "Karim Benjelloun",
+            roleKey: "md",
+            image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=800&auto=format&fit=crop",
+            link: "#",
+        },
+        {
+            name: "Youssef Amrani",
+            roleKey: "tech_lead",
+            image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=800&auto=format&fit=crop",
+            link: "#",
+        },
+        {
+            name: "Nadia El Fassi",
+            roleKey: "booking",
+            image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop",
+            link: "#",
+        },
+        {
+            name: "Omar Tazi",
+            roleKey: "logistics",
+            image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800&auto=format&fit=crop",
+            link: "#",
+        },
+        {
+            name: "Hassan Berrada",
+            roleKey: "maintenance",
+            image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=800&auto=format&fit=crop",
+            link: "#",
+        },
+        {
+            name: "Laila Chaoui",
+            roleKey: "support",
+            image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=800&auto=format&fit=crop",
+            link: "#",
+        },
+    ]
+}
+
+// =============================================================================
+// SOCIAL PROOF - Client names
+// =============================================================================
+
+export const clients = [
+    "NETFLIX",
+    "HBO",
+    "SONY PICTURES",
+    "UNIVERSAL",
+    "WARNER BROS",
+    "DISNEY+",
+    "APPLE TV+",
+    "PARAMOUNT",
+    "AMAZON STUDIOS"
+]
+
+// =============================================================================
+// INTRO BENTO - Homepage "Who Are We?" section
+// =============================================================================
+
+export const introBento = {
+    title: { en: "WHO ARE WE?", fr: "QUI SOMMES-NOUS ?" },
+    subtitle: { en: "The Standard of Excellence", fr: "Le Standard d'Excellence" },
+    description: {
+        en: "We combine technical mastery with logistical power to bring your vision to life.",
+        fr: "Nous combinons maîtrise technique et puissance logistique pour donner vie à votre vision."
+    },
+    items: [
+        {
+            title: { en: "A RELIABLE PARTNER", fr: "UN PARTENAIRE FIABLE" },
+            description: {
+                en: "We are the technical backbone of the Moroccan audiovisual industry, providing comprehensive solutions from consulting to storage for productions of all scales.",
+                fr: "Nous sommes l'épine dorsale technique de l'industrie audiovisuelle marocaine, offrant des solutions complètes du conseil au stockage pour des productions de toutes tailles."
+            }
+        },
+        {
+            title: { en: "EXCELLENCE MODEL", fr: "MODÈLE D'EXCELLENCE" },
+            description: {
+                en: "TFS has built its business model around three fundamental values that form the foundation of its corporate culture.",
+                fr: "TFS a construit son modèle économique autour de trois valeurs fondamentales qui constituent le socle de sa culture d'entreprise."
+            }
+        },
+        {
+            title: { en: "Innovation", fr: "Innovation" },
+            description: {
+                en: "Every service we deliver is unique. We design specialized solutions with our partners to meet the highest standards.",
+                fr: "Chaque service que nous fournissons est unique. Nous concevons des solutions spécialisées avec nos partenaires pour répondre aux plus hauts standards."
+            }
+        },
+        {
+            title: { en: "Technical Quality", fr: "Qualité Technique" },
+            description: {
+                en: "Guaranteed by the expertise of our teams and the reliability of our equipment, devices, and IT/digital solutions.",
+                fr: "Garantie par l'expertise de nos équipes et la fiabilité de nos équipements, appareils et solutions IT/numériques."
+            }
+        },
+        {
+            title: { en: "Customer Service", fr: "Service Client" },
+            description: {
+                en: "We guarantee compliance with deadlines thanks to the professionalism of our teams and efficient operational processes.",
+                fr: "Nous garantissons le respect des délais grâce au professionnalisme de nos équipes et à des processus opérationnels efficaces."
+            }
+        }
+    ]
 }
 
 // =============================================================================
@@ -409,18 +529,18 @@ export const globalOperations = {
 
 export const searchConfig = {
     categories: [
-        { key: "camera", label: { en: "Cameras", fr: "Caméras" }, query: "camera" },
-        { key: "lens", label: { en: "Lenses", fr: "Objectifs" }, query: "lens" },
+        { key: "camera", label: { en: "Cameras", fr: "Caméras" }, query: "cameras" },
+        { key: "lens", label: { en: "Lenses", fr: "Objectifs" }, query: "lenses" },
         { key: "lighting", label: { en: "Lighting", fr: "Éclairages" }, query: "lighting" },
-        { key: "audio", label: { en: "Audio", fr: "Audio" }, query: "audio" }
+        { key: "audio", label: { en: "Monitors", fr: "Moniteurs" }, query: "monitors" }
     ],
     popular: [
-        "RED Komodo",
         "ARRI Alexa",
-        "Sony FX6",
-        "Aputure 600d",
-        "Zeiss CP.3",
-        "DJI Ronin"
+        "Sony Venice",
+        "RED Komodo",
+        "Teradek",
+        "Zeiss",
+        "Aputure"
     ]
 }
 

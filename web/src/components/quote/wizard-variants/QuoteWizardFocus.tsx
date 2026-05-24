@@ -62,7 +62,6 @@ export function QuoteWizardFocus({ items }: WizardProps) {
 
                             {currentQ.type === 'email' && (
                                 <input
-                                    autoFocus
                                     type="email"
                                     placeholder={currentQ.placeholder}
                                     className="w-full bg-transparent border-b-2 border-zinc-800 py-4 text-3xl md:text-4xl text-white placeholder:text-zinc-800 outline-none focus:border-white transition-colors"
@@ -71,7 +70,6 @@ export function QuoteWizardFocus({ items }: WizardProps) {
 
                             {currentQ.type === 'text' && (
                                 <input
-                                    autoFocus
                                     type="text"
                                     placeholder={currentQ.placeholder}
                                     className="w-full bg-transparent border-b-2 border-zinc-800 py-4 text-3xl md:text-4xl text-white placeholder:text-zinc-800 outline-none focus:border-white transition-colors"
@@ -80,7 +78,6 @@ export function QuoteWizardFocus({ items }: WizardProps) {
 
                             {currentQ.type === 'textarea' && (
                                 <textarea
-                                    autoFocus
                                     placeholder={currentQ.placeholder}
                                     className="w-full bg-transparent border-b-2 border-zinc-800 py-4 text-2xl md:text-3xl text-white placeholder:text-zinc-800 outline-none focus:border-white transition-colors resize-none h-40"
                                 />

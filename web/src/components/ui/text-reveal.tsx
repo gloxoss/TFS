@@ -8,11 +8,13 @@ import { cn } from "@/lib/utils";
 interface TextRevealByWordProps {
     text: string;
     className?: string;
+    textClassName?: string;
 }
 
 export const TextRevealByWord: FC<TextRevealByWordProps> = ({
     text,
     className,
+    textClassName,
 }) => {
     const targetRef = useRef<HTMLDivElement | null>(null);
 
@@ -31,9 +33,10 @@ export const TextRevealByWord: FC<TextRevealByWordProps> = ({
             >
                 <p
                     ref={targetRef}
-                    className={
-                        "flex flex-wrap p-5 text-2xl font-bold font-display text-black/20 dark:text-white/20 md:p-8 md:text-3xl lg:p-10 lg:text-4xl xl:text-5xl"
-                    }
+                    className={cn(
+                        "flex flex-wrap p-5 text-2xl font-bold font-display text-black/20 dark:text-white/20 md:p-8 md:text-3xl lg:p-10 lg:text-4xl xl:text-5xl",
+                        textClassName
+                    )}
                 >
                     {words.map((word, i) => {
                         const start = i / words.length;

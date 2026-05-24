@@ -1,6 +1,7 @@
 "use client"
 
 import { motion } from 'framer-motion'
+import DOMPurify from 'isomorphic-dompurify'
 import type { ServiceSection } from '@/services/services/interface'
 import Image from 'next/image'
 
@@ -65,14 +66,14 @@ export default function ServiceContentSection({ sections, lng, serviceId }: Serv
                             {/* Content Box */}
                             <div className={`max-w-5xl ${isReversed ? 'text-right' : 'text-left'}`}>
                                 {title && (
-                                    <h2 className="text-5xl md:text-7xl lg:text-8xl font-display font-bold text-white mb-8 leading-[0.9] uppercase tracking-tight text-balance">
+                                    <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white mb-8 leading-[0.95] uppercase tracking-tight text-balance">
                                         {title}
                                     </h2>
                                 )}
                                 {content && (
                                     <div
                                         className="prose prose-invert prose-lg md:prose-2xl max-w-none text-zinc-200 leading-relaxed text-pretty"
-                                        dangerouslySetInnerHTML={{ __html: content }}
+                                        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }}
                                     />
                                 )}
 

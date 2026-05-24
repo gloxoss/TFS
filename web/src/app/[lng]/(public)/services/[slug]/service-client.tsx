@@ -15,13 +15,37 @@ import ServiceFeaturesSection from '@/components/marketing/services/service-feat
 import ServiceContactSection from '@/components/marketing/services/service-contact-section'
 import CTASection from '@/components/marketing/cta-section'
 
+// Template Components
+import ShowcaseServiceClient from './showcase-service-client'
+import HubServiceClient from './hub-service-client'
+
 interface ServiceDetailClientProps {
     service: Service
     lng: string
+    subServices?: Service[]  // For hub template
 }
 
-export default function ServiceDetailClient({ service, lng }: ServiceDetailClientProps) {
+export default function ServiceDetailClient({ service, lng, subServices }: ServiceDetailClientProps) {
     const [showFloatingButton, setShowFloatingButton] = useState(false)
+
+    // Show floating button after scrolling
+    useEffect(() => {
+        const handleScroll = () => {
+            setShowFloatingButton(window.scrollY > 400)
+        }
+        window.addEventListener('scroll', handleScroll, { passive: true })
+        return () => window.removeEventListener('scroll', handleScroll)
+    }, [])
+
+    // Route to hub template if applicable (both 'hub' and 'hub_alt')
+    if ((service.template === 'hub' || service.template === 'hub_alt') && subServices) {
+        return <HubServiceClient service={service} subServices={subServices} lng={lng} />
+    }
+
+    // Route to showcase template if applicable
+    if (service.template === 'showcase') {
+        return <ShowcaseServiceClient service={service} lng={lng} />
+    }
 
     // Localized content
     const title = lng === 'fr' && service.titleFr ? service.titleFr : service.title
@@ -35,15 +59,6 @@ export default function ServiceDetailClient({ service, lng }: ServiceDetailClien
     // Check if we have structured content
     const hasStructuredContent = service.sections?.length || service.stats?.length || service.features?.length || service.tags?.length
 
-    // Show floating button after scrolling
-    useEffect(() => {
-        const handleScroll = () => {
-            setShowFloatingButton(window.scrollY > 400)
-        }
-        window.addEventListener('scroll', handleScroll)
-        return () => window.removeEventListener('scroll', handleScroll)
-    }, [])
-
     return (
         <main className="min-h-screen bg-black text-white">
             {/* Floating Equipment Button - Top Right */}
@@ -54,7 +69,7 @@ export default function ServiceDetailClient({ service, lng }: ServiceDetailClien
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: 50 }}
                         transition={{ duration: 0.3 }}
-                        className="fixed top-24 right-6 md:right-12 z-50"
+                        className="fixed bottom-28 right-6 z-50"
                     >
                         <Link
                             href={`/${lng}/equipment`}

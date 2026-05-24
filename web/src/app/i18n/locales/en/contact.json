@@ -17,6 +17,12 @@
     "info": {
         "title": "Visit Us",
         "subtitle": "Our equipment showroom in Casablanca.",
+        "labels": {
+            "headquarters": "Headquarters",
+            "address": "Address",
+            "phone": "Phone",
+            "email": "Email"
+        },
         "casablanca": {
             "city": "Casablanca, Morocco",
             "address": "55-57, Rue Souleimane el Farissi, 20330",
@@ -28,6 +34,10 @@
         "title": "Opening Hours",
         "weekdays": "Monday - Friday: 9:00 - 18:00",
         "saturday": "Saturday: 10:00 - 14:00",
-        "sunday": "Sunday: Closed"
+        "sunday": "Sunday: Closed",
+        "weekdaysLabel": "Mon - Fri",
+        "weekdaysTime": "9:00 - 18:00",
+        "weekendLabel": "Saturday / Sunday",
+        "weekendStatus": "Closed"
     }
 }

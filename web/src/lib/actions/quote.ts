@@ -17,8 +17,10 @@ import { cookies } from 'next/headers'
 import PocketBase from 'pocketbase'
 import { QuoteFormData } from '@/lib/schemas/quote'
 import { getQuoteService, getEmailService } from '@/services'
+import { getEmailConfig } from '@/services/email/templates/config'
 import { createServerClient, createAdminClient } from '@/lib/pocketbase/server'
 import type { CreateQuotePayload, QuoteResult, QuoteEmailItem } from '@/services'
+import { ENABLE_DIGITAL_SIGNATURE } from '@/lib/config'
 
 // BLIND QUOTE: Simplified cart item - no pricing data
 interface SubmissionCartItem {
@@ -174,6 +176,8 @@ export async function submitQuote(submission: QuoteSubmissionData): Promise<Quot
       const accessToken = 'accessToken' in result.data ? result.data.accessToken : undefined
       const confirmationNumber = 'confirmationNumber' in result.data ? result.data.confirmationNumber : ''
 
+      const emailConfig = getEmailConfig()
+
       // Send customer confirmation email
       try {
         await emailService.sendQuoteConfirmation({
@@ -186,7 +190,7 @@ export async function submitQuote(submission: QuoteSubmissionData): Promise<Quot
           rentalEndDate: endDate,
           projectDescription: payload.projectDescription,
           specialRequests: payload.specialRequests,
-          replyTo: process.env.ADMIN_EMAIL,
+          replyTo: emailConfig.adminEmail,
           // Magic link data for quote tracking
           quoteId,
           accessToken,
@@ -200,7 +204,7 @@ export async function submitQuote(submission: QuoteSubmissionData): Promise<Quot
       // Send admin notification email
       try {
         await emailService.sendAdminQuoteNotification({
-          to: process.env.ADMIN_EMAIL || '',
+          to: emailConfig.adminEmails,
           subject: `🎬 New Quote Request: ${confirmationNumber}`,
           customerName,
           customerEmail: formData.email,
@@ -241,9 +245,11 @@ export async function submitQuote(submission: QuoteSubmissionData): Promise<Quot
 export async function acceptQuote(
   quoteId: string,
   accessToken: string,
-  signatureFormData: FormData
+  signatureFormData?: FormData
 ): Promise<QuoteResult> {
   try {
+    console.log('[AUDIT] acceptQuote START', { quoteId, hasToken: !!accessToken, hasSignature: !!signatureFormData })
+
     // Validate inputs
     if (!quoteId || !accessToken) {
       return {
@@ -252,39 +258,56 @@ export async function acceptQuote(
       }
     }
 
-    const signatureFile = signatureFormData.get('signature') as File
-    if (!signatureFile || signatureFile.size === 0) {
-      return {
-        success: false,
-        error: 'Please provide your signature to accept the quote.',
+    // Only require signature when digital signature feature is enabled
+    console.log('[AUDIT] ENABLE_DIGITAL_SIGNATURE =', ENABLE_DIGITAL_SIGNATURE)
+    if (ENABLE_DIGITAL_SIGNATURE) {
+      const signatureFile = signatureFormData?.get('signature') as File | null
+      if (!signatureFile || signatureFile.size === 0) {
+        return {
+          success: false,
+          error: 'Please provide your signature to accept the quote.',
+        }
       }
     }
 
     // Initialize PocketBase with admin auth for server-side operations
-    const pb = await createAdminClient()
+    console.log('[AUDIT] Creating admin client...')
+    let pb
+    try {
+      pb = await createAdminClient()
+      console.log('[AUDIT] Admin client created. authStore.isValid:', pb.authStore.isValid)
+    } catch (authErr: any) {
+      console.error('[AUDIT] ADMIN AUTH FAILED:', authErr?.message || authErr)
+      return { success: false, error: `[AUDIT] Admin auth failed: ${authErr?.message}` }
+    }
 
     // Fetch the quote and validate access token
+    console.log('[AUDIT] Fetching quote:', quoteId)
     let quote
     try {
       quote = await pb.collection('quotes').getOne(quoteId)
-    } catch {
-      return {
-        success: false,
-        error: 'Quote not found. Please check your link and try again.',
-      }
+      console.log('[AUDIT] Quote fetched OK:', { status: quote.status, is_locked: quote.is_locked, hasToken: !!quote.access_token })
+    } catch (fetchErr: any) {
+      console.error('[AUDIT] QUOTE FETCH FAILED:', fetchErr?.message || fetchErr)
+      return { success: false, error: `[AUDIT] Quote fetch failed: ${fetchErr?.message}` }
     }
 
     // Validate access token
     if (quote.access_token !== accessToken) {
+      console.error('[acceptQuote] Token mismatch', { expected: quote.access_token, got: accessToken })
       return {
         success: false,
         error: 'Invalid access token. Please use the link from your email.',
       }
     }
 
+    // Normalize status (PB select fields can return arrays)
+    const currentStatus = Array.isArray(quote.status) ? quote.status[0] : quote.status
+    console.log('[acceptQuote] Quote fetched', { quoteId, currentStatus, rawStatus: quote.status, isLocked: quote.is_locked })
+
     // Validate quote status - must be 'quoted' to accept
-    if (quote.status !== 'quoted') {
-      if (quote.status === 'confirmed') {
+    if (currentStatus !== 'quoted') {
+      if (currentStatus === 'confirmed') {
         return {
           success: false,
           error: 'This quote has already been accepted.',
@@ -292,17 +315,30 @@ export async function acceptQuote(
       }
       return {
         success: false,
-        error: 'This quote cannot be accepted at this time. Please contact us.',
+        error: `This quote cannot be accepted at this time (status: ${currentStatus}). Please contact us.`,
       }
     }
 
-    // Update quote with signature and status
-    const updateData = new FormData()
-    updateData.append('signature', signatureFile)
-    updateData.append('signed_at', new Date().toISOString())
-    updateData.append('status', 'confirmed')
-
-    await pb.collection('quotes').update(quoteId, updateData)
+    // Update quote status (with or without signature)
+    try {
+      if (ENABLE_DIGITAL_SIGNATURE && signatureFormData) {
+        const signatureFile = signatureFormData.get('signature') as File
+        const updateData = new FormData()
+        updateData.append('signature', signatureFile)
+        updateData.append('signed_at', new Date().toISOString())
+        updateData.append('status', 'confirmed')
+        await pb.collection('quotes').update(quoteId, updateData)
+      } else {
+        // Simple status update without signature
+        await pb.collection('quotes').update(quoteId, {
+          status: 'confirmed',
+        })
+      }
+      console.log('[acceptQuote] Quote updated to confirmed successfully')
+    } catch (updateError: any) {
+      console.error('[acceptQuote] PB update failed:', updateError?.response || updateError)
+      throw updateError
+    }
 
     // Send admin notification email
     try {
@@ -333,11 +369,11 @@ export async function acceptQuote(
         confirmationNumber: quote.confirmation_number,
       },
     }
-  } catch (error) {
-    console.error('Accept quote error:', error)
+  } catch (error: any) {
+    console.error('[AUDIT] UNCAUGHT ERROR in acceptQuote:', error?.message, error?.response || error)
     return {
       success: false,
-      error: 'Unable to accept the quote. Please try again or contact us.',
+      error: `[AUDIT] Uncaught: ${error?.message || 'Unknown error'}`,
     }
   }
 }

@@ -9,12 +9,10 @@ interface AuthListenerProps {
 }
 
 export default function AuthListener({ initialUser }: AuthListenerProps) {
-  const setUser = useAuthStore((state) => state.setUser);
-
   useEffect(() => {
     // Sync the server-side user with the client store
-    setUser(initialUser);
-  }, [initialUser, setUser]);
+    useAuthStore.getState().setUser(initialUser);
+  }, [initialUser]);
 
   // This component doesn't render anything visible
   return null;

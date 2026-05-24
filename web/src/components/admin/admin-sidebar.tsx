@@ -12,6 +12,7 @@ import {
     LogOut,
     Menu,
     FileText,
+    Download,
     LucideIcon
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -61,6 +62,7 @@ export default function AdminSidebar({
         { name: 'Overview', href: `/${lng}/admin`, icon: LayoutDashboard, permission: PERMISSIONS.DASHBOARD_VIEW },
         { name: 'Requests', href: `/${lng}/admin/requests`, icon: Inbox, permission: PERMISSIONS.QUOTES_VIEW },
         { name: 'Inventory', href: `/${lng}/admin/inventory`, icon: Package, permission: PERMISSIONS.INVENTORY_VIEW },
+        { name: 'Broadcast', href: `/${lng}/admin/broadcast`, icon: Download, permission: PERMISSIONS.DOWNLOADS_VIEW },
         { name: 'Blog', href: `/${lng}/admin/blog`, icon: FileText, permission: PERMISSIONS.BLOG_VIEW },
         { name: 'Users', href: `/${lng}/admin/users`, icon: Users, permission: PERMISSIONS.USERS_VIEW },
         { name: 'Settings', href: `/${lng}/admin/settings`, icon: Settings, permission: PERMISSIONS.SETTINGS_VIEW },

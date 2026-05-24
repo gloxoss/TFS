@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(timeout 10:*)",
+      "Bash(taskkill //F //IM \"Claude.exe\" //T)"
+    ]
+  }
+}

@@ -10,7 +10,7 @@
 
 import { useState, useEffect } from 'react'
 import { Calendar, ArrowRight } from 'lucide-react'
-import { format, addDays, differenceInDays, parseISO, isValid } from 'date-fns'
+import { format, addDays, addMonths, differenceInDays, parseISO, isValid } from 'date-fns'
 import { cn } from '@/lib/utils'
 
 export interface DateRange {
@@ -84,15 +84,24 @@ export function DateRangePicker({
 
   // Quick select options
   const quickSelects = [
-    { label: '1 Day', days: 1 },
-    { label: '3 Days', days: 3 },
-    { label: '1 Week', days: 7 },
-    { label: '2 Weeks', days: 14 },
+    { label: '1 Day', value: 1, unit: 'day' },
+    { label: '3 Days', value: 3, unit: 'day' },
+    { label: '1 Week', value: 7, unit: 'day' },
+    { label: '2 Weeks', value: 14, unit: 'day' },
+    { label: '1 Month', value: 1, unit: 'month' },
   ]
 
-  const handleQuickSelect = (days: number) => {
+  const handleQuickSelect = (value: number, unit: string) => {
     const start = startDate || today
-    const end = format(addDays(parseISO(start), days - 1), 'yyyy-MM-dd')
+    const startDateObj = parseISO(start)
+    let end: string
+
+    if (unit === 'month') {
+      end = format(addMonths(startDateObj, value), 'yyyy-MM-dd')
+    } else {
+      end = format(addDays(startDateObj, value - 1), 'yyyy-MM-dd')
+    }
+
     setStartDate(start)
     setEndDate(end)
     onChange({ start, end })
@@ -157,21 +166,28 @@ export function DateRangePicker({
       {/* Quick Select Buttons */}
       <div className="flex flex-wrap gap-2">
         <span className="text-xs text-zinc-500 self-center mr-2">Quick select:</span>
-        {quickSelects.map((option) => (
-          <button
-            key={option.days}
-            type="button"
-            onClick={() => handleQuickSelect(option.days)}
-            className={cn(
-              'px-3 py-1.5 text-xs font-medium rounded-full transition-colors',
-              rentalDays === option.days
-                ? 'bg-white text-black'
-                : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white border border-zinc-700'
-            )}
-          >
-            {option.label}
-          </button>
-        ))}
+        {quickSelects.map((option) => {
+          const isMonth = option.unit === 'month'
+          const isActive = isMonth
+            ? rentalDays >= 28 && rentalDays <= 31
+            : rentalDays === option.value
+
+          return (
+            <button
+              key={option.label}
+              type="button"
+              onClick={() => handleQuickSelect(option.value, option.unit)}
+              className={cn(
+                'px-3 py-1.5 text-xs font-medium rounded-full transition-colors',
+                isActive
+                  ? 'bg-white text-black'
+                  : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white border border-zinc-700'
+              )}
+            >
+              {option.label}
+            </button>
+          )
+        })}
       </div>
 
       {/* Duration Display */}

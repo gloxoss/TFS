@@ -56,6 +56,7 @@ export default function ServiceStatsSection({ stats, lng }: ServiceStatsSectionP
                 <div className="flex flex-wrap justify-center gap-12 md:gap-16 lg:gap-24">
                     {stats.map((stat, index) => {
                         const label = lng === 'fr' && stat.labelFr ? stat.labelFr : stat.label
+                        const value = lng === 'fr' && stat.valueFr ? stat.valueFr : stat.value
 
                         return (
                             <motion.div
@@ -67,7 +68,7 @@ export default function ServiceStatsSection({ stats, lng }: ServiceStatsSectionP
                                 className="text-center"
                             >
                                 <div className="text-5xl md:text-7xl font-display font-bold text-white mb-2">
-                                    <AnimatedNumber value={stat.value} />
+                                    <AnimatedNumber value={value} />
                                 </div>
                                 <div className="text-xs md:text-sm text-zinc-500 uppercase tracking-widest">
                                     {label}

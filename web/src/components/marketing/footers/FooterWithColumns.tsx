@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useTranslation } from "@/app/i18n/client";
 import { useSiteSettings } from "@/components/providers/site-settings-provider";
 import { t as translate } from "@/data/site-content";
+import { Facebook, Instagram, Youtube } from "lucide-react";
 
 interface FooterProps {
     lng: string;
@@ -18,11 +19,30 @@ export default function FooterWithColumns({ lng }: FooterProps) {
             <div className="max-w-7xl mx-auto px-6 py-12">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                     {/* Brand */}
-                    <div className="col-span-1 md:col-span-2">
+                    <div className="col-span-1 md:col-span-2 flex flex-col items-start">
                         <h3 className="text-xl font-bold text-white mb-4">{company.name}</h3>
-                        <p className="text-zinc-400 text-sm max-w-sm">
+                        <p className="text-zinc-400 text-sm max-w-sm mb-6">
                             {translate(company.tagline, lng)}
                         </p>
+
+                        {/* Social Links */}
+                        <div className="flex space-x-4 mt-2">
+                            {company.social.instagram && (
+                                <a href={company.social.instagram} target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-white transition-colors" aria-label="Instagram">
+                                    <Instagram className="h-5 w-5" />
+                                </a>
+                            )}
+                            {company.social.facebook && (
+                                <a href={company.social.facebook} target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-white transition-colors" aria-label="Facebook">
+                                    <Facebook className="h-5 w-5" />
+                                </a>
+                            )}
+                            {company.social.youtube && (
+                                <a href={company.social.youtube} target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-white transition-colors" aria-label="YouTube">
+                                    <Youtube className="h-5 w-5" />
+                                </a>
+                            )}
+                        </div>
                     </div>
 
                     {/* Quick Links */}
@@ -37,12 +57,12 @@ export default function FooterWithColumns({ lng }: FooterProps) {
 
                             <li>
                                 <Link href={`/${lng}/about`} className="text-zinc-400 hover:text-white text-sm transition-colors">
-                                    About
+                                    About Us
                                 </Link>
                             </li>
                             <li>
                                 <Link href={`/${lng}/contact`} className="text-zinc-400 hover:text-white text-sm transition-colors">
-                                    Contact
+                                    Contact Us
                                 </Link>
                             </li>
                         </ul>
@@ -52,9 +72,31 @@ export default function FooterWithColumns({ lng }: FooterProps) {
                     <div>
                         <h4 className="text-white font-semibold mb-4">Contact</h4>
                         <ul className="space-y-2 text-zinc-400 text-sm">
-                            <li>{company.email}</li>
-                            <li>{company.phone.display}</li>
-                            <li>{company.address.street} {company.address.city}</li>
+                            <li>
+                                <a href={`mailto:${company.email}`} className="hover:text-white transition-colors">
+                                    {company.email}
+                                </a>
+                            </li>
+                            <li>
+                                <a href={`tel:${company.phone.link}`} className="hover:text-white transition-colors">
+                                    {company.phone.display}
+                                </a>
+                            </li>
+                            <li>
+                                <a href={`tel:${company.fax.link}`} className="hover:text-white transition-colors">
+                                    {company.fax.display}
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    href="https://maps.app.goo.gl/DYrvH6NSsuGwpLim7?g_st=ic"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="hover:text-white transition-colors block leading-relaxed"
+                                >
+                                    {company.address.street} {company.address.postalCode} - {company.address.city}, {company.address.country}
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -65,11 +107,6 @@ export default function FooterWithColumns({ lng }: FooterProps) {
                         <p className="text-zinc-500 text-sm">
                             © {new Date().getFullYear()} TV Film Solutions. All rights reserved.
                         </p>
-                        <div className="flex items-center gap-3 text-xs text-zinc-600">
-                            <span>By <a href="https://www.instagram.com/z_dream_f" target="_blank" rel="noopener noreferrer" className="font-bold hover:text-white transition-colors">Z Dream-F</a></span>
-                            <span className="text-zinc-700">|</span>
-                            <span>v1.0.0</span>
-                        </div>
                     </div>
                 </div>
             </div>

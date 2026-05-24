@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { ShoppingCart } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useTranslation } from '@/app/i18n/client'
 
 interface StickyProductFooterProps {
     isVisible: boolean
@@ -11,6 +12,7 @@ interface StickyProductFooterProps {
     isAvailable: boolean
     isAdding: boolean
     onAdd: () => void
+    lng: string
 }
 
 export function StickyProductFooter({
@@ -19,8 +21,11 @@ export function StickyProductFooter({
     selectedCount,
     isAvailable,
     isAdding,
-    onAdd
+    onAdd,
+    lng
 }: StickyProductFooterProps) {
+    const { t } = useTranslation(lng, 'catalog')
+
     return (
         <AnimatePresence>
             {isVisible && (
@@ -29,7 +34,7 @@ export function StickyProductFooter({
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: 100, opacity: 0 }}
                     transition={{ type: 'spring', damping: 20, stiffness: 300 }}
-                    className="fixed bottom-12 left-4 right-20 sm:right-4 z-40 mx-auto max-w-4xl"
+                    className="fixed bottom-28 left-4 right-4 z-40 mx-auto max-w-4xl"
                 >
                     <div className="bg-zinc-900/90 backdrop-blur-lg border border-zinc-800 rounded-2xl shadow-2xl p-4 flex items-center justify-between gap-4">
                         {/* Info */}
@@ -39,14 +44,14 @@ export function StickyProductFooter({
                             </h3>
                             <p className="text-xs text-zinc-400">
                                 {selectedCount === 0
-                                    ? 'Base package only'
-                                    : `${selectedCount} additional items selected`}
+                                    ? t('detail.basePackage')
+                                    : `${selectedCount} ${t('detail.selected')}`}
                             </p>
                         </div>
 
                         {/* Price/Context (Optional placeholder) */}
                         <div className="flex-1 sm:hidden">
-                            <span className="text-xs text-zinc-400">{selectedCount} extras</span>
+                            <span className="text-xs text-zinc-400">{selectedCount} {t('detail.selected')}</span>
                         </div>
 
                         {/* Action */}
@@ -65,7 +70,7 @@ export function StickyProductFooter({
                             ) : (
                                 <>
                                     <ShoppingCart className="w-4 h-4" />
-                                    Add to Quote
+                                    {t('detail.addToQuote')}
                                 </>
                             )}
                         </button>

@@ -17,7 +17,7 @@ import type { IQuoteService } from './quotes/interface'
 import type { IEmailService } from './email/interface'
 
 // Re-export types
-export type { IProductService, ProductFilters, PaginatedResult } from './products/interface'
+export type { IProductService, ProductFilters, PaginatedResult, Attribute } from './products/interface'
 export type { Product, Category } from './products/types'
 export type {
   IQuoteService,
@@ -33,6 +33,7 @@ export type {
   EmailResult,
   QuoteConfirmationEmailPayload,
   AdminQuoteNotificationPayload,
+  ContactMessageEmailPayload,
   QuoteEmailItem,
 } from './email/interface'
 export type { BlogPost, BlogFilters } from './blog/types'

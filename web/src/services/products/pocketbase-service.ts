@@ -93,13 +93,13 @@ function mapRecordToProduct(record: RecordModel, lang: string = 'en'): Product {
         // record.image = main hero image (single file field)
         // record.images = gallery images (multi-file field)
         imageUrl: record.image
-            ? `${PB_URL}/api/files/${record.collectionId}/${record.id}/${record.image}`
+            ? `${process.env.NEXT_PUBLIC_POCKETBASE_URL}/api/files/${record.collectionId}/${record.id}/${record.image}`
             : Array.isArray(record.images) && record.images[0]
-                ? `${PB_URL}/api/files/${record.collectionId}/${record.id}/${record.images[0]}`
+                ? `${process.env.NEXT_PUBLIC_POCKETBASE_URL}/api/files/${record.collectionId}/${record.id}/${record.images[0]}`
                 : specs?.image_url as string | undefined,
         images: Array.isArray(record.images) && record.images.length > 0
             ? record.images.map((img: string) =>
-                `${PB_URL}/api/files/${record.collectionId}/${record.id}/${img}`
+                `${process.env.NEXT_PUBLIC_POCKETBASE_URL}/api/files/${record.collectionId}/${record.id}/${img}`
             )
             : undefined,
         // Status flags - ONLY boolean availability, no stock numbers
@@ -130,6 +130,7 @@ const mapRecordToCategory = (record: RecordModel): Category => ({
     thumbnail: record.thumbnail
         ? `${PB_URL}/api/files/${record.collectionId}/${record.id}/${record.thumbnail}`
         : undefined,
+    sortOrder: record.sort_order,
 });
 
 // Collection names per TDD cinema-tdd.md
@@ -171,7 +172,7 @@ export class PocketBaseProductService implements IProductService {
         }
     }
 
-    async getProductBySlug(slug: string, retries: number = 3): Promise<Product | null> {
+    async getProductBySlug(slug: string, lang: string = 'en', retries: number = 3): Promise<Product | null> {
         // Add retry logic for cold start / connection issues
         for (let attempt = 1; attempt <= retries; attempt++) {
             try {
@@ -179,7 +180,7 @@ export class PocketBaseProductService implements IProductService {
                     `slug = "${slug}"`,
                     { expand: 'category' }
                 );
-                const product = mapRecordToProduct(record);
+                const product = mapRecordToProduct(record, lang);
                 if (record.expand?.category) {
                     product.category = mapRecordToCategory(record.expand.category);
                 }
@@ -255,8 +256,12 @@ export class PocketBaseProductService implements IProductService {
 
             if (filters?.search) {
                 const searchTerm = filters.search.replace(/"/g, '\\"');
-                // Use actual fields from products collection schema
-                filterParts.push(`(name ~ "${searchTerm}" || description ~ "${searchTerm}")`);
+                // Search across all relevant text fields:
+                // - name (legacy), name_en, name_fr (bilingual)
+                // - description (legacy), description_en, description_fr (bilingual)
+                // - brand (important for "RED", "ARRI", "Sony" searches)
+                // - slug (for URL-style searches)
+                filterParts.push(`(name ~ "${searchTerm}" || name_en ~ "${searchTerm}" || name_fr ~ "${searchTerm}" || description ~ "${searchTerm}" || description_en ~ "${searchTerm}" || description_fr ~ "${searchTerm}" || brand ~ "${searchTerm}" || slug ~ "${searchTerm}")`);
             }
 
             if (filters?.minPrice !== undefined) {
@@ -271,11 +276,36 @@ export class PocketBaseProductService implements IProductService {
                 filterParts.push('(stock_available > 0)');
             }
 
+            // Dynamic Specs Filtering
+            if (filters?.specs) {
+                Object.entries(filters.specs).forEach(([key, value]) => {
+                    if (Array.isArray(value) && value.length > 0) {
+                        // OR logic
+                        const parts = value.map(v => {
+                            // Check for safe keys (alphanumeric + underscore)
+                            if (/^[a-zA-Z0-9_]+$/.test(key)) {
+                                return `specs.${key} = "${v}"`
+                            }
+                            // Fallback for keys with hyphens etc: Strict string match (assumes compact JSON or specific format)
+                            // This matches the fix for 'day-light' which fails with dot notation
+                            return `specs ~ '"${key}":"${v}"'`
+                        })
+                        filterParts.push(`(${parts.join(' || ')})`)
+                    } else if (typeof value === 'string' && value) {
+                        if (/^[a-zA-Z0-9_]+$/.test(key)) {
+                            filterParts.push(`specs.${key} = "${value}"`)
+                        } else {
+                            filterParts.push(`specs ~ '"${key}":"${value}"'`)
+                        }
+                    }
+                })
+            }
+
             const filterString = filterParts.length > 0 ? filterParts.join(' && ') : '';
 
             const result = await this.pb.collection(EQUIPMENT_COLLECTION).getList(page, perPage, {
                 filter: filterString || undefined,
-                sort: 'category_sort_order,item_sort_order,name', // Sort by category order (cameras first), then name
+                sort: 'category.sort_order,item_sort_order,name', // Sort by category order (cameras first), then name
                 expand: 'category', // Expand category to get category data
             });
 
@@ -308,7 +338,7 @@ export class PocketBaseProductService implements IProductService {
     async getCategories(): Promise<Category[]> {
         try {
             const records = await this.pb.collection(CATEGORIES_COLLECTION).getFullList({
-                sort: 'name',
+                sort: 'sort_order',
             });
             return records.map(mapRecordToCategory);
         } catch (error) {
@@ -328,4 +358,42 @@ export class PocketBaseProductService implements IProductService {
             return null;
         }
     }
+
+    /**
+     * Get filterable attributes for catalog filters
+     * Optionally filter by category
+     */
+    async getAttributes(categoryId?: string): Promise<Attribute[]> {
+        try {
+            const options: { filter?: string; sort?: string } = { sort: 'name' }
+            if (categoryId) {
+                options.filter = `categories ~ "${categoryId}"`
+            }
+
+            const records = await this.pb.collection('attributes').getFullList(options);
+            return records.map(record => ({
+                id: record.id,
+                name: record.name || '',
+                slug: record.slug || '',
+                type: record.type || 'text',
+                options: Array.isArray(record.options) ? record.options : [],
+                categories: Array.isArray(record.categories) ? record.categories : [],
+            }))
+        } catch (error) {
+            log.error('Error fetching attributes', error);
+            return []
+        }
+    }
+}
+
+/**
+ * Attribute type for catalog filters
+ */
+export interface Attribute {
+    id: string
+    name: string
+    slug: string
+    type: string
+    options: string[]
+    categories: string[]
 }

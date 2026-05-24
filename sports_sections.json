@@ -1,0 +1,244 @@
+[
+  {
+    "id": "g0j19dx2ipy02pn",
+    "slug": "football",
+    "sections": [
+      {
+        "content": "Our multi-camera stadium setups provide comprehensive coverage from every angle. We deploy strategic camera positions including high behind-goal angles, midfield elevated platforms, and corner positions to capture tactical movements, goal-line decisions, and crowd reactions. Each camera is operated by experienced sports cinematographers who understand the rhythm and flow of the game.",
+        "image": "poster_2_y1wkz752cx.jpg",
+        "layout": "right",
+        "title": "Complete Stadium Coverage"
+      },
+      {
+        "content": "TFS Football utilizes Spidercam for iconic aerial stadium shots, Cablecam for dynamic horizontal tracking across the pitch, and stabilized sideline systems including Steadicam and ARRI Trinity for fluid movement along the touchline. These systems work in perfect coordination to deliver broadcast-quality footage that rivals the world's top football productions.",
+        "title": "Aerial & Motion Systems"
+      },
+      {
+        "content": "Beyond camera work, TFS provides complete match day production support including pre-match player arrivals, warm-up coverage, tunnel moments, and post-match interviews. Our team captures the atmosphere—fans, flags, chants—creating an immersive viewing experience that transports audiences into the heart of the stadium.",
+        "title": "Match Day Production"
+      }
+    ]
+  },
+  {
+    "id": "9o5l784pxk6woq2",
+    "slug": "baseball",
+    "sections": [
+      {
+        "content": "Baseball demands exceptional precision in capturing split-second moments. TFS deploys high-speed cameras capable of 1000+ fps to freeze every pitch—fastballs, curveballs, sliders—in crystal-clear detail. Our super slow-motion replays reveal the grip, spin, and trajectory that define elite pitching, providing viewers with insights invisible to the naked eye.",
+        "image": "inisde_1_qtqsuwdl33.jpg",
+        "layout": "right",
+        "title": "High-Speed Pitch Tracking"
+      },
+      {
+        "content": "We position cameras strategically around the diamond: center field for the classic pitcher-batter view, first and third base lines for defensive plays, high home positions for tactical overview, and dugout-level angles for player reactions. This comprehensive setup ensures we never miss a stolen base, diving catch, or game-changing double play.",
+        "image": "inisde_2_sug8l3ndnx.jpg",
+        "layout": "left",
+        "title": "Diamond Coverage Architecture"
+      },
+      {
+        "content": "TFS Baseball productions include seamless replay integration with multiple angle options for umpire reviews, broadcast analysis, and highlight packages. Our operators are trained to anticipate key moments, ensuring that every close call at the plate, every tag at second base, is captured from the optimal angle for immediate replay.",
+        "title": "Replay & Analysis Integration"
+      }
+    ]
+  },
+  {
+    "id": "8v8ck1k82j9mzyj",
+    "slug": "basketball",
+    "sections": [
+      {
+        "content": "Basketball's speed and physicality require cameras that move with the action. TFS positions stabilized Steadicam and gimbal operators at court level, tracking fast breaks, defensive rotations, and player isolation plays. Our operators anticipate the flow, delivering smooth, immersive footage that puts viewers in the front row of every possession.",
+        "image": "inside_rd8rm3slfy.jpg",
+        "layout": "right",
+        "title": "Court-Level Immersion"
+      },
+      {
+        "content": "We deploy overhead camera systems to capture the full court—pick-and-rolls, zone defenses, and offensive sets become clear from above. Combined with backboard-mounted cameras for rim-shaking dunks and blocked shots, our multi-angle approach reveals the strategy and athleticism that define elite basketball.",
+        "image": "insie_p4p911o13z.jpg",
+        "layout": "left",
+        "title": "Overhead & Tactical Views"
+      },
+      {
+        "content": "Basketball arenas pulse with energy. TFS captures the crowd reactions, bench celebrations, timeout huddles, and halftime shows that make basketball a complete entertainment experience. Our audio integration captures the court sounds—sneaker squeaks, ball handling, and player communication—adding authenticity to every broadcast.",
+        "title": "Atmosphere & Energy Capture"
+      }
+    ]
+  },
+  {
+    "id": "rqmmedff8w9i0dd",
+    "slug": "motorsports",
+    "sections": [
+      {
+        "content": "Capturing vehicles at 300+ km/h requires specialized equipment and expertise. TFS Motorsports deploys Speedcam systems that match racing velocity, maintaining sharp focus on cars through straights and chicanes. Our Cablecam installations span pit lanes and grandstands, providing dynamic aerial tracking that follows the leaders through critical race sections.",
+        "image": "inside_2_i5nlwwz8va.jpg",
+        "layout": "right",
+        "title": "Speed Tracking Technology"
+      },
+      {
+        "content": "We establish comprehensive camera networks around circuits—corner entry and exit positions, overtaking zones, pit lane coverage, and podium setups. AGITO robotic cameras provide repeatable, precise movements for replay sequences, while Electro Moto systems enable smooth tracking shots along barriers and access roads.",
+        "image": "inside_a9luthqnww.jpg",
+        "layout": "left",
+        "title": "Circuit Coverage Network"
+      },
+      {
+        "content": "Motorsport production demands rigorous safety protocols. TFS operates in full coordination with race control, marshals, and medical teams. Our camera positions are certified, our operators are trained in circuit safety, and our communication systems integrate with race management to ensure zero interference with racing operations while capturing every moment of action.",
+        "title": "Safety & Coordination"
+      }
+    ]
+  },
+  {
+    "id": "fbizufw5des9gmt",
+    "slug": "athletics",
+    "sections": [
+      {
+        "content": "Athletics track events demand split-second precision. TFS deploys high-speed cameras at start lines capturing explosive reactions, finish line photo-finish integration, and rail-mounted tracking cameras that follow sprinters at full speed. For distance events, our strategically positioned cameras capture pack dynamics, breakaways, and the final sprint drama.",
+        "image": "inside_2_f9mrwr0nvv.jpg",
+        "layout": "right",
+        "title": "Track Event Excellence"
+      },
+      {
+        "content": "Each field event requires unique camera approaches. For throws, we position cameras to capture release technique and flight trajectory. For jumps, we deploy high-speed cameras at takeoff and landing, overhead views for technique analysis, and stabilized close-ups for athlete focus moments. Pole vault and high jump receive multi-angle coverage emphasizing height and clearance.",
+        "image": "inside_jkks27n2ni.jpg",
+        "layout": "left",
+        "title": "Field Event Specialization"
+      },
+      {
+        "content": "Major athletics events fill stadiums with passionate fans. TFS captures the pageantry—national teams, victory laps, medal ceremonies, and crowd reactions to world records. Our coverage extends beyond competition to include athlete preparation, warm-up rituals, and the emotional moments that define championship athletics.",
+        "title": "Stadium Atmosphere"
+      }
+    ]
+  },
+  {
+    "id": "szuc0os1xm57c5u",
+    "slug": "combat-sports",
+    "sections": [
+      {
+        "content": "Combat sports require intimate camera positions that capture every strike, block, and submission attempt. TFS positions cameras at ring corners, cage sides, and overhead to deliver comprehensive fight coverage. Our operators are trained to anticipate action, maintaining focus through explosive exchanges and ground transitions that define modern combat sports.",
+        "image": "inside_2_794oy9b9rj.jpg",
+        "layout": "right",
+        "title": "Ring & Cage Coverage"
+      },
+      {
+        "content": "We specialize in capturing the defining moments—the knockout punch, the fight-ending submission, the corner advice between rounds. High-speed cameras freeze impact moments in stunning detail, while our stabilized close-up work captures fighter emotions, corner reactions, and the tension that builds before main events.",
+        "image": "inside_ihoothgn2q.jpg",
+        "layout": "left",
+        "title": "Impact & Emotion"
+      },
+      {
+        "content": "Combat sports events are theatrical experiences. TFS provides complete production support including dramatic walkouts, pre-fight staredowns, ring announcements, and post-fight celebrations. Our lighting-aware camera work handles the dramatic arena atmospherics that define championship fight nights.",
+        "title": "Event Production"
+      }
+    ]
+  },
+  {
+    "id": "cuw7sub1fon9np0",
+    "slug": "tennis",
+    "sections": [
+      {
+        "content": "Tennis demands precise camera positioning that respects the geometry of the court. TFS establishes the classic behind-baseline elevated position for rally coverage, supplemented by net-level cameras for approach shots, side angles for service technique, and high positions for tactical court coverage. Every position is calculated to deliver clean sight lines without player distraction.",
+        "image": "inside_2_ved2veov56.jpg",
+        "layout": "right",
+        "title": "Court Geometry"
+      },
+      {
+        "content": "Tennis is as much a mental battle as a physical one. Our coverage captures the focus during service routines, the frustration of unforced errors, and the celebration of break points won. We position cameras to capture player boxes, coaching reactions, and the quiet intensity that builds through deciding sets.",
+        "image": "inside_cn8xcv40ux.jpg",
+        "layout": "left",
+        "title": "Player Focus & Emotion"
+      },
+      {
+        "content": "From clay to grass to hard courts, each surface demands adjusted camera work to handle ball speed, bounce, and lighting conditions. TFS adapts equipment and positioning for indoor arenas, outdoor stadiums, and intimate club settings, maintaining broadcast excellence regardless of venue scale or surface type.",
+        "title": "Surface & Venue Adaptation"
+      }
+    ]
+  },
+  {
+    "id": "2qpqf2a5qslzela",
+    "slug": "rugby",
+    "sections": [
+      {
+        "content": "Rugby's scrums, lineouts, and mauls require specialized camera positions. TFS deploys dedicated cameras for set pieces—tight angles on scrum engagements, elevated positions for lineout jumpers, and tracking cameras for rolling mauls. Our operators understand rugby's technical elements, ensuring clear coverage of binding, timing, and the explosive moments when the ball emerges.",
+        "image": "inside_2_p2elzbzsb5.jpg",
+        "layout": "right",
+        "title": "Set Piece Coverage"
+      },
+      {
+        "content": "When play opens up, TFS delivers fluid coverage through Steadicam operators running the touchline, elevated mid-field positions tracking attacking movements, and in-goal cameras for try-scoring moments. Our aerial systems follow breakaway runs and kick-chase sequences, maintaining visual continuity through rugby's fast phase transitions.",
+        "image": "inside_zzt8jlwn3c.jpg",
+        "layout": "left",
+        "title": "Open Play Dynamics"
+      },
+      {
+        "content": "Rugby's physicality demands cameras that capture impact—tackle angles, ruck clearouts, and the collisions that define the sport. Beyond the pitch, we capture the unique rugby atmosphere: pre-match rituals, team huddles, crowd songs, and the post-match respect between opponents that embodies rugby's values.",
+        "title": "Physicality & Atmosphere"
+      }
+    ]
+  },
+  {
+    "id": "36aeikj7kuvnsxy",
+    "slug": "cycling",
+    "sections": [
+      {
+        "content": "Road cycling spans hundreds of kilometers. TFS deploys motorcycle-mounted cameras that ride alongside the peloton, capturing attacks, breakaways, and group dynamics. Helicopter and drone coverage provides sweeping aerial views of the race against scenic backdrops, while fixed positions at climbs, sprints, and feed zones capture key strategic moments.",
+        "image": "inside_2_qc8s7k9ger.jpg",
+        "layout": "right",
+        "title": "Mobile & Aerial Coverage"
+      },
+      {
+        "content": "Cycling finishes demand precision timing and multi-angle coverage. TFS positions high-speed cameras at finish lines for photo-finish clarity, stabilized platforms for sprint lead-outs, and elevated positions to capture the tactical positioning in the final kilometers. Our coverage captures both the winner's celebration and the battles throughout the finishing group.",
+        "image": "inside_m1jormb8vc.jpg",
+        "layout": "left",
+        "title": "Finish Line Excellence"
+      },
+      {
+        "content": "Beyond road racing, TFS provides specialized coverage for track cycling—capturing the speed of pursuits, the strategy of madison races, and the power of sprint events in velodromes worldwide. For mountain biking, we deploy rugged camera systems that handle forest trails, technical descents, and cross-country endurance courses.",
+        "title": "Velodrome & MTB Specialization"
+      }
+    ]
+  },
+  {
+    "id": "rboqw1panm5c4gl",
+    "slug": "extreme-sports",
+    "sections": [
+      {
+        "content": "Extreme sports demand cameras that move with athletes. TFS operators use lightweight gimbals, body-mounted rigs, and compact stabilizers to follow skaters through parks, BMX riders through courses, and climbers up walls. Our approach prioritizes dynamic angles and authentic perspectives that communicate the speed, risk, and skill of action sports.",
+        "image": "inside_2_ukpi10sc3s.jpg",
+        "layout": "right",
+        "title": "Action-First Camera Work"
+      },
+      {
+        "content": "For organized competitions—X Games, street league events, FMX shows—TFS provides full broadcast infrastructure while maintaining the creative aesthetic that defines action sports. Multi-camera setups capture trick sequences from optimal angles, with super slow-motion replay capability for judging and highlight packages.",
+        "image": "inside_3_2og4n7dpj6.jpg",
+        "layout": "left",
+        "title": "Competition & Event Coverage"
+      },
+      {
+        "content": "Beyond competition, extreme sports are lifestyle movements. TFS captures the culture—skate sessions, surf trips, mountain expeditions—with cinematic documentary approaches. Our small, agile crews embed with athletes, capturing authentic moments that translate into compelling content for brands, athletes, and broadcasters.",
+        "title": "Lifestyle & Documentary"
+      }
+    ]
+  },
+  {
+    "id": "bto6gl2241kdgw9",
+    "slug": "equestrian",
+    "sections": [
+      {
+        "content": "TFS Equestrian Sports delivers high-level audiovisual coverage of horse racing and equestrian events, in strategic partnership with SOREC (Société Royale d’Encouragement du Cheval), Morocco’s leading authority for the development and promotion of the equine sector.",
+        "image": "eq_inside2_qdrbydoyzy.jpg",
+        "layout": "right",
+        "title": "Development and Promotion of Equestrian Sports"
+      },
+      {
+        "content": "TFS operates according to the highest professional standards, capturing the power, speed, and elegance of horse racing. Our production approach combines high-speed tracking systems, stabilized ground movements, aerial cinematography, and precision long-range optics to follow every stride, every acceleration, and every dramatic finish with breathtaking clarity.",
+        "image": "eq_inside3_xleybb181r.jpg",
+        "layout": "left",
+        "title": "High-Speed Tracking Systems"
+      },
+      {
+        "content": "As the trusted audiovisual production partner of SOREC, TFS brings years of proven expertise in Moroccan horse racing coverage. From day-to-day race broadcasts to prestigious events like the Morocco International Meeting, we deliver world-class production quality that elevates equestrian sports across every platform.",
+        "image": "eq_inside1_xhrobrq5pg.jpg",
+        "layout": "right",
+        "title": "SOREC Strategic Partnership"
+      }
+    ]
+  }
+]
